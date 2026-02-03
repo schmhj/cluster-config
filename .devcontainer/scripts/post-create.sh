@@ -2,6 +2,9 @@
 
 echo "post-create start" >> ~/.status.log
 
+# Install Git LFS
+sudo apt-get update && sudo apt-get install -y git-lfs | tee -a ~/.status.log
+
 # Install the K3D cluster for Argo CD
 k3d cluster create --config .devcontainer/manifests/k3d-dev.yaml --wait | tee -a ~/.status.log
 
