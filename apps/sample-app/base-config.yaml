@@ -1,0 +1,5 @@
+app:
+  name: sample-ui          # Used for the ArgoCD App Name
+  project: my-team          # Used for ArgoCD RBAC/Projects
+  chartName: simple-go      # Points to the actual Helm chart in Repo A
+  version: 0.2.1           # The specific Git Tag/Branch to deploy

@@ -1,0 +1,46 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: prod-appset
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+  - git:
+      repoURL: https://github.com/schmhj/cluster-config.git
+      revision: HEAD
+      directories:
+      - path: apps/*/values/envs/prod
+      files:
+      - path: apps/*/base-config.yaml
+  
+  template:      
+    metadata:
+      name: '{{index .path.segments 1}}-{{index .path.segments 4}}'
+    spec:
+      project: '{{app.project}}'
+      sources:
+        - repoURL: https://akuity.github.io/demo-helm-charts
+          chart: '{{app.chartName}}'
+          targetRevision: '{{app.version}}'
+          # path: '{{.path.path}}'
+          helm:
+            valueFiles:
+            - $values/{{app.name}}/values/common/values.yaml
+            - $values/{{app.name}}/values/env/dev/values.yaml  
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{index .path.segments 1}}-{{index .path.segments 4}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            maxDuration: 3m0s
+            factor: 2
