@@ -1,0 +1,34 @@
+{
+	"name": "workshop-environment",
+	"image": "quay.io/akuity/argo-cd-learning-assets/akuity-devcontainer:0.2.5",
+
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {
+			"enableNonRootDocker": "true",
+			"moby": "true"
+		}
+	},
+	
+	"hostRequirements": {
+		"cpus": 4
+	},
+	"postCreateCommand": "/bin/bash -c .devcontainer/scripts/post-create.sh",
+
+	"postStartCommand": "/bin/bash -c .devcontainer/scripts/post-start.sh",
+
+	"forwardPorts": [30179],
+	"portsAttributes": {
+		"30179": {
+			"label": "Argo CD Dashboard",
+			"protocol": "https"
+		}
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"streetsidesoftware.code-spell-checker",
+				"streetsidesoftware.code-spell-checker-british-english"
+			]
+		}
+	}
+}
