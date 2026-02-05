@@ -12,8 +12,8 @@ spec:
       revision: HEAD
       directories:
       - path: apps/*/values/envs/dev
-      files:
-      - path: apps/*/base-config.yaml
+      # files:
+      # - path: apps/*/base-config.yaml
   
   template:      
     metadata:
@@ -22,9 +22,8 @@ spec:
       project: default
       sources:
         - repoURL: https://akuity.github.io/demo-helm-charts
-          chart: '{{app.chartName}}'
-          targetRevision: '{{app.version}}'
-          # path: '{{.path.path}}'
+          chart: simple-go
+          targetRevision: 0.2.1
           helm:
             valueFiles:
             - $values/{{app.name}}/values/common/values.yaml
