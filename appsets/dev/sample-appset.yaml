@@ -26,8 +26,8 @@ spec:
           targetRevision: 0.2.1
           helm:
             valueFiles:
-            - $values/sample-app/values/common/values.yaml
-            - $values/sample-app/values/envs/dev/values.yaml
+            - $values/apps/sample-app/values/common/values.yaml
+            - $values/apps/sample-app/values/envs/dev/values.yaml
             
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: main
