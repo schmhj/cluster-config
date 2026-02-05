@@ -27,7 +27,11 @@ spec:
           helm:
             valueFiles:
             - $values/sample-app/values/common/values.yaml
-            - $values/sample-app/values/env/dev/values.yaml  
+            - $values/sample-app/values/env/dev/values.yaml
+            
+        - repoURL: https://github.com/schmhj/cluster-config.git
+          targetRevision: main
+          ref: values
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{index .path.segments 1}}-{{index .path.segments 4}}'
