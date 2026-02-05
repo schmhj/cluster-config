@@ -26,8 +26,8 @@ spec:
           targetRevision: 0.2.1
           helm:
             valueFiles:
-            - $values/{{app.name}}/values/common/values.yaml
-            - $values/{{app.name}}/values/env/dev/values.yaml  
+            - $values/sample-app/values/common/values.yaml
+            - $values/sample-app/values/env/dev/values.yaml  
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{index .path.segments 1}}-{{index .path.segments 4}}'
