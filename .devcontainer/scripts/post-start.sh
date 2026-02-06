@@ -36,6 +36,9 @@ kubectl patch cm/argocd-cm -n argocd --type=json  -p="[{\"op\": \"replace\", \"p
 # Update Argo CD to use cluster-admin service account for sync operations in the "default" project
 kubectl apply -f .devcontainer/manifests/argocd-configupdate.yaml | tee -a  ~/.status.log
 
+# Bootstrap apps
+kubectl apply -f bootstrap/dev-root.yaml -n argocd | tee -a  ~/.status.log
+
 # Best effort env load
 source ~/.bashrc
 
