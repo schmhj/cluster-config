@@ -54,8 +54,8 @@ spec:
           {{ end }}
           helm:
             valueFiles:
-              - '{{ .path.path }}/values.yaml'
-            
+              - $values/apps/{{index .path.segments 1}}/envs/dev/values.yaml
+              
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
-          path: '{{ .path.path }}'
+          ref: values
