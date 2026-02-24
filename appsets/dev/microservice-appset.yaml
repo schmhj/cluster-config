@@ -18,7 +18,7 @@ spec:
       - name: microservice-app
         chartRepo: https://github.com/schmhj/microservice-template.git
         chartPath: helm/microservice
-        chartVersion: "0.0.6"
+        chartVersion: HEAD
       
       - name: sample-app
         chartRepo: https://akuity.github.io/demo-helm-charts
@@ -27,23 +27,23 @@ spec:
   
   template:      
     metadata:
-      name: '{{ index .path.segments 4 }}-{{ .name }}'
+      name: '{{index .path.segments 4}}-{{index .path.segments 1}}'
     spec:
       project: default
       sources:
         - repoURL: '{{ .chartRepo }}'
           path: '{{ .chartPath }}'
-          targetRevision: HEAD
+          targetRevision: '{{ .chartVersion }}'
           helm:
             valueFiles:
-              - '{{ .path.path }}/values.yaml'
+              - '$values/{{ .path.path }}/values.yaml'
             
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
           ref: values
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{ index .path.segments 4 }}-{{ .name }}'
+        namespace: '{{index .path.segments 4}}-{{index .path.segments 1}}'
       syncPolicy:
         automated:
           prune: true
