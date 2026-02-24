@@ -20,15 +20,15 @@ spec:
       project: default
       sources:
         - repoURL: https://github.com/schmhj/microservice-template.git
-          chart: helm/microservice
-          targetRevision: main
+          path: helm/microservice
+          targetRevision: HEAD
           helm:
             valueFiles:
             - $values/apps/microservice-template-app/values/common/values.yaml
             - $values/apps/microservice-template-app/values/envs/dev/values.yaml
             
         - repoURL: https://github.com/schmhj/cluster-config.git
-          targetRevision: main
+          targetRevision: HEAD
           ref: values
       destination:
         server: https://kubernetes.default.svc
