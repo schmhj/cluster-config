@@ -12,26 +12,38 @@ spec:
       revision: HEAD
       directories:
       - path: apps/*/values/envs/dev
+
+  - list:
+      elements:
+      - name: microservice-app
+        chartRepo: https://github.com/schmhj/microservice-template.git
+        chartPath: helm/microservice
+        chartVersion: "0.0.6"
+      
+      - name: sample-app
+        chartRepo: https://akuity.github.io/demo-helm-charts
+        chartPath: sample-app
+        chartVersion: "0.2.1"
   
   template:      
     metadata:
-      name: '{{index .path.segments 4}}-{{index .path.segments 1}}'
+      name: '{{ index .path.segments 4 }}-{{ .name }}'
     spec:
       project: default
       sources:
-        - repoURL: https://github.com/schmhj/microservice-template.git
-          path: helm/microservice
+        - repoURL: '{{ .chartRepo }}'
+          path: '{{ .chartPath }}'
           targetRevision: HEAD
           helm:
             valueFiles:
-            - $values/{{.path.path}}/values.yaml
+              - '{{ .path.path }}/values.yaml'
             
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
           ref: values
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{index .path.segments 4}}-{{index .path.segments 1}}'
+        namespace: '{{ index .path.segments 4 }}-{{ .name }}'
       syncPolicy:
         automated:
           prune: true

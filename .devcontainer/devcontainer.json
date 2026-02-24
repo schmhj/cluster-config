@@ -16,7 +16,7 @@
 
 	"postStartCommand": "/bin/bash -c .devcontainer/scripts/post-start.sh",
 
-	"forwardPorts": [30179, 30280],
+	"forwardPorts": [30179, 30280, 6000],
 	"portsAttributes": {
 		"30179": {
 			"label": "Argo CD Dashboard",
@@ -24,6 +24,10 @@
 		},
 		"30280": {
 			"label": "Sample App",
+			"protocol": "http"
+		},
+		"6000": {
+			"label": "Microservice Template App",
 			"protocol": "http"
 		}
 	},
