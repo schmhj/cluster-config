@@ -13,7 +13,7 @@ spec:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: HEAD
           directories:
-          - path: apps/*/values/envs/dev
+          - path: apps/{{ .name }}/values/envs/dev
 
       - list:
           elements:
