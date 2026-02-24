@@ -27,17 +27,6 @@ spec:
       name: '{{index .path.segments 4}}-{{ .appName }}'
     spec:
       project: default
-      sources:
-        - repoURL: '{{ .chartRepo }}'
-          targetRevision: '{{ .chartVersion }}'
-          "{{ if .isGitRepo }}path{{ else }}chart{{ end }}": '{{ .chartPath }}'
-          helm:
-            valueFiles:
-              - '{{ .path.path }}/values.yaml'
-            
-        - repoURL: https://github.com/schmhj/cluster-config.git
-          targetRevision: HEAD
-          path: '{{ .path.path }}'
       destination:
         server: https://kubernetes.default.svc
         namespace: '{{index .path.segments 4}}-{{index .path.segments 1}}'
@@ -53,3 +42,20 @@ spec:
             duration: 5s
             maxDuration: 3m0s
             factor: 2
+    templatePatch: |
+      spec:
+        sources:
+          - repoURL: '{{ .chartRepo }}'
+            targetRevision: '{{ .chartVersion }}'
+            {{ if .isGitRepo }}
+            path: '{{ .chartPath }}'
+            {{ else }}
+            chart: '{{ .chartPath }}'
+            {{ end }}
+            helm:
+              valueFiles:
+                - '{{ .path.path }}/values.yaml'
+              
+          - repoURL: https://github.com/schmhj/cluster-config.git
+            targetRevision: HEAD
+            path: '{{ .path.path }}'
