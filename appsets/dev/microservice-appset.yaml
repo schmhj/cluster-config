@@ -30,11 +30,7 @@ spec:
       sources:
         - repoURL: '{{ .chartRepo }}'
           targetRevision: '{{ .chartVersion }}'
-          {{ if .isGitRepo }}
-          path: '{{ .chartPath }}'
-          {{ else }}
-          chart: '{{ .chartPath }}'
-          {{ end }}
+          "{{ if .isGitRepo }}path{{ else }}chart{{ end }}": '{{ .chartPath }}'
           helm:
             valueFiles:
               - '{{ .path.path }}/values.yaml'
