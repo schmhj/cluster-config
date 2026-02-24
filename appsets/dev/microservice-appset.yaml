@@ -13,23 +13,18 @@ spec:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: HEAD
           directories:
-          - path: apps/{{ .name }}/values/envs/dev
-
-      - list:
-          elements:
-          - name: microservice-app
-            chartRepo: https://github.com/schmhj/microservice-template.git
-            chartPath: helm/microservice
-            chartVersion: HEAD
-          
-          - name: sample-app
-            chartRepo: https://akuity.github.io/demo-helm-charts
-            chartPath: sample-app
-            chartVersion: "0.2.1"
+          - path: apps/*/values/envs/dev
+      - git:
+          repoURL: https://github.com/schmhj/cluster-config.git
+          revision: HEAD
+          files:
+          - path: "{{.path.path}}/config.json"
   
   template:      
     metadata:
-      name: '{{index .path.segments 4}}-{{index .path.segments 1}}'
+      # .path.path is the directory (from directories generator)
+      # .appName is from config.json (from files generator)
+      name: '{{index .path.segments 4}}-{{ .appName }}'
     spec:
       project: default
       sources:
