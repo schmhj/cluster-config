@@ -2,5 +2,6 @@
     "appName": "microservice-app",
     "chartRepo": "https://github.com/schmhj/microservice-template.git",
     "chartPath": "helm/microservice",
-    "chartVersion": "HEAD"
+    "chartVersion": "HEAD",
+    "isGitRepo": true
 }

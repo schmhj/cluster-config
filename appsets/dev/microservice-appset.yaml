@@ -29,8 +29,12 @@ spec:
       project: default
       sources:
         - repoURL: '{{ .chartRepo }}'
-          path: '{{ .chartPath }}'
           targetRevision: '{{ .chartVersion }}'
+          {{ if .isGitRepo }}
+          path: '{{ .chartPath }}'
+          {{ else }}
+          chart: '{{ .chartPath }}'
+          {{ end }}
           helm:
             valueFiles:
               - '{{ .path.path }}/values.yaml'
