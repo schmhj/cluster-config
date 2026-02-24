@@ -19,13 +19,13 @@ spec:
     spec:
       project: default
       sources:
-        - repoURL: https://akuity.github.io/demo-helm-charts
-          chart: simple-go
-          targetRevision: 0.2.1
+        - repoURL: https://github.com/schmhj/microservice-template.git
+          chart: helm/microservice
+          targetRevision: main
           helm:
             valueFiles:
-            - $values/apps/sample-app/values/common/values.yaml
-            - $values/apps/sample-app/values/envs/dev/values.yaml
+            - $values/apps/microservice-template-app/values/common/values.yaml
+            - $values/apps/microservice-template-app/values/envs/dev/values.yaml
             
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: main
