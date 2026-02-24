@@ -11,7 +11,7 @@ spec:
       repoURL: https://github.com/schmhj/cluster-config.git
       revision: HEAD
       directories:
-      - path: apps/*/values/envs/dev
+      - path: apps/microservice-template-app/values/envs/dev
   
   template:      
     metadata:
