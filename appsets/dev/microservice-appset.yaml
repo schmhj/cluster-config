@@ -19,16 +19,15 @@ spec:
     spec:
       project: default
       sources:
-        - repoURL: https://akuity.github.io/demo-helm-charts
-          chart: simple-go
-          targetRevision: 0.2.1
+        - repoURL: https://github.com/schmhj/microservice-template.git
+          path: helm/microservice
+          targetRevision: HEAD
           helm:
             valueFiles:
-            - $values/apps/sample-app/values/common/values.yaml
-            - $values/apps/sample-app/values/envs/dev/values.yaml
+            - $values/{{.path.path}}/values.yaml
             
         - repoURL: https://github.com/schmhj/cluster-config.git
-          targetRevision: main
+          targetRevision: HEAD
           ref: values
       destination:
         server: https://kubernetes.default.svc
