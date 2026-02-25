@@ -52,8 +52,8 @@ spec:
           auth:
             ssh:
               privateKeySecret:
-                name: github-app-creds
-                key: privateKey
+                name: github-ssh-key
+                key: ssh-privatekey
           {{ else }}
           chart: '{{ .chartPath }}'
           {{ end }}

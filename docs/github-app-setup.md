@@ -1,79 +1,85 @@
-# GitHub App Authentication for ArgoCD
+# SSH Key Authentication for ArgoCD
 
-## Overview
-
-This setup enables ArgoCD to authenticate with private GitHub repositories using GitHub Apps in a GitOps-managed way.
+This guide explains how to set up SSH key authentication for ArgoCD to access private GitHub repositories in a GitOps-managed way.
 
 ## File Structure
 
 ```
 argocd/
 ├── secrets/
-│   └── github-app-secret.yaml    # GitHub App credentials
+│   └── github-app-secret.yaml    # SSH private key (renamed from github-app-secret.yaml)
 ├── config/
 │   └── argocd-cm.yaml             # ArgoCD configuration
 bootstrap/
 └── argocd-config.yaml             # Application to manage argocd/ via GitOps
 ```
 
-## GitHub App Creation Steps
+## Setup Steps
 
-### 1. Create the GitHub App
+### 1. Generate SSH Key Pair
 
-- Go to GitHub Settings → Developer settings → GitHub Apps → New GitHub App
-- Fill in:
-  - **App name**: `argocd`
-  - **Homepage URL**: `https://<your-argocd-domain>`
-  - **Webhook URL**: Leave blank (not needed for Git auth)
-  - **Uncheck** "Active" under Webhooks
-- Under **Repository permissions**, grant `Read-only` access to:
-  - Contents
-  - Metadata
-- Click "Create GitHub App"
-- Save the **App ID** shown on the app page
+Generate a new SSH key for ArgoCD:
 
-### 2. Generate and Save Private Key
+```bash
+ssh-keygen -t ed25519 -f ~/.ssh/argocd-github -N "" -C "argocd@example.com"
+```
 
-- In your GitHub App settings, scroll to "Private keys"
-- Click "Generate a private key"
-- A `.pem` file will download
-- Save it securely
+This creates:
+- `~/.ssh/argocd-github` (private key)
+- `~/.ssh/argocd-github.pub` (public key)
 
-### 3. Install App on Your Organization
+### 2. Add Public Key as GitHub Deploy Key
 
-- Go to the GitHub App's "Install app" tab
-- Select your organization
-- Choose "Only select repositories"
-- Select `microservice-template` and other private repos ArgoCD needs
-- Click "Install"
-- From the installation URL, note the **Installation ID**
-  - Format: `https://github.com/organizations/YOUR_ORG/settings/installations/INSTALLATION_ID`
+1. Go to your private repository on GitHub (e.g., `microservice-template`)
+2. Navigate to Settings → Deploy keys → Add deploy key
+3. Paste the contents of `~/.ssh/argocd-github.pub`
+4. Title: `argocd-deploy-key` (or any descriptive name)
+5. Check "Allow write access" only if ArgoCD needs to push (usually not needed for pull-only)
+6. Click "Add key"
 
-## Configuration
+Repeat for each private repository ArgoCD needs to access.
 
-### Update Secret
+### 3. Update Secret with Private Key
 
-Edit `argocd/secrets/github-app-secret.yaml`:
+Edit `argocd/secrets/github-app-secret.yaml` and replace `REPLACE_WITH_YOUR_SSH_PRIVATE_KEY` with the full contents of your private key file:
 
-1. Replace `REPLACE_WITH_APP_ID` with your App ID
-2. Replace `REPLACE_WITH_INSTALLATION_ID` with your Installation ID
-3. Replace `REPLACE_WITH_PRIVATE_KEY_CONTENT` with the contents of your `.pem` file (keep the BEGIN/END lines)
+```bash
+cat ~/.ssh/argocd-github
+```
 
-### Update ConfigMap
+Copy the entire output (including BEGIN/END lines) and paste it into the secret, maintaining proper indentation.
 
-Edit `argocd/config/argocd-cm.yaml`:
+Example:
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: github-ssh-key
+  namespace: argocd
+type: Opaque
+stringData:
+  ssh-privatekey: |
+    -----BEGIN OPENSSH PRIVATE KEY-----
+    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUtY25vbmUtbm9uZQAAAAg...
+    [rest of key content]
+    -----END OPENSSH PRIVATE KEY-----
+```
 
-1. Change `https://argocd.example.com` to your actual ArgoCD URL
+### 4. Deploy Configuration
 
-## Deployment
+#### Option 1: Via GitOps (Recommended)
 
-### Option 1: Via GitOps (Recommended)
+1. Commit and push changes to your repository:
+   ```bash
+   git add argocd/ bootstrap/
+   git commit -m "Add SSH authentication for private repositories"
+   git push
+   ```
 
-1. Commit the files to your repository
 2. ArgoCD will sync the `argocd-config` Application automatically
 3. The Secret and ConfigMap will be deployed to the `argocd` namespace
 
-### Option 2: Manual Apply
+#### Option 2: Manual Apply
 
 ```bash
 kubectl apply -f argocd/secrets/github-app-secret.yaml
@@ -82,27 +88,93 @@ kubectl apply -f argocd/config/argocd-cm.yaml
 
 ## Usage in ApplicationSet
 
-The `appsets/dev/microservice-appset.yaml` references the secret:
+The ApplicationSet in `appsets/dev/microservice-appset.yaml` uses SSH authentication for private Git repositories:
 
 ```yaml
 auth:
   ssh:
     privateKeySecret:
-      name: github-app-creds
-      key: privateKey
+      name: github-ssh-key
+      key: ssh-privatekey
 ```
 
-This allows ArgoCD to authenticate to private repositories listed in your ApplicationSet.
+This enables ArgoCD to authenticate to repositories like `https://github.com/schmhj/microservice-template.git` when marked with `"isGitRepo": true` in their `config.json`.
+
+## Repository URLs
+
+Ensure your repository URLs in `config.json` use SSH format if using git@:
+
+```json
+{
+  "appName": "microservice-app",
+  "chartRepo": "git@github.com:schmhj/microservice-template.git",
+  "chartPath": "helm/microservice",
+  "chartVersion": "HEAD",
+  "isGitRepo": true
+}
+```
+
+Or HTTPS format (ArgoCD handles both):
+```json
+{
+  "chartRepo": "https://github.com/schmhj/microservice-template.git",
+  ...
+}
+```
 
 ## Security Considerations
 
-⚠️ **Warning**: The private key in the Secret is sensitive data.
+⚠️ **Warning**: The SSH private key in the Secret is sensitive data.
 
-### Recommended Approaches:
+### Recommended Approaches for Production:
 
-1. **Sealed Secrets**: Encrypt secrets using Sealed Secrets (see `docs/sealed-secrets.md`)
-2. **External Secrets Operator**: Sync from AWS Secrets Manager, HashiCorp Vault, etc.
-3. **SOPS**: Encrypt with SOPS before committing to Git
-4. **Manual Secret Management**: Create the Secret outside of Git
+1. **Sealed Secrets**: Encrypt the secret using Sealed Secrets before committing to Git
+   - See `docs/sealed-secrets.md` for instructions
 
-For production environments, **do not store unencrypted private keys in Git**.
+2. **External Secrets Operator**: Sync from a vault
+   - AWS Secrets Manager
+   - HashiCorp Vault
+   - Azure Key Vault
+
+3. **SOPS (Secrets Operations)**: Encrypt secrets with SOPS before committing
+
+4. **Manual Secret Management**: Create the Secret outside of Git and do not track it in version control
+
+**Best Practice**: For production, do NOT store unencrypted private keys in Git repositories.
+
+## Troubleshooting
+
+### ArgoCD cannot access repository
+
+1. Verify the SSH key is correctly added to GitHub:
+   ```bash
+   ssh -T git@github.com
+   ```
+
+2. Check ArgoCD logs:
+   ```bash
+   kubectl logs -n argocd deployment/argocd-application-controller
+   ```
+
+3. Verify the secret exists:
+   ```bash
+   kubectl get secret github-ssh-key -n argocd -o yaml
+   ```
+
+4. Test with a simple Git repo Application:
+   ```yaml
+   apiVersion: argoproj.io/v1alpha1
+   kind: Application
+   metadata:
+     name: test-ssh
+     namespace: argocd
+   spec:
+     project: default
+     source:
+       repoURL: git@github.com:schmhj/microservice-template.git
+       path: .
+       targetRevision: HEAD
+     destination:
+       server: https://kubernetes.default.svc
+       namespace: default
+   ```

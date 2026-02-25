@@ -4,7 +4,7 @@ metadata:
   name: argocd-cm
   namespace: argocd
 data:
-  url: http://localhost:30179
+  url: https://argocd.default.svc.cluster.local
   application.instanceLabelKey: argocd.argoproj.io/instance
   server.disable.auth: "false"
   server.insecure: "false"
