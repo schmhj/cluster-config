@@ -1,5 +1,8 @@
 replicaCount: 1
 
+imagePullSecrets:
+  - name: ghcr-io-secret
+
 image:
   repository: ghcr.io/schmhj/microservice-template
   pullPolicy: IfNotPresent
