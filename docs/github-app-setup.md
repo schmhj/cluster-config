@@ -60,8 +60,7 @@ type: Opaque
 stringData:
   ssh-privatekey: |
     -----BEGIN OPENSSH PRIVATE KEY-----
-    b3BlbnNzaC1rZXktdjEAAAAABG5vbmUtY25vbmUtbm9uZQAAAAg...
-    [rest of key content]
+    REPLACE_WITH_YOUR_SSH_PRIVATE_KEY
     -----END OPENSSH PRIVATE KEY-----
 ```
 
