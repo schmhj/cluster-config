@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  url: http://localhost:30179
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  server.disable.auth: "false"
+  server.insecure: "false"

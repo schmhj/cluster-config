@@ -49,6 +49,11 @@ spec:
           targetRevision: '{{ .chartVersion }}'
           {{ if .isGitRepo }}
           path: '{{ .chartPath }}'
+          auth:
+            ssh:
+              privateKeySecret:
+                name: github-app-creds
+                key: privateKey
           {{ else }}
           chart: '{{ .chartPath }}'
           {{ end }}
