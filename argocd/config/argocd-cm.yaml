@@ -8,3 +8,11 @@ data:
   application.instanceLabelKey: argocd.argoproj.io/instance
   server.disable.auth: "false"
   server.insecure: "false"
+  repositories: |
+    - type: git
+      url: git@github.com:schmhj/microservice-template.git
+      sshPrivateKeySecret:
+        name: github-ssh-key
+        key: ssh-privatekey
+    - type: git
+      url: https://github.com/schmhj/cluster-config.git
