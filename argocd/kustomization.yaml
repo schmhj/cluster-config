@@ -1,0 +1,7 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - config/argocd-cm.yaml
+  - secrets/github-app-secret.yaml
+  - secrets/ghcr-io-secret.yaml
