@@ -23,8 +23,8 @@ kubectx k3d-dev | tee -a ~/.status.log
 
 # Create secret using sealed-secrets keys
 kubectl create secret tls sealed-secrets-key \
-  --cert=~/.secrets/sealed-secrets.crt \
-  --key=~/.secrets/sealed-secrets.key \
+  --cert=$HOME/.secrets/sealed-secrets.crt \
+  --key=$HOME/.secrets/sealed-secrets.key \
   -n kube-system
 
 # Install Argo CD using Helm
@@ -34,7 +34,7 @@ helm install argocd argo/argo-cd --version 7.8.26 --namespace argocd --create-na
 
 # Install Sealed Secrets
 helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets | tee -a ~/.status.log
-helm install sealed-secrets sealed-secrets/sealed-secrets --namespace kube-system --set existingSecret=~/.secrets/sealed-secrets.key | tee -a ~/.status.log
+helm install sealed-secrets sealed-secrets/sealed-secrets --namespace kube-system --set existingSecret=$HOME/.secrets/sealed-secrets.key | tee -a ~/.status.log
 
 # Install kubeseal
 curl -OL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.34.0/kubeseal-0.34.0-linux-amd64.tar.gz" | tee -a ~/.status.log
