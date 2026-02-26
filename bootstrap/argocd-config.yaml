@@ -9,8 +9,6 @@ spec:
     repoURL: https://github.com/schmhj/cluster-config.git
     targetRevision: HEAD
     path: argocd
-    kustomize:
-      enable: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
