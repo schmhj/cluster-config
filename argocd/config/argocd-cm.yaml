@@ -1,18 +1,11 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: argocd-cm
+  name: argocd-cm-githubapps
   namespace: argocd
 data:
   url: https://argocd.default.svc.cluster.local
   application.instanceLabelKey: argocd.argoproj.io/instance
-  server.disable.auth: "false"
   server.insecure: "false"
-  repositories: |
-    - type: git
-      url: git@github.com:schmhj/microservice-template.git
-      sshPrivateKeySecret:
-        name: github-ssh-key
-        key: ssh-privatekey
-    - type: git
-      url: https://github.com/schmhj/cluster-config.git
+  accounts.ghapp: login=schmhj
+  account.ghapp.tokens: $github-app-creds:token

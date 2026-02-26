@@ -50,10 +50,7 @@ spec:
           {{ if .isGitRepo }}
           path: '{{ .chartPath }}'
           auth:
-            ssh:
-              privateKeySecret:
-                name: github-ssh-key
-                key: ssh-privatekey
+            password: $github-app-creds:token
           {{ else }}
           chart: '{{ .chartPath }}'
           {{ end }}

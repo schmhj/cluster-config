@@ -12,8 +12,14 @@
 	"hostRequirements": {
 		"cpus": 4
 	},
-	"postCreateCommand": "/bin/bash -c .devcontainer/scripts/post-create.sh",
 
+	"remoteEnv": {
+		"SEALED_SECRETS_PRIVATE_KEY": "${{ secrets.SEALED_SECRETS_PRIVATE_KEY }}",
+		"SEALED_SECRETS_CERT": "${{ secrets.SEALED_SECRETS_CERT }}",
+		"ARGOCD_GITOPS_AUTH_BOT_KEY":  "${{ secrets.ARGOCD_GITOPS_AUTH_BOT_KEY }}"
+  	},
+	
+	"postCreateCommand": "/bin/bash -c .devcontainer/scripts/post-create.sh",
 	"postStartCommand": "/bin/bash -c .devcontainer/scripts/post-start.sh",
 
 	"forwardPorts": [30179, 30280, 6000],
