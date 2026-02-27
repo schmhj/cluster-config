@@ -1,7 +1,7 @@
 replicaCount: 1
 
 imagePullSecrets:
-  - name: ghcr-io-secret
+  - name: ghcr-auth-secret
 
 image:
   repository: ghcr.io/schmhj/microservice-template

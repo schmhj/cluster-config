@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - config/argocd-cm.yaml
   - secrets/github-app-secret.yaml
-  - secrets/ghcr-io-secret.yaml
+  - secrets/ghcr-auth-secret.yaml
