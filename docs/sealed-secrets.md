@@ -87,11 +87,6 @@ EOF
 echo -n "YOUR_GITHUB_USERNAME:YOUR_GITHUB_PAT" | base64
 ```
 
-Example output:
-```
-WU9VUl9HSVRIVUJfVVNFUk5BTUU6WU9VUl9HSVRIVUJfUEFU
-```
-
 So your config becomes:
 ```json
 {
@@ -99,7 +94,7 @@ So your config becomes:
     "ghcr.io": {
       "username": "schmhj",
       "password": "ghp_xxxxxxxxxxxxxxxxxxxx",
-      "auth": "WU9VUl9HSVRIVUJfVVNFUk5BTUU6WU9VUl9HSVRIVUJfUEFU"
+      "auth": ""
     }
   }
 }
