@@ -7,5 +7,7 @@ data:
   url: https://argocd.default.svc.cluster.local
   application.instanceLabelKey: argocd.argoproj.io/instance
   server.insecure: "false"
-  accounts.ghapp: login=sachindra-maharjan
-  account.ghapp.tokens: $github-app-creds:githubAppID!$github-app-creds:githubAppInstallationID!$github-app-creds:githubAppPrivateKey
+  accounts.ghapp: login=ghapp
+  account.ghapp.tokens: $github-app-creds:token
+
+#account.ghapp.tokens: $github-app-creds:githubAppID!$github-app-creds:githubAppInstallationID!$github-app-creds:githubAppPrivateKey
