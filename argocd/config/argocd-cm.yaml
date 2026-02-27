@@ -8,6 +8,4 @@ data:
   application.instanceLabelKey: argocd.argoproj.io/instance
   server.insecure: "false"
   accounts.ghapp: login=ghapp
-  account.ghapp.tokens: $github-app-creds:token
-
-#account.ghapp.tokens: $github-app-creds:githubAppID!$github-app-creds:githubAppInstallationID!$github-app-creds:githubAppPrivateKey
+  account.ghapp.tokens: $github-app-creds:githubAppID!$github-app-creds:githubAppInstallationID!$github-app-creds:githubAppPrivateKey
