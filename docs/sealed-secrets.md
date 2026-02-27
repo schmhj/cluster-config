@@ -114,6 +114,19 @@ eyJhdXRocyI6eyJnaGNyLmlvIjp7InVzZXJuYW1lIjoic2NoaWpiYWoiLCJwYXNzd29yZCI6ImdocF94
 ### Step 3: Create Kubernetes Secret (Dry Run)
 
 ```bash
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ghcr-io-secret
+  namespace: dev-microservice-app
+type: kubernetes.io/dockerconfigjson
+data:
+  .dockerconfigjson: <paste-base64-string-here>
+```
+
+OR
+
+```bash
 kubectl create secret docker-registry ghcr-io-secret \
   --docker-server=ghcr.io \
   --docker-username=YOUR_GITHUB_USERNAME \
