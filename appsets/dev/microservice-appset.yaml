@@ -47,13 +47,13 @@ spec:
       sources:
         - repoURL: '{{ .chartRepo }}'
           targetRevision: '{{ .chartVersion }}'
-          {{ if .isGitRepo }}
+      {{- if .isGitRepo }}
           path: '{{ .chartPath }}'
           auth:
             password: $github-app-creds:token
-          {{ else }}
+      {{- else }}
           chart: '{{ .chartPath }}'
-          {{ end }}
+      {{- end }}
           helm:
             valueFiles:
               - $values/apps/{{index .path.segments 1}}/values/common/values.yaml
