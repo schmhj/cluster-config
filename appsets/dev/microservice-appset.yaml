@@ -49,8 +49,6 @@ spec:
           targetRevision: '{{ .chartVersion }}'
       {{- if .isGitRepo }}
           path: '{{ .chartPath }}'
-          auth:
-            password: $github-app-creds:token
       {{- else }}
           chart: '{{ .chartPath }}'
       {{- end }}
