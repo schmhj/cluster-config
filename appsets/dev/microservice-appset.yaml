@@ -54,8 +54,8 @@ spec:
       {{- end }}
           helm:
             valueFiles:
-              - $values/apps/{{index .path.segments 1}}/values/common/values.yaml
-              - $values/apps/{{index .path.segments 1}}/values/envs/dev/values.yaml
+              - $values/apps/{{index .path.segments 1}}/common/values.yaml
+              - $values/apps/{{index .path.segments 1}}/envs/dev/values.yaml
               
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
