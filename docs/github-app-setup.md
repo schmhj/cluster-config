@@ -99,9 +99,9 @@ metadata:
   namespace: argocd
 type: Opaque
 stringData:
-  appID: "123456"
-  installationID: "12345678"
-  privateKey: |
+  githubAppID: "123456"
+  githubAppInstallationID: "12345678"
+  githubAppPrivateKey: |
     -----BEGIN RSA PRIVATE KEY-----
     MIIEpAIBAAKCAQEA2x3F8p/j0K...
     [rest of the key]
