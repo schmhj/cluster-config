@@ -24,12 +24,12 @@ spec:
     metadata:
       # .path.path is the directory (from directories generator)
       # .appName is from config.json (from files generator)
-      name: '{{index .path.segments 4}}-{{ .appName }}'
+      name: '{{index .path.segments 3}}-{{ .appName }}'
     spec:
       project: default
       destination:
         server: https://kubernetes.default.svc
-        namespace: '{{index .path.segments 4}}-{{index .path.segments 1}}'
+        namespace: '{{index .path.segments 1}}'
       syncPolicy:
         automated:
           prune: true
