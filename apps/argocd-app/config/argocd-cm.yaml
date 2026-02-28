@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm-ghaap-auth1
+  namespace: argocd
+data:
+  url: https://argocd.default.svc.cluster.local
+  application.instanceLabelKey: argocd.argoproj.io/instance
+  server.insecure: "false"
+  accounts.ghapp: login=ghapp
+  account.ghapp.tokens: $ghaap-auth-secret:githubAppID!$ghaap-auth-secret:githubAppInstallationID!$ghaap-auth-secret:githubAppPrivateKey
