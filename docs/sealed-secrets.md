@@ -35,6 +35,22 @@ to retrieve the public cert used for encryption and store it locally. You can th
       --format [json|yaml] --cert mycert.pem > mysealedsecret.[json|yaml]
 ```
 
+OR
+
+```
+kubeseal \
+  --controller-name=sealed-secrets \
+  --controller-namespace=kube-system \
+  --fetch-cert > ~/.secrets/sealed-secrets-cert.pem
+
+cat /tmp/ghcr-secret.yaml | kubeseal \
+  --controller-name=sealed-secrets \
+  --controller-namespace=kube-system \
+  --format yaml \
+  --cert ~/.secrets/sealed-secrets-cert.pem \
+  > /tmp/ghcr-sealed-secret.yaml
+```
+
 3. Apply the sealed secret
 ```
     kubectl create -f mysealedsecret.[json|yaml]

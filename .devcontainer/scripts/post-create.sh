@@ -8,7 +8,7 @@ sudo apt-get update && sudo apt-get install -y git-lfs | tee -a ~/.status.log
 # Set up Sealed Secrets keys. Keys are stored in GitHub secrets and passed as environment variables to the container. We need to write them to files for Sealed Secrets to use.
 mkdir -p ~/.secrets
 echo "$SEALED_SECRETS_PRIVATE_KEY" > ~/.secrets/sealed-secrets.key
-echo "$SEALED_SECRETS_CERT" > ~/.secrets/sealed-secrets.crt
+echo "$SEALED_SECRETS_CERT" > ~/.secrets/sealed-secrets.pem
 echo "$ARGOCD_GITOPS_AUTH_BOT_KEY" > ~/.secrets/gitops-secret.key
 chmod 600 ~/.secrets/sealed-secrets.key
 
