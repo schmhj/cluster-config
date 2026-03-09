@@ -34,8 +34,6 @@ kubectl create secret tls sealed-secrets-key \
   -n kube-system \
   --dry-run=client -o yaml > custom-sealed-secret-key.yaml
 
-cat custom-sealed-secret-key.yaml | tee -a ~/.status.log
-
 kubectl apply -f custom-sealed-secret-key.yaml | tee -a ~/.status.log
 
 # Install Argo CD using Helm
@@ -46,6 +44,11 @@ helm install argocd argo/argo-cd --version 7.8.26 --namespace argocd --create-na
 # Install Sealed Secrets
 helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets | tee -a ~/.status.log
 helm install sealed-secrets sealed-secrets/sealed-secrets --namespace kube-system --set existingSecret="$SECRETS_PRIV_KEY" | tee -a ~/.status.log
+
+# Install emberstack to reflect secrets across namespaces
+helm repo add emberstack https://emberstack.github.io/helm-charts
+helm repo update
+helm install reflector emberstack/reflector --namespace kube-system
 
 # Install kubeseal
 curl -OL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.34.0/kubeseal-0.34.0-linux-amd64.tar.gz" | tee -a ~/.status.log
