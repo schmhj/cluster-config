@@ -60,3 +60,8 @@ spec:
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
           ref: values
+        - repoURL: https://github.com/schmhj/cluster-config.git
+          targetRevision: HEAD
+          path: {{.path.path}}
+          directories:
+            include: ghcr-secret-mirror.yaml
