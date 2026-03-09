@@ -19,6 +19,7 @@ spec:
           revision: HEAD
           files:
           - path: "{{.path.path}}/config.json"
+          - path: "{{.path.path}}/ghcr-secret-mirror.yaml"
   
   template:      
     metadata:
