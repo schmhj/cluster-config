@@ -18,7 +18,6 @@ spec:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: HEAD
           files:
-          - path: "{{.path.path}}/ghcr-secret-mirror.yaml"
           - path: "{{.path.path}}/config.json"
         
   template:      
