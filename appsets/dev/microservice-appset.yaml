@@ -62,6 +62,6 @@ spec:
           ref: values
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
-          path: {{.path.path}}
-          directories:
-            include: ghcr-secret-mirror.yaml
+          path: '{{ .path.path }}' # This points to apps/*/envs/dev/
+          directory:
+            include: 'ghcr-secret-mirror.yaml' # Only pick up the secret mirror
