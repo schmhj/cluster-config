@@ -2,15 +2,21 @@
 
 echo "post-create start" >> ~/.status.log
 
+SECRETS_DIR="$HOME/.secrets"
+SECRETS_PUB_KEY="${SECRETS_DIR}/sealed-secrets.pub"
+SECRETS_PRIV_KEY="${SECRETS_DIR}/sealed-secrets"
+SECRETS_GITOPS_AUTH_KEY="${SECRETS_DIR}/gitops-secret.key"
+
+
 # Install Git LFS
 sudo apt-get update && sudo apt-get install -y git-lfs | tee -a ~/.status.log
 
 # Set up Sealed Secrets keys. Keys are stored in GitHub secrets and passed as environment variables to the container. We need to write them to files for Sealed Secrets to use.
-mkdir -p ~/.secrets
-echo "$SEALED_SECRETS_PRIVATE_KEY" > ~/.secrets/sealed-secrets.key
-echo "$SEALED_SECRETS_CERT" > ~/.secrets/sealed-secrets.pem
-echo "$ARGOCD_GITOPS_AUTH_BOT_KEY" > ~/.secrets/gitops-secret.key
-chmod 600 ~/.secrets/sealed-secrets.key
+mkdir -p $SECRETS_DIR
+echo "$SEALED_SECRETS_PRIVATE_KEY" > "$SECRETS_PRIV_KEY"
+echo "$SEALED_SECRETS_CERT" > "$SECRETS_PUB_KEY"
+echo "$ARGOCD_GITOPS_AUTH_BOT_KEY" > "$SECRETS_GITOPS_AUTH_KEY"
+chmod 600 "$SECRETS_DIR/$SECRETS_PRIV_KEY"
 
 # Install the K3D cluster for Argo CD
 k3d cluster create --config .devcontainer/manifests/k3d-dev.yaml --wait | tee -a ~/.status.log
@@ -23,8 +29,8 @@ kubectx k3d-dev | tee -a ~/.status.log
 
 # Create secret using sealed-secrets keys
 kubectl create secret tls sealed-secrets-key \
-  --cert=$HOME/.secrets/sealed-secrets.crt \
-  --key=$HOME/.secrets/sealed-secrets.key \
+  --cert="$SECRETS_PUB_KEY" \
+  --key="$SECRETS_PRIV_KEY" \
   -n kube-system
 
 # Install Argo CD using Helm
@@ -34,7 +40,7 @@ helm install argocd argo/argo-cd --version 7.8.26 --namespace argocd --create-na
 
 # Install Sealed Secrets
 helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets | tee -a ~/.status.log
-helm install sealed-secrets sealed-secrets/sealed-secrets --namespace kube-system --set existingSecret=$HOME/.secrets/sealed-secrets.key | tee -a ~/.status.log
+helm install sealed-secrets sealed-secrets/sealed-secrets --namespace kube-system --set existingSecret="$SECRETS_PRIV_KEY" | tee -a ~/.status.log
 
 # Install kubeseal
 curl -OL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.34.0/kubeseal-0.34.0-linux-amd64.tar.gz" | tee -a ~/.status.log
