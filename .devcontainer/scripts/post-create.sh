@@ -31,7 +31,12 @@ kubectx k3d-dev | tee -a ~/.status.log
 kubectl create secret tls sealed-secrets-key \
   --cert="$SECRETS_PUB_KEY" \
   --key="$SECRETS_PRIV_KEY" \
-  -n kube-system
+  -n kube-system \
+  --dry-run=client -o yaml > custom-sealed-secret-key.yaml
+
+cat custom-sealed-secret-key.yaml | tee -a ~/.status.log
+
+kubectl apply -f custom-sealed-secret-key.yaml | tee -a ~/.status.log
 
 # Install Argo CD using Helm
 helm repo add argo https://argoproj.github.io/argo-helm | tee -a  ~/.status.log 
