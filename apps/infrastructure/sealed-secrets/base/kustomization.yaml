@@ -8,3 +8,6 @@ helmCharts:
     releaseName: sealed-secrets
     valuesInline:
       fullnameOverride: sealed-secrets
+      resources:
+        requests:
+          memory: "64Mi"

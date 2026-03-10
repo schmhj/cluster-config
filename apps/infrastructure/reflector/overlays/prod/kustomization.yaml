@@ -22,3 +22,7 @@ patches:
           limits:
             cpu: "200m"
             memory: "256Mi"
+    target:
+      group: kustomize.config.k8s.io
+      version: v1beta1
+      kind: Kustomization

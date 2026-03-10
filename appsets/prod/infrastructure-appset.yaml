@@ -1,0 +1,38 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infrastructure-appset-prod
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/schmhj/cluster-config.git
+        revision: HEAD
+        directories:
+          - path: apps/infrastructure/*/overlays/prod
+  template:
+    metadata:
+      name: "{{index .path.segments 2}}-prod"
+      namespace: argocd
+      labels:
+        layer: "3"
+        env: prod
+        domain: infrastructure
+    spec:
+      project: infrastructure
+      source:
+        repoURL: https://github.com/schmhj/cluster-config.git
+        targetRevision: HEAD
+        path: "{{.path.path}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true

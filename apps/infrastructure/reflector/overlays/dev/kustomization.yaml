@@ -13,3 +13,7 @@ patches:
         path: /helmCharts/0/valuesInline/serviceMonitor
         value:
           enabled: false
+    target:
+      group: kustomize.config.k8s.io
+      version: v1beta1
+      kind: Kustomization
