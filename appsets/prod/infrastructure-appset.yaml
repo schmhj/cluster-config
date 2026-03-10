@@ -16,6 +16,8 @@ spec:
     metadata:
       name: "{{index .path.segments 2}}-prod"
       namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}0{{ else if eq (index .path.segments 2) "infra-secrets" }}1{{ else }}5{{ end }}'
       labels:
         layer: "3"
         env: prod
