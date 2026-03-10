@@ -5,4 +5,4 @@ helmCharts:
     repo: https://emberstack.github.io/helm-charts
     version: "10.0.16"                       
     namespace: kube-system
-    valueFiles: values.yaml
+    valuesFile: values.yaml
