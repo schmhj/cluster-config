@@ -4,6 +4,7 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "1"
   
 resources:
+  - crd-wait-hook.yaml 
   - ../../base
 
 patches:

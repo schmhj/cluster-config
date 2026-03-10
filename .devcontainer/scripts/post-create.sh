@@ -51,12 +51,12 @@ helm install argocd argo/argo-cd --version 7.8.26 --namespace argocd --create-na
 # helm install reflector emberstack/reflector --namespace kube-system
 
 # Install kubeseal
-# curl -OL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.34.0/kubeseal-0.34.0-linux-amd64.tar.gz" | tee -a ~/.status.log
-# tar -xvzf kubeseal-0.34.0-linux-amd64.tar.gz kubeseal  | tee -a ~/.status.log
-# sudo install -m 755 kubeseal /usr/local/bin/kubeseal  | tee -a ~/.status.log
+curl -OL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.34.0/kubeseal-0.34.0-linux-amd64.tar.gz" | tee -a ~/.status.log
+tar -xvzf kubeseal-0.34.0-linux-amd64.tar.gz kubeseal  | tee -a ~/.status.log
+sudo install -m 755 kubeseal /usr/local/bin/kubeseal  | tee -a ~/.status.log
 
-# rm kubeseal-0.34.0-linux-amd64.tar.gz
-# rm kubeseal
+rm kubeseal-0.34.0-linux-amd64.tar.gz
+rm kubeseal
 
 rm custom-sealed-secret-key.yaml
 
