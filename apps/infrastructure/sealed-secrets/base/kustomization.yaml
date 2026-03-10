@@ -1,5 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+
 helmCharts:
   - name: sealed-secrets
     repo: https://bitnami-labs.github.io/sealed-secrets
@@ -10,4 +11,8 @@ helmCharts:
       fullnameOverride: sealed-secrets
       resources:
         requests:
+          cpu: "50m"
           memory: "64Mi"
+        limits:
+          cpu: "200m"
+          memory: "256Mi"
