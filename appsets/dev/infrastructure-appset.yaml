@@ -17,7 +17,7 @@ spec:
       name: "{{index .path.segments 2}}-dev"
       namespace: argocd
       annotations:
-        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}0{{ else if eq (index .path.segments 2) "infra-secrets" }}1{{ else }}5{{ end }}'
+        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}1{{ else }}5{{ end }}'
       labels:
         layer: "3"
         env: dev
