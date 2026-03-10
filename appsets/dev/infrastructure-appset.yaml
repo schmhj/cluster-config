@@ -14,7 +14,7 @@ spec:
           - path: apps/infrastructure/*/overlays/dev
   template:
     metadata:
-      name: "infra-{{.path.basenameNormalized}}"
+      name: "{{index .path.segments 3}}"
       namespace: argocd
       labels:
         layer: "3"
