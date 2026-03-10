@@ -8,3 +8,7 @@ helmCharts:
     releaseName: reflector
     valuesInline:
       fullnameOverride: reflector
+      serviceAccount:
+        name: reflector
+      rbac:
+        enabled: true
