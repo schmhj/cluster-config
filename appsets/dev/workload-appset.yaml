@@ -7,16 +7,18 @@ spec:
   goTemplate: true
   goTemplateOptions: ["missingkey=error"]
   generators:
+  - matrix:
+    generators:
     - git:
         repoURL: https://github.com/schmhj/cluster-config.git
         revision: HEAD
         directories:
-          - path: apps/workloads/*/overlays/dev
+        - path: apps/workloads/*/overlays/dev
     - git:
         repoURL: https://github.com/schmhj/cluster-config.git
         revision: HEAD
         files:
-          - path: "{{.path.path}}/config.json"
+        - path: "{{.path.path}}/config.json"
   template:
     metadata:
       name: "{{index .path.segments 2}}-dev"
