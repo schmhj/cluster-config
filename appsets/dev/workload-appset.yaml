@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: infrastructure-appset-dev
+  name: workload-appset-dev
   namespace: argocd
 spec:
   goTemplate: true
@@ -11,26 +11,26 @@ spec:
         repoURL: https://github.com/schmhj/cluster-config.git
         revision: HEAD
         directories:
-          - path: apps/infrastructure/*/overlays/dev
+          - path: apps/workload/*/overlays/dev
   template:
     metadata:
       name: "{{index .path.segments 2}}-dev"
       namespace: argocd
       annotations:
-        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}'
+        argocd.argoproj.io/sync-wave: '5'
       labels:
         layer: "3"
         env: dev
-        domain: infrastructure
+        domain: workload
     spec:
-      project: infrastructure-dev
+      project: workload-dev
       source:
         repoURL: https://github.com/schmhj/cluster-config.git
         targetRevision: HEAD
         path: "{{.path.path}}"
       destination:
         server: https://kubernetes.default.svc
-        namespace: argocd
+        namespace: workload
       syncPolicy:
         automated:
           prune: true
