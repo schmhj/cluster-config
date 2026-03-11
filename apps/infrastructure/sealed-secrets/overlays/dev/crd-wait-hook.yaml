@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/hook: Sync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
-    argocd.argoproj.io/sync-wave: "1"       # runs in same wave as sealed-secrets install
+    argocd.argoproj.io/sync-wave: "2"       # runs in same wave as sealed-secrets install
 spec:
   template:
     spec:
