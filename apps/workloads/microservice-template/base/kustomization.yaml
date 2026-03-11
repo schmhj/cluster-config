@@ -5,8 +5,8 @@ commonAnnotations:
 
 helmCharts:
   - name: microservice
-    repo: https://github.com/schmhj/microservice-template.git # Git repo URL
-    version: "1.0.0" # Branch/Tag
+    repo: https://ghcr.io/schmhj/charts
+    version: "0.1.0" # Branch/Tag
     releaseName: microservice
     valuesInline:
       fullnameOverride: microservice
