@@ -5,7 +5,7 @@ commonAnnotations:
 
 helmCharts:
   - name: microservice
-    repo: https://ghcr.io/schmhj/charts
+    repo: oci://ghcr.io/schmhj/charts
     version: "0.1.0" # Branch/Tag
     releaseName: microservice
     valuesInline:
