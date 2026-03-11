@@ -59,8 +59,8 @@ spec:
       {{- end }}
           helm:
             valueFiles:
-              - $values/apps/workloads/{{index .path.segments 1}}/base/values.yaml
-              - $values/apps/workloads/{{index .path.segments 1}}/overlays/dev/values.yaml
+              - $values/apps/workloads/{{index .path.segments 2}}/base/values.yaml
+              - $values/apps/workloads/{{index .path.segments 2}}/overlays/dev/values.yaml
               
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
