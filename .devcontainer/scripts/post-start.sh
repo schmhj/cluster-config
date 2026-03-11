@@ -38,6 +38,7 @@ kubectl apply -f .devcontainer/manifests/argocd-configupdate.yaml | tee -a  ~/.s
 
 # Bootstrap apps
 kubectl apply -f bootstrap/dev/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
+sleep 2
 kubectl apply -f bootstrap/dev/root-app.yaml -n argocd | tee -a  ~/.status.log
 
 # Best effort env load

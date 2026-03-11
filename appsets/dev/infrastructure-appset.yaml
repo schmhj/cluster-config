@@ -23,7 +23,7 @@ spec:
         env: dev
         domain: infrastructure
     spec:
-      project: infrastructure
+      project: infrastructure-dev
       source:
         repoURL: https://github.com/schmhj/cluster-config.git
         targetRevision: HEAD

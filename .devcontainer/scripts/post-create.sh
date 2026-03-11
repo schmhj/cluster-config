@@ -32,9 +32,9 @@ kubectl create secret tls sealed-secrets-key \
   --cert="$SECRETS_PUB_KEY" \
   --key="$SECRETS_PRIV_KEY" \
   -n kube-system \
-  --dry-run=client -o yaml > custom-sealed-secret-key.yaml
+  --dry-run=client -o yaml > /tmp/custom-sealed-secret-key.yaml
 
-kubectl apply -f custom-sealed-secret-key.yaml | tee -a ~/.status.log
+kubectl apply -f /tmp/custom-sealed-secret-key.yaml | tee -a ~/.status.log
 
 # Install Argo CD using Helm
 helm repo add argo https://argoproj.github.io/argo-helm | tee -a  ~/.status.log 
@@ -58,6 +58,6 @@ sudo install -m 755 kubeseal /usr/local/bin/kubeseal  | tee -a ~/.status.log
 rm kubeseal-0.34.0-linux-amd64.tar.gz
 rm kubeseal
 
-rm custom-sealed-secret-key.yaml
+rm /tmp/custom-sealed-secret-key.yaml
 
 echo "post-create complete" >> ~/.status.log
