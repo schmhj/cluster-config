@@ -1,6 +1,6 @@
 {
     "appName": "microservice-app",
-    "chartRepo": "oci://github.com/schmhj/charts",
+    "chartRepo": "oci://ghcr.io/schmhj/charts",
     "chartName": "microservice",
     "chartVersion": "0.1.0",
     "isGitRepo": false
