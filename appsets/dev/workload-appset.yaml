@@ -12,6 +12,11 @@ spec:
         revision: HEAD
         directories:
           - path: apps/workloads/*/overlays/dev
+    - git:
+        repoURL: https://github.com/schmhj/cluster-config.git
+        revision: HEAD
+        files:
+        - path: "{{.path.path}}/config.json"
   template:
     metadata:
       name: "{{index .path.segments 2}}-dev"
@@ -24,10 +29,20 @@ spec:
         domain: workload
     spec:
       project: workload-dev
-      source:
-        repoURL: https://github.com/schmhj/cluster-config.git
-        targetRevision: HEAD
-        path: "{{.path.path}}"
+      sources:
+        - repoURL: https://github.com/schmhj/cluster-config.git
+          targetRevision: HEAD
+          path: "{{.path.path}}"
+        - repoURL: https://github.com/schmhj/cluster-config.git
+          targetRevision: HEAD
+          ref: values
+        - repoURL: {{ .chartRepo }}
+          targetRevision: {{ .chartVersion }}
+          chart: {{.chartName}}
+          helm:
+            valueFiles:
+              - $values/apps/workloads/{{index .path.segments 2}}/base/values.yaml
+              - $values/apps/workloads/{{index .path.segments 2}}/overlays/dev/values.yaml
       destination:
         server: https://kubernetes.default.svc
         namespace: workload

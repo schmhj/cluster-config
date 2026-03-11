@@ -1,0 +1,7 @@
+{
+    "appName": "sample-app",
+    "chartRepo": "https://akuity.github.io/demo-helm-charts",
+    "chartName": "simple-go",
+    "chartVersion": "0.2.1",
+    "isGitRepo": false
+}
