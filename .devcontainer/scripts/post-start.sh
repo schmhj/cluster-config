@@ -37,7 +37,7 @@ kubectl patch cm/argocd-cm -n argocd --type=json  -p="[{\"op\": \"replace\", \"p
 kubectl apply -f .devcontainer/manifests/argocd-configupdate.yaml | tee -a  ~/.status.log
 
 # Bootstrap apps
-kubectl apply -f bootstrap/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
+kubectl apply -f bootstrap/dev/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
 kubectl apply -f bootstrap/dev/root-app.yaml -n argocd | tee -a  ~/.status.log
 
 # Best effort env load

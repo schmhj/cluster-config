@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: appprojects-dev
+  name: appprojects
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "0"
@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: https://github.com/schmhj/cluster-config.git
     targetRevision: HEAD
-    path: appprojects
+    path: appprojects/prod
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd

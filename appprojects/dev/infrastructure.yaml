@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infrastructure-dev
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  description: "Infrastructure Environment"
+  sourceRepos:
+    - "*"
+  destinations:
+    - namespace: "*"
+      server: "https://kubernetes.default.svc"
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  destinationServiceAccounts:
+    - server: https://kubernetes.default.svc
+      namespace: "*"
+      defaultServiceAccount: kube-system:argocd-cluster-admin
