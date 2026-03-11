@@ -8,6 +8,7 @@ helmCharts:
     version: "2.18.3"
     namespace: kube-system
     releaseName: sealed-secrets
+    includeCrds: true
     valuesInline:
       fullnameOverride: sealed-secrets
       resources:
