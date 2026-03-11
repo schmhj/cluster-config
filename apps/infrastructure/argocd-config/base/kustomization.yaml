@@ -5,3 +5,4 @@ commonAnnotations:
 resources:
   - argocd-configmap.yaml
   - github-app-secret.yaml
+  - ghcr-oci-secret.yaml
