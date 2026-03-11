@@ -69,4 +69,4 @@ spec:
           targetRevision: HEAD
           path: '{{ .path.path }}' # This points to apps/workloads/*/envs/dev/
           directory:
-            include: 'docker-config-mirror.yaml' # Only pick up the secret mirror
+            include: 'dockerconfig-mirror.yaml' # Only pick up the secret mirror
