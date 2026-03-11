@@ -36,9 +36,9 @@ spec:
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
           ref: values
-        - repoURL: { { .chartRepo } }
-          targetRevision: { { .chartVersion } }
-          chart: { { .chartName } }
+        - repoURL: "{{ .chartRepo }}"
+          targetRevision: "{{  .chartVersion }}"
+          chart: "{{ .chartName }}"
           helm:
             valueFiles:
               - $values/apps/workloads/{{index .path.segments 2}}/base/values.yaml
