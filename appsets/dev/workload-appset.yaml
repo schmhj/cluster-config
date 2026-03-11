@@ -13,7 +13,7 @@ spec:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: HEAD
           directories:
-          - path: apps/*/envs/dev
+          - path: apps/workloads/*/overlays/dev
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: HEAD
