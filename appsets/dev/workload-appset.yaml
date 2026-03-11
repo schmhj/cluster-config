@@ -16,13 +16,13 @@ spec:
         repoURL: https://github.com/schmhj/cluster-config.git
         revision: HEAD
         files:
-        - path: "{{.path.path}}/config.json"
+          - path: "{{.path.path}}/config.json"
   template:
     metadata:
       name: "{{index .path.segments 2}}-dev"
       namespace: argocd
       annotations:
-        argocd.argoproj.io/sync-wave: '5'
+        argocd.argoproj.io/sync-wave: "5"
       labels:
         layer: "3"
         env: dev
@@ -36,9 +36,9 @@ spec:
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
           ref: values
-        - repoURL: {{ .chartRepo }}
-          targetRevision: {{ .chartVersion }}
-          chart: {{.chartName}}
+        - repoURL: { { .chartRepo } }
+          targetRevision: { { .chartVersion } }
+          chart: { { .chartName } }
           helm:
             valueFiles:
               - $values/apps/workloads/{{index .path.segments 2}}/base/values.yaml
@@ -54,3 +54,9 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
           - SkipDryRunOnMissingResource=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            maxDuration: 3m0s
+            factor: 2
