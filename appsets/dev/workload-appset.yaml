@@ -65,8 +65,8 @@ spec:
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD
           ref: values
-        - repoURL: https://github.com/schmhj/cluster-config.git
-          targetRevision: HEAD
-          path: '{{ .path.path }}' # This points to apps/workloads/*/envs/dev/
-          directory:
-            include: 'dockerconfig-mirror.yaml' # Only pick up the secret mirror
+        # - repoURL: https://github.com/schmhj/cluster-config.git
+        #   targetRevision: HEAD
+        #   path: '{{ .path.path }}' # This points to apps/workloads/*/envs/dev/
+        #   directory:
+        #     include: 'dockerconfig-mirror.yaml' # Only pick up the secret mirror
