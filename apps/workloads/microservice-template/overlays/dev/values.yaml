@@ -1,7 +1,7 @@
 replicaCount: 1
 
 imagePullSecrets:
-  - name: infra-docker-config
+  - name: infra-docker-secret
 
 image:
   repository: ghcr.io/schmhj/microservice-template
@@ -11,4 +11,3 @@ image:
 service:
   type: NodePort
   port: 6000
-
