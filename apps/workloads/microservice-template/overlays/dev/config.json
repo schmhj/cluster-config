@@ -1,6 +1,6 @@
 {
     "appName": "microservice-app",
-    "chartRepo": "ghcr.io/schmhj/charts/microservice",
+    "chartRepo": "ghcr.io/schmhj/charts",
     "chartName": "microservice",
     "chartVersion": "0.1.0",
     "isGitRepo": false
