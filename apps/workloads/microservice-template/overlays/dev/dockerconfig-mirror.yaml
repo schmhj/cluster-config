@@ -5,6 +5,6 @@ metadata:
   namespace: workload
   annotations:
     # Tell Reflector where to pull the data from
-    reflector.v1.k8s.emberstack.com/reflect-from: "infrastructure/infra-docker-config"
+    reflector.v1.k8s.emberstack.com/reflects: "infrastructure/infra-docker-config"
 type: kubernetes.io/dockerconfigjson # Important! Default value is Opaque.
 data: {} # Leave this empty; Reflector will populate it
