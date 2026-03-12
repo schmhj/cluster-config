@@ -1,7 +1,7 @@
 replicaCount: 1
 
 imagePullSecrets:
-  - name: infra-docker-secret
+  - name: infra-docker-config
 
 image:
   repository: ghcr.io/schmhj/microservice-template

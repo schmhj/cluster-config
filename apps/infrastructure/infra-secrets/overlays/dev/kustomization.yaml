@@ -10,7 +10,7 @@ patches:
       group: bitnami.com
       version: v1alpha1
       kind: SealedSecret
-      name: infra-docker-secret
+      name: infra-docker-config
       namespace: infrastructure
     patch: |-
       - op: replace
