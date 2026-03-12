@@ -4,4 +4,4 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
   - namespace.yaml
-  - docker-sealedsecret.yaml
+  - dockerconfig-sealedsecret.yaml
