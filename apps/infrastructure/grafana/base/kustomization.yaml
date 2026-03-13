@@ -3,9 +3,9 @@ kind: Kustomization
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "2"
 helmCharts:
-  - name: lgtm-distributed
+  - name: alloy
     repo: https://grafana.github.io/helm-charts
-    version: "3.0.1"
+    version: "1.5.1"
     namespace: monitoring
     releaseName: lgtm-distributed
     valuesFile: values.yaml

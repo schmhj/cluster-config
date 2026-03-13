@@ -1,4 +1,0 @@
-tempo:
-  enabled: true
-  ingester:
-    replicas: 2
