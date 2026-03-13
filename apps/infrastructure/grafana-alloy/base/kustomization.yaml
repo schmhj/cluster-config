@@ -7,5 +7,5 @@ helmCharts:
     repo: https://grafana.github.io/helm-charts
     version: "1.5.1"
     namespace: monitoring
-    releaseName: lgtm-distributed
+    releaseName: grafana
     valuesFile: values.yaml

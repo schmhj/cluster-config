@@ -7,107 +7,115 @@ secrets:
 
 # --- Alloy Sub-Chart Configuration ---
 # Note: The grafana/alloy chart has a top-level 'alloy' key for its settings.
-alloy: 
-  alloy:
-    # Inject secrets as environment variables
-    extraEnv:
-      - name: PROMETHEUS_URL
-        valueFrom:
-          secretKeyRef:
-            name: grafana-cloud-credentials
-            key: prometheus-url
-      - name: PROMETHEUS_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: grafana-cloud-credentials
-            key: prometheus-username
-      - name: LOKI_URL
-        valueFrom:
-          secretKeyRef:
-            name: grafana-cloud-credentials
-            key: loki-url
-      - name: LOKI_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: grafana-cloud-credentials
-            key: loki-username
-      - name: TEMPO_URL
-        valueFrom:
-          secretKeyRef:
-            name: grafana-cloud-credentials
-            key: tempo-url
-      - name: TEMPO_USERNAME
-        valueFrom:
-          secretKeyRef:
-            name: grafana-cloud-credentials
-            key: tempo-username
-      - name: GRAFANA_CLOUD_API_KEY
-        valueFrom:
-          secretKeyRef:
-            name: grafana-cloud-credentials
-            key: password
+alloy:
+  # Inject secrets as environment variables
+  extraEnv:
+    - name: PROMETHEUS_URL
+      valueFrom:
+        secretKeyRef:
+          name: grafana-cloud-credentials
+          key: prometheus-url
+    - name: PROMETHEUS_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: grafana-cloud-credentials
+          key: prometheus-username
+    - name: LOKI_URL
+      valueFrom:
+        secretKeyRef:
+          name: grafana-cloud-credentials
+          key: loki-url
+    - name: LOKI_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: grafana-cloud-credentials
+          key: loki-username
+    - name: TEMPO_URL
+      valueFrom:
+        secretKeyRef:
+          name: grafana-cloud-credentials
+          key: tempo-url
+    - name: TEMPO_USERNAME
+      valueFrom:
+        secretKeyRef:
+          name: grafana-cloud-credentials
+          key: tempo-username
+    - name: GRAFANA_CLOUD_API_KEY
+      valueFrom:
+        secretKeyRef:
+          name: grafana-cloud-credentials
+          key: password
 
-    configMap:
-      create: true
-      content: |
-        // 1. RECEIVE: Accept OTLP from Spring Boot (via GRPC and HTTP)
-        otelcol.receiver.otlp "default" {
-          http { endpoint = "0.0.0.0:4318" }
-          grpc { endpoint = "0.0.0.0:4317" }
-          output {
-            metrics = [otelcol.exporter.prometheus.cloud.input]
-            logs    = [otelcol.exporter.loki.cloud.input]
-            traces  = [otelcol.exporter.otlp.cloud.input]
+  configMap:
+    create: true
+    content: |
+      // 1. RECEIVE: Accept OTLP from Spring Boot (via GRPC and HTTP)
+      otelcol.receiver.otlp "default" {
+        http { endpoint = "0.0.0.0:4318" }
+        grpc { endpoint = "0.0.0.0:4317" }
+        output {
+          metrics = [otelcol.exporter.prometheus.cloud.input]
+          logs    = [otelcol.exporter.loki.cloud.input]
+          traces  = [otelcol.exporter.otlp.cloud.input]
+        }
+      }
+
+      // 2. EXPORT METRICS: Convert OTLP to Prometheus and send to Mimir
+      otelcol.exporter.prometheus "cloud" {
+        forward_to = [prometheus.remote_write.cloud.receiver]
+      }
+      prometheus.remote_write "cloud" {
+        endpoint {
+          url = env("PROMETHEUS_URL")
+          basic_auth {
+            username = env("PROMETHEUS_USERNAME")
+            password = env("GRAFANA_CLOUD_API_KEY")
           }
         }
+      }
 
-        // 2. EXPORT METRICS: Convert OTLP to Prometheus and send to Mimir
-        otelcol.exporter.prometheus "cloud" {
-          forward_to = [prometheus.remote_write.cloud.receiver]
-        }
-        prometheus.remote_write "cloud" {
-          endpoint {
-            url = env("PROMETHEUS_URL")
-            basic_auth {
-              username = env("PROMETHEUS_USERNAME")
-              password = env("GRAFANA_CLOUD_API_KEY")
-            }
+      // 3. EXPORT LOGS: Send OTLP to Loki
+      otelcol.exporter.loki "cloud" {
+        forward_to = [loki.write.cloud.receiver]
+      }
+      loki.write "cloud" {
+        endpoint {
+          url = env("LOKI_URL")
+          basic_auth {
+            username = env("LOKI_USERNAME")
+            password = env("GRAFANA_CLOUD_API_KEY")
           }
         }
+      }
 
-        // 3. EXPORT LOGS: Send OTLP logs to Loki
-        otelcol.exporter.loki "cloud" {
-          forward_to = [loki.write.cloud.receiver]
+      // 4. EXPORT TRACES: Send OTLP traces to Tempo
+      otelcol.exporter.otlp "cloud" {
+        client {
+          endpoint = env("TEMPO_URL")
+          auth     = otelcol.auth.basic.cloud.handler
         }
-        loki.write "cloud" {
-          endpoint {
-            url = env("LOKI_URL")
-            basic_auth {
-              username = env("LOKI_USERNAME")
-              password = env("GRAFANA_CLOUD_API_KEY")
-            }
-          }
-        }
+      }
+      otelcol.auth.basic "cloud" {
+        username = sys.env("TEMPO_USERNAME")
+        password = sys.env("GRAFANA_CLOUD_API_KEY")
+      }
 
-        // 4. EXPORT TRACES: Send OTLP traces to Tempo
-        otelcol.exporter.otlp "cloud" {
-          client {
-            endpoint = env("TEMPO_URL")
-            auth     = otelcol.auth.basic.cloud.handler
-          }
-        }
-        otelcol.auth.basic "cloud" {
-          username = sys.env("TEMPO_USERNAME")
-          password = sys.env("GRAFANA_CLOUD_API_KEY")
-        }
+  # Ensure correct ports are matched
+  extraPorts:
+    - name: "otlp-grpc"
+      port: 4317
+      targetPort: 4317
+      protocol: "TCP"
+    - name: "otlp-http"
+      port: 4318
+      targetPort: 4318
+      protocol: "TCP"
+  
+controller:
+  type: daemonset  # Run on every node for log collection
 
-    # Ensure correct ports are matched
-    extraPorts:
-      - name: "otlp-grpc"
-        port: 4317
-        targetPort: 4317
-        protocol: "TCP"
-      - name: "otlp-http"
-        port: 4318
-        targetPort: 4318
-        protocol: "TCP"
+rbac:
+  create: true
+
+serviceAccount:
+  create: true
