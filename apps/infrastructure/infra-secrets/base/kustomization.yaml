@@ -3,5 +3,4 @@ kind: Kustomization
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
-  - namespace.yaml
   - dockerconfig-sealedsecret.yaml
