@@ -4,6 +4,7 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
   - ../../base
+  - grafana-sealedsecret.yaml
 
 patches:
   - target:
