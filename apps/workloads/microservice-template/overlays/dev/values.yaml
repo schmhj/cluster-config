@@ -10,8 +10,7 @@ image:
   
 service:
   type: NodePort
-  port: 30380
-  targetPort: 9000
+  port: 9000
 
 # OpenTelemetry Collector configuration for receiving OTLP and exporting to Grafana Cloud
 otelCollector: "grafana-alloy.monitoring.svc.cluster.local"
