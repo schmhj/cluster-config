@@ -12,7 +12,7 @@ ports:
   - port: 30280:30280
     nodeFilters:
       - server:*
-  - port: 30380:30380
+  - port: 32056:32056
     nodeFilters:
       - server:*
 options:
