@@ -110,6 +110,7 @@ CHART_NAME=""
 CHART_REPO=""
 CHART_VERSION=""
 NAMESPACE=""
+NAMESPACE_EXISTS=true   # default: assume it exists (no file created)
 IS_GIT_REPO="false"
 
 while true; do
@@ -123,6 +124,19 @@ while true; do
       prompt_required CHART_REPO    "Chart repo (URL)"
       prompt_required CHART_VERSION "Chart version"
       prompt_required NAMESPACE     "Namespace"
+
+      # Ask whether namespace already exists (infrastructure only)
+      if [[ "$APP_TYPE" == "infrastructure" ]]; then
+        while true; do
+          printf "  Does namespace '%s' already exist in the cluster? [y/N]: " "$NAMESPACE"
+          read -r ns_exists_choice
+          case "$ns_exists_choice" in
+            [yY]|[yY][eE][sS]) NAMESPACE_EXISTS=true;  break ;;
+            [nN]|[nN][oO]|"")  NAMESPACE_EXISTS=false; break ;;
+            *) red "  Please enter y or n." ;;
+          esac
+        done
+      fi
 
       # isGitRepo only relevant for workloads config.json
       if [[ "$APP_TYPE" == "workloads" ]]; then
@@ -166,6 +180,13 @@ if $HELM_DETAILS; then
   echo "  Chart repo   : $CHART_REPO"
   echo "  Chart version: $CHART_VERSION"
   echo "  Namespace    : $NAMESPACE"
+  if [[ "$APP_TYPE" == "infrastructure" ]]; then
+    if $NAMESPACE_EXISTS; then
+      echo "  NS exists    : yes (no namespace manifest created)"
+    else
+      echo "  NS exists    : no  (will create apps/infrastructure/namespaces/base/${NAMESPACE}-ns.yaml)"
+    fi
+  fi
   [[ "$APP_TYPE" == "workloads" ]] && echo "  Is Git repo  : $IS_GIT_REPO"
 else
   echo "  Helm details : (placeholders will be used)"
@@ -193,12 +214,69 @@ done
 # ─────────────────────────────────────────────
 #  INFRASTRUCTURE  templates
 # ─────────────────────────────────────────────
+# ─────────────────────────────────────────────
+#  NAMESPACE  manifest
+#   Creates apps/infrastructure/namespaces/base/{ns}-ns.yaml
+#   and adds it to that directory's kustomization resources.
+# ─────────────────────────────────────────────
+create_namespace_file() {
+  local ns_name="$1"
+  local ns_base_dir="apps/infrastructure/namespaces/base"
+  local ns_file_lower
+  ns_file_lower="${ns_base_dir}/${ns_name}-ns.yaml"
+
+  mkdir -p "$ns_base_dir"
+
+  # Case-insensitive duplicate check
+  local existing
+  existing=$(find "$ns_base_dir" -maxdepth 1 -iname "${ns_name}-ns.yaml" 2>/dev/null | head -1)
+  if [[ -n "$existing" ]]; then
+    yellow "  ~ namespace manifest already exists (skipping): $existing"
+    return
+  fi
+
+  local ns_content="apiVersion: v1
+kind: Namespace
+metadata:
+  name: ${ns_name}
+  labels:
+    managed-by: argocd
+"
+  write_file "$ns_file_lower" "$ns_content"
+
+  # ── Ensure a kustomization.yaml in ns base that lists the manifest ──
+  local ks_file="${ns_base_dir}/kustomization.yaml"
+  if [[ ! -f "$ks_file" ]]; then
+    local ks_content="apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ${ns_name}-ns.yaml
+"
+    write_file "$ks_file" "$ks_content"
+  else
+    # File exists – append the resource entry only if not already present
+    if ! grep -qF "- ${ns_name}-ns.yaml" "$ks_file"; then
+      # Guarantee the file ends with a newline before appending
+      [[ -n "$(tail -c1 "$ks_file")" ]] && printf '\n' >> "$ks_file"
+      printf '  - %s-ns.yaml\n' "$ns_name" >> "$ks_file"
+      green "  ✔ appended resource to: $ks_file"
+    else
+      yellow "  ~ resource already listed in: $ks_file"
+    fi
+  fi
+}
+
 create_infra_files() {
   # Resolve values or keep placeholders
   local cn="${CHART_NAME:-"{chartName}"}"
   local cr="${CHART_REPO:-"{chartRepo}"}"
   local cv="${CHART_VERSION:-"{chartVersion}"}"
   local ns="${NAMESPACE:-"{namespace}"}"
+
+  # ── Namespace manifest (when namespace does not yet exist) ───────
+  if ! $NAMESPACE_EXISTS && $HELM_DETAILS; then
+    create_namespace_file "$ns"
+  fi
 
   # ── base/values.yaml (empty) ─────────────
   write_file "${BASE_DIR}/values.yaml" ""
