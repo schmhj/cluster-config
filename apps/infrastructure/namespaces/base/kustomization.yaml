@@ -5,3 +5,4 @@ commonAnnotations:
 resources:
   - infrastructure-ns.yaml
   - monitoring-ns.yaml
+  - traefik-ns.yaml
