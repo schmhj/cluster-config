@@ -11,9 +11,11 @@ ports:
     expose:
       default: true
   traefik:
+    port: 9000
     expose:
       default: true
     nodePort: 30420
+    exposedPort: 9000
 
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
