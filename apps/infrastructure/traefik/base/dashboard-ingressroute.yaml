@@ -1,7 +1,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: traefik-routing-dashboard
+  name: traefik-routing
   namespace: traefik
 spec:
   entryPoints:
