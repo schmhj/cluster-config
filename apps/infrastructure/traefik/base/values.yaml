@@ -34,7 +34,7 @@ ports:
     port: 8000
     expose:
       default: true
-    exposedPort: 80
+    exposedPort: 8000
     protocol: TCP
     # -- NodePort for HTTP traffic
     nodePort: 30480
