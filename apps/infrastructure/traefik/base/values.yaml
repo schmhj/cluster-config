@@ -1,20 +1,23 @@
 # Minimum Traefik configuration for dashboard via NodePort
-dashboard:
-  enabled: true
+api:
+  dashboard: true
+  insecure: true
 
 service:
   type: NodePort
-  nodePorts:
-    traefik: 30280
 
-globalArguments:
-  - "--global.checknewversion=false"
-  - "--global.sendanonymoususage=false"
+ports:
+  web:
+    expose:
+      default: true
+    nodePort: 30280
+  traefik:
+    expose:
+      default: false
 
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
-  - "--api.dashboard=true"
-  - "--api.debug=false"
   - "--log.level=INFO"
   - "--accesslog=true"
-
+  # optional settings if you want explicit entrypoint config:
+  # - "--entrypoints.web.address=:80"
