@@ -34,7 +34,7 @@ ports:
     exposedPort: 80
     protocol: TCP
     # -- NodePort for HTTP traffic
-    nodePort: 30080
+    nodePort: 30480
   
   websecure:
     port: 8443
