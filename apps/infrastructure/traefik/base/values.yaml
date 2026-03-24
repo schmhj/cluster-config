@@ -1,23 +1,39 @@
-# Minimum Traefik configuration for dashboard via NodePort
+# Traefik configuration for dashboard via NodePort
 api:
   dashboard: true
   insecure: true
+  debug: false
 
 service:
   type: NodePort
+  spec:
+    # Keep loadBalancerSourceRanges as [] if you want to allow all sources
+    loadBalancerSourceRanges: []
 
 ports:
   web:
-    expose:
-      default: true
+    port: 80
+    expose: true
+    exposedPort: 80
+    protocol: TCP
+    nodePort: 30752
+  websecure:
+    port: 443
+    expose: true
+    exposedPort: 443
+    protocol: TCP
+    nodePort: 32680
   traefik:
-    expose:
-      default: true
+    port: 9000
+    expose: true
+    exposedPort: 9000
+    protocol: TCP
     nodePort: 30420
 
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
   - "--log.level=INFO"
   - "--accesslog=true"
-  # optional settings if you want explicit entrypoint config:
-  # - "--entrypoints.web.address=:80"
+  - "--entrypoints.traefik.address=:9000"
+  - "--entrypoints.web.address=:80"
+  - "--entrypoints.websecure.address=:443"
