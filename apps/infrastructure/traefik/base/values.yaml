@@ -10,10 +10,10 @@ ports:
   web:
     expose:
       default: true
-    nodePort: 30420
   traefik:
     expose:
-      default: false
+      default: true
+    nodePort: 30420
 
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
