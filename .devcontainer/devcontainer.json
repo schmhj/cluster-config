@@ -36,7 +36,7 @@
 			"label": "Microservice Template App",
 			"protocol": "http"
 		},
-		"30420": {
+		"30480": {
 			"label": "Traefik Dashboard",
 			"protocol": "http"
 		}
