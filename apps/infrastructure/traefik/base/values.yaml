@@ -1,24 +1,66 @@
-# Configure Network Ports and EntryPoints
-# EntryPoints are the network listeners for incoming traffic.
+# apps/infrastructure/traefik/values-codespaces.yaml
+
+globalArguments:
+  - "--global.checknewversion=false"
+  - "--global.sendanonymoususage=false"
+
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true" # Often needed for local self-signed certs
+  - "--api.dashboard=true"
+  - "--api.debug=false"
+  - "--log.level=INFO"
+  - "--accesslog=true"
+
+deployment:
+  replicas: 1 # Save resources in Codespaces
+  podAnnotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "9100"
+
 ports:
-  # Defines the HTTP entry point named 'web'
   web:
     port: 80
-    nodePort: 30000
-    # Instructs this entry point to redirect all traffic to the 'websecure' entry point
-    http:
-      redirections:
-        entryPoint:
-          to: websecure
-          scheme: https
-          permanent: true
-
-  # Defines the HTTPS entry point named 'websecure'
+    expose:
+      default: true
+    # Removed redirectTo websecure to prevent local SSL redirect loops
   websecure:
     port: 443
-    nodePort: 30001
+    expose:
+      default: true
+    tls:
+      enabled: true
+  traefik:
+    port: 9000
+    nodePort: 32900
+    expose:
+      default: true # Set to true if you want to access dashboard via port forward
 
-# Enables the dashboard in Secure Mode
-api:
-  dashboard: true
-  insecure: false
+service:
+  type: ClusterIP # Codespaces uses built-in port forwarding, no cloud LB needed
+  annotations: {}
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+  name: traefik
+
+providers:
+  kubernetesCRD:
+    enabled: true
+    allowCrossNamespace: true
+    allowExternalNameServices: true
+  kubernetesIngress:
+    enabled: true
+    publishedService:
+      enabled: false # Not needed for ClusterIP services
+
+rbac:
+  enabled: true
+  namespaced: false
+
+metrics:
+  prometheus:
+    entryPoint: metrics
+    addEntryPointsLabels: true
+    addRoutersLabels: true
+    addServicesLabels: true
