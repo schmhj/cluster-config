@@ -12,7 +12,10 @@ api:
 ingressRoute:
   dashboard:
     # -- Create an IngressRoute for the dashboard
-    enabled: false
+    enabled: true
+    # -- Override entryPoints for dashboard to go through exposed web port (NodePort 30480)
+    entryPoints:
+      - web
 
 service:
   type: NodePort
