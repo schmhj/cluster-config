@@ -1,7 +1,7 @@
 # Minimum Traefik configuration for dashboard via NodePort
 api:
   dashboard: true
-  insecure: true
+  insecure: false
 
 service:
   type: NodePort
