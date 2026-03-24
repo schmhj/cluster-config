@@ -1,24 +1,49 @@
-# Minimum Traefik configuration for dashboard via NodePort
+# Traefik configuration for dashboard via NodePort (based on official Helm chart)
+# Ref: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
+
 api:
+  # -- Enable the dashboard
   dashboard: true
-  insecure: false
+  # -- Enable the insecure API (HTTP)
+  insecure: true
+  # -- Enable the debug API
+  debug: false
 
 ingressRoute:
   dashboard:
-    enabled: true
+    # -- Create an IngressRoute for the dashboard
+    enabled: false
 
 service:
   type: NodePort
 
 ports:
-  web:
-    expose:
-      default: true
   traefik:
+    port: 8080
     expose:
       default: true
+    exposedPort: 8080
+    protocol: TCP
+    # -- NodePort for accessing Traefik dashboard (port 30420)
     nodePort: 30420
-    targetPort: 8080
+  
+  web:
+    port: 8000
+    expose:
+      default: true
+    exposedPort: 80
+    protocol: TCP
+    # -- NodePort for HTTP traffic
+    nodePort: 30080
+  
+  websecure:
+    port: 8443
+    expose:
+      default: true
+    exposedPort: 443
+    protocol: TCP
+    # -- NodePort for HTTPS traffic
+    nodePort: 30443
 
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
