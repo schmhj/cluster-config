@@ -10,7 +10,7 @@ ports:
   web:
     expose:
       default: true
-    nodePort: 30280
+    nodePort: 30420
   traefik:
     expose:
       default: false
