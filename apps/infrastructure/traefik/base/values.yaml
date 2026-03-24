@@ -3,6 +3,10 @@ api:
   dashboard: true
   insecure: false
 
+ingressRoute:
+  dashboard:
+    enabled: true
+
 service:
   type: NodePort
 
@@ -11,7 +15,6 @@ ports:
     expose:
       default: true
   traefik:
-    port: 9000
     expose:
       default: true
     nodePort: 30420
@@ -21,5 +24,4 @@ additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
   - "--log.level=INFO"
   - "--accesslog=true"
-  # optional settings if you want explicit entrypoint config:
-  # - "--entrypoints.web.address=:80"
+
