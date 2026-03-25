@@ -64,3 +64,8 @@ resources:
   limits:
     cpu: 500m
     memory: 256Mi
+
+ # ← allows IngressRoute to reference services in other namespaces
+providers:
+  kubernetesCRD:
+    allowCrossNamespace: true   
