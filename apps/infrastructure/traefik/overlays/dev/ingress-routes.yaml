@@ -45,7 +45,7 @@ spec:
       services:
         - name: microservice-template-dev
           namespace: workload
-          port: 9000
+          port: 32056
           weight: 1
     
     # ── Sample Service ────────────────────────────────────────
