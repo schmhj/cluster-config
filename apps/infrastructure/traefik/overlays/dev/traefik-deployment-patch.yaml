@@ -16,4 +16,4 @@
 
 - op: replace
   path: /spec/template/spec/containers/0/resources/requests/memory
-  value: "64i"
+  value: "64Mi"
