@@ -1,11 +1,6 @@
 # Traefik configuration for dashboard via NodePort (based on official Helm chart)
 # Ref: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 
-# ── Global ───────────────────────────────────────────────────
-globalArguments:
-  - "--global.checknewversion=false"
-  - "--global.sendanonymoususage=false"
-
 # ── Deployment ───────────────────────────────────────────────
 deployment:
   enabled: true
@@ -52,8 +47,6 @@ ports:
       default: true
     exposedPort: 8000
     protocol: TCP
-    # In prod, redirect all HTTP → HTTPS (see prod overlay)
-    redirections: {}
   
   websecure:
     port: 8443
@@ -61,8 +54,6 @@ ports:
       default: true
     exposedPort: 443
     protocol: TCP
-    tls:
-      enabled: true
 
 # ── RBAC ──────────────────────────────────────────────────────
 rbac:
@@ -113,7 +104,7 @@ livenessProbe:
   periodSeconds: 10
   successThreshold: 1
   timeoutSeconds: 2
-  
+
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
   - "--log.level=INFO"
