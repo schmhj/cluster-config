@@ -20,13 +20,13 @@ api:
   # -- Enable the debug API
   debug: false
 
-ingressRoute:
-  dashboard:
-    # -- Create an IngressRoute for the dashboard
-    enabled: true
-    # -- Override entryPoints for dashboard to go through exposed web port (NodePort 30480)
-    entryPoints:
-      - web
+# ingressRoute:
+#   dashboard:
+#     # -- Create an IngressRoute for the dashboard
+#     enabled: true
+#     # -- Override entryPoints for dashboard to go through exposed web port (NodePort 30480)
+#     entryPoints:
+#       - web
 
 service:
   enabled: true
