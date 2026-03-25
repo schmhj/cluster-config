@@ -43,7 +43,7 @@ spec:
         - name: secure-headers
           namespace: traefik
       services:
-        - name: microservice
+        - name: microservice-template-dev
           namespace: workload
           port: 9000
           weight: 1
