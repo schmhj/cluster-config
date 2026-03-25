@@ -11,5 +11,5 @@ patches:
       kind: Kustomization
     patch: |-
       - op: replace
-        path: /helmCharts/0/valuesInline/fullnameOverride
-        value: traefik
+        path: /helmCharts/0/valuesFile
+        value: values.yaml

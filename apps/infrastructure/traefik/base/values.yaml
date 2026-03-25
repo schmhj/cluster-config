@@ -1,11 +1,27 @@
 # Traefik configuration for dashboard via NodePort (based on official Helm chart)
 # Ref: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 
+# ── Global ───────────────────────────────────────────────────
+globalArguments:
+  - "--global.checknewversion=false"
+  - "--global.sendanonymoususage=false"
+
+# ── Deployment ───────────────────────────────────────────────
+deployment:
+  enabled: true
+  replicas: 2                    # Override to 1 in dev overlay
+  revisionHistoryLimit: 3
+
+# ── Pod Disruption Budget ─────────────────────────────────────
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
+
 api:
   # -- Enable the dashboard
   dashboard: true
   # -- Enable the insecure API (HTTP)
-  insecure: true
+  insecure: false
   # -- Enable the debug API
   debug: false
 
@@ -18,26 +34,26 @@ ingressRoute:
       - web
 
 service:
-  type: NodePort
+  enabled: true
+  type: LoadBalancer
+  annotations: {}
 
 ports:
   traefik:
     port: 8080
     expose:
-      default: true
+      default: false
     exposedPort: 8080
     protocol: TCP
-    # -- NodePort for accessing Traefik dashboard (port 30420)
-    nodePort: 30420
-  
+   
   web:
     port: 8000
     expose:
       default: true
     exposedPort: 8000
     protocol: TCP
-    # -- NodePort for HTTP traffic
-    nodePort: 30480
+    # In prod, redirect all HTTP → HTTPS (see prod overlay)
+    redirections: {}
   
   websecure:
     port: 8443
@@ -45,9 +61,59 @@ ports:
       default: true
     exposedPort: 443
     protocol: TCP
-    # -- NodePort for HTTPS traffic
-    nodePort: 30443
+    tls:
+      enabled: true
 
+# ── RBAC ──────────────────────────────────────────────────────
+rbac:
+  enabled: true
+
+serviceAccount:
+  name: traefik
+
+# ── Metrics ───────────────────────────────────────────────────
+metrics:
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: false            # Enable if you have Prometheus Operator
+
+# ── TLS Options (default hardened config) ────────────────────
+tlsOptions:
+  default:
+    minVersion: VersionTLS12
+    cipherSuites:
+      - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
+      - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+      - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
+      - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+      - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
+      - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
+
+# ── Resources ─────────────────────────────────────────────────
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 256Mi
+
+# ── Health Checks ─────────────────────────────────────────────
+readinessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 2
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 2
+
+livenessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 2
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 2
+  
 additionalArguments:
   - "--serversTransport.insecureSkipVerify=true"
   - "--log.level=INFO"
