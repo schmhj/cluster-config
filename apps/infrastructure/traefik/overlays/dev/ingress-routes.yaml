@@ -32,7 +32,7 @@ spec:
     - web
   routes:
     # ── Users Service ──────────────────────────────────────────
-    - match: Host(`127.0.0.1`) && PathPrefix(`/api/ms-template`)
+    - match: PathPrefix(`/api/ms-template`)
       kind: Rule
       priority: 10
       middlewares:
@@ -49,7 +49,7 @@ spec:
           weight: 1
     
     # ── Sample Service ────────────────────────────────────────
-    - match: Host(`127.0.0.1`) && PathPrefix(`/api/sample`)
+    - match: PathPrefix(`/api/sample`)
       kind: Rule
       priority: 10
       middlewares:
