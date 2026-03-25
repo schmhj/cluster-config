@@ -55,31 +55,6 @@ ports:
     exposedPort: 443
     protocol: TCP
 
-# ── RBAC ──────────────────────────────────────────────────────
-rbac:
-  enabled: true
-
-serviceAccount:
-  name: traefik
-
-# ── Metrics ───────────────────────────────────────────────────
-metrics:
-  prometheus:
-    enabled: true
-    serviceMonitor:
-      enabled: false            # Enable if you have Prometheus Operator
-
-# ── TLS Options (default hardened config) ────────────────────
-tlsOptions:
-  default:
-    minVersion: VersionTLS12
-    cipherSuites:
-      - TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256
-      - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
-      - TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384
-      - TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-      - TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305
-      - TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305
 
 # ── Resources ─────────────────────────────────────────────────
 resources:
@@ -89,24 +64,3 @@ resources:
   limits:
     cpu: 500m
     memory: 256Mi
-
-# ── Health Checks ─────────────────────────────────────────────
-readinessProbe:
-  failureThreshold: 3
-  initialDelaySeconds: 2
-  periodSeconds: 10
-  successThreshold: 1
-  timeoutSeconds: 2
-
-livenessProbe:
-  failureThreshold: 3
-  initialDelaySeconds: 2
-  periodSeconds: 10
-  successThreshold: 1
-  timeoutSeconds: 2
-
-additionalArguments:
-  - "--serversTransport.insecureSkipVerify=true"
-  - "--log.level=INFO"
-  - "--accesslog=true"
-
