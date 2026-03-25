@@ -10,10 +10,8 @@ spec:
   entryPoints:
     - web                        # Port 80
   routes:
-    - match: HostRegexp(`{host:.+}`)
-      kind: Rule
-      priority: 1
-      middlewares: []
+    - kind: Rule
+      match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
       services:
-        - name: noop@internal
-          kind: TraefikService
+        - kind: TraefikService
+          name: api@internal
