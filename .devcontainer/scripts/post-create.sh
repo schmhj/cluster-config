@@ -39,7 +39,7 @@ kubectl apply -f /tmp/custom-sealed-secret-key.yaml | tee -a ~/.status.log
 # Install Argo CD using Helm
 helm repo add argo https://argoproj.github.io/argo-helm | tee -a  ~/.status.log 
 helm repo update | tee -a  ~/.status.log 
-helm install argocd argo/argo-cd --version 7.8.26 --namespace argocd --create-namespace --set server.service.type="NodePort" --set server.service.nodePortHttps=30179 --set configs.cm."kustomize\.buildOptions"="--enable-helm" --set configs.cm."application\.sync\.impersonation\.enabled"="true" | tee -a  ~/.status.log 
+helm install argocd argo/argo-cd --version 7.8.26 --namespace argocd --create-namespace --set server.service.type="NodePort" --set server.service.nodePortHttp=30179 --set configs.cm."kustomize\.buildOptions"="--enable-helm" --set configs.cm."application\.sync\.impersonation\.enabled"="true" | tee -a  ~/.status.log 
 
 # Install Sealed Secrets
 # helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets | tee -a ~/.status.log
