@@ -32,16 +32,16 @@ spec:
     - web
   routes:
     # ── Microservie template Service ──────────────────────────────────────────
-    - match: Host(`127.0.0.1`) && PathPrefix(`/api/ms-template`)
+    - match: Host(`127.0.0.1`) && PathPrefix(`/`)
       kind: Rule
       priority: 10
-      middlewares:
-        - name: strip-api-prefix
-          namespace: traefik
-        - name: rate-limit
-          namespace: traefik
-        - name: secure-headers
-          namespace: traefik
+      # middlewares:
+      #   - name: strip-api-prefix
+      #     namespace: traefik
+      #   - name: rate-limit
+      #     namespace: traefik
+      #   - name: secure-headers
+      #     namespace: traefik
       services:
         - name: microservice-template-dev
           namespace: workload
