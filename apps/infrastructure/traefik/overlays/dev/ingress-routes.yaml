@@ -1,0 +1,65 @@
+---
+# ── IngressRoute: Traefik Dashboard (HTTPS) ──────────────────
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      kind: Rule
+      services:
+        - name: api@internal     # Built-in Traefik API service
+          kind: TraefikService
+
+---
+# ── IngressRoute: Microservices (HTTPS) ──────────────────────
+# Covers: /api/sample, /api/ms-template
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: microservices
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    # ── Users Service ──────────────────────────────────────────
+    - match: Host(`127.0.0.1`) && PathPrefix(`/api/ms-template`)
+      kind: Rule
+      priority: 10
+      middlewares:
+        - name: strip-api-prefix
+          namespace: traefik
+        - name: rate-limit
+          namespace: traefik
+        - name: secure-headers
+          namespace: traefik
+      services:
+        - name: microservice
+          namespace: workloads
+          port: 8080
+          weight: 1
+    
+    # ── Sample Service ────────────────────────────────────────
+    - match: Host(`127.0.0.1`) && PathPrefix(`/api/sample`)
+      kind: Rule
+      priority: 10
+      middlewares:
+        - name: strip-api-prefix
+          namespace: traefik
+        - name: rate-limit
+          namespace: traefik
+        - name: secure-headers
+          namespace: traefik
+      services:
+        - name: microservice-template-dev
+          namespace: workloads
+          port: 8080

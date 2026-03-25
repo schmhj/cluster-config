@@ -1,4 +1,75 @@
 ---
+# ── Middleware: strip path prefix before forwarding ──────────
+# /api/users/* → users-svc:8080/  (prefix stripped)
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-api-prefix
+  namespace: traefik
+spec:
+  stripPrefix:
+    prefixes:
+      - /api/ms-template
+      - /api/sample
+
+---
+# ── Middleware: rate limiting (global) ───────────────────────
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: rate-limit
+  namespace: traefik
+spec:
+  rateLimit:
+    average: 100
+    burst: 50
+
+---
+# ── Middleware: security headers ─────────────────────────────
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: secure-headers
+  namespace: traefik
+spec:
+  headers:
+    frameDeny: true
+    sslRedirect: true
+    browserXssFilter: true
+    contentTypeNosniff: true
+    forceSTSHeader: true
+    stsIncludeSubdomains: true
+    stsPreload: true
+    stsSeconds: 31536000
+    customResponseHeaders:
+      X-Robots-Tag: noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex
+  
+# ---
+# # ── Middleware: dashboard BasicAuth ──────────────────────────
+# # Generate password: echo $(htpasswd -nbs admin yourpassword)
+# # Then base64-encode and store in a Secret, not inline.
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: traefik-dashboard-auth
+#   namespace: traefik
+# type: Opaque
+# stringData:
+#   # Format: user:htpasswd-hash  (generate with: htpasswd -nbs admin password)
+#   users: "admin:$apr1$xyz$CHANGEME"   # ← Replace with real hash
+
+# ---
+# apiVersion: traefik.io/v1alpha1
+# kind: Middleware
+# metadata:
+#   name: dashboard-auth
+#   namespace: traefik
+# spec:
+#   basicAuth:
+#     secret: traefik-dashboard-auth
+#     removeHeader: true           # Strip Authorization header from upstream
+
+---
 # ── IngressRoute: HTTP → HTTPS redirect catch-all ────────────
 # Handles the edge case where LB doesn't terminate HTTP itself
 apiVersion: traefik.io/v1alpha1
@@ -10,8 +81,11 @@ spec:
   entryPoints:
     - web                        # Port 80
   routes:
-    - kind: Rule
-      match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+    - match: HostRegexp(`{host:.+}`)
+      kind: Rule
+      priority: 1
+      middlewares: []
       services:
-        - kind: TraefikService
-          name: api@internal
+        - name: noop@internal
+          kind: TraefikService
+
