@@ -32,12 +32,12 @@ spec:
     - web
   routes:
     # ── Microservie template Service ──────────────────────────────────────────
-    - match: Host(`127.0.0.1`) && PathPrefix(`/`)
+    - match: Host(`127.0.0.1`) && PathPrefix(`/api/templates`)
       kind: Rule
       priority: 10
-      # middlewares:
-      #   - name: strip-api-prefix
-      #     namespace: traefik
+      middlewares:
+        - name: strip-api-prefix
+          namespace: traefik
       #   - name: rate-limit
       #     namespace: traefik
       #   - name: secure-headers
@@ -49,7 +49,7 @@ spec:
           weight: 1
     
     # ── Sample Service ────────────────────────────────────────
-    - match: Host(`127.0.0.1`) && PathPrefix(`/api/sample`)
+    - match: Host(`127.0.0.1`) && PathPrefix(`/api/samples`)
       kind: Rule
       priority: 10
       middlewares:

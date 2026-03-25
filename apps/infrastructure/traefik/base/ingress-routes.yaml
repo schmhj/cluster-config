@@ -9,8 +9,8 @@ metadata:
 spec:
   stripPrefix:
     prefixes:
-      - /api/ms-template
-      - /api/sample
+      - /api/templates
+      - /api/samples
 
 ---
 # ── Middleware: rate limiting (global) ───────────────────────
