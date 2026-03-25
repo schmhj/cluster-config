@@ -26,7 +26,7 @@
 	"portsAttributes": {
 		"30179": {
 			"label": "Argo CD Dashboard",
-			"protocol": "http"
+			"protocol": "https"
 		},
 		"30280": {
 			"label": "Sample App",
