@@ -23,7 +23,7 @@ spec:
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: microservices
+  name: traefik-microservices
   namespace: traefik
   annotations:
     argocd.argoproj.io/sync-wave: "5"
