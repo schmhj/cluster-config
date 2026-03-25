@@ -29,7 +29,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   entryPoints:
-    - websecure
+    - web
   routes:
     # ── Users Service ──────────────────────────────────────────
     - match: Host(`127.0.0.1`) && PathPrefix(`/api/ms-template`)
