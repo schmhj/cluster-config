@@ -9,8 +9,7 @@ metadata:
 spec:
   stripPrefix:
     prefixes:
-      - /api/templates
-      - /api/samples
+      - /api
 
 ---
 # ── IngressRoute: Traefik Dashboard (HTTPS) ──────────────────
@@ -46,7 +45,7 @@ spec:
     - web
   routes:
     # ── Microservie template Service ──────────────────────────────────────────
-    - match: Host(`127.0.0.1`) && PathPrefix(`/test`)
+    - match: Host(`127.0.0.1`) && PathPrefix(`/api`)
       kind: Rule
       priority: 10
       middlewares:
