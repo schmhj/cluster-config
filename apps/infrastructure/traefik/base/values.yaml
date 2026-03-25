@@ -68,7 +68,8 @@ resources:
  # ← allows IngressRoute to reference services in other namespaces
 providers:
   kubernetesCRD:
-    allowCrossNamespace: true 
+    allowCrossNamespace: true
+    allowExternalNameServices: true 
 
 
 logs:
