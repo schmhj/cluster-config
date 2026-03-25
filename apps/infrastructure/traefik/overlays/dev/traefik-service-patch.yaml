@@ -5,5 +5,5 @@
 
 # web port
 - op: replace
-  path: /spec/ports/1/nodePort
+  path: /spec/ports/0/nodePort
   value: 30480
