@@ -31,8 +31,8 @@ spec:
   entryPoints:
     - web
   routes:
-    # ── Users Service ──────────────────────────────────────────
-    - match: PathPrefix(`/api/ms-template`)
+    # ── Microservie template Service ──────────────────────────────────────────
+    - match: Host(`127.0.0.1`) && PathPrefix(`/api/ms-template`)
       kind: Rule
       priority: 10
       middlewares:
@@ -49,7 +49,7 @@ spec:
           weight: 1
     
     # ── Sample Service ────────────────────────────────────────
-    - match: PathPrefix(`/api/sample`)
+    - match: Host(`127.0.0.1`) && PathPrefix(`/api/sample`)
       kind: Rule
       priority: 10
       middlewares:

@@ -18,3 +18,8 @@ patches:
       name: traefik
       namespace: traefik
     path: traefik-service-patch.yaml
+  
+  - path: traefik-config-patch.yaml
+    target:
+      kind: HelmChart
+      name: traefik

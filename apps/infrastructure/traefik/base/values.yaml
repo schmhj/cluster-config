@@ -68,4 +68,22 @@ resources:
  # ← allows IngressRoute to reference services in other namespaces
 providers:
   kubernetesCRD:
-    allowCrossNamespace: true   
+    allowCrossNamespace: true 
+
+
+logs:
+  general:
+    level: INFO          # traefik system logs
+
+  access:
+    enabled: false        # ← request/response logs (disabled by default)
+    format: json         # json or clf (common log format)
+    fields:
+      general:
+        defaultMode: keep
+      headers:
+        defaultMode: keep
+        names:
+          User-Agent: keep
+          Authorization: redact    # hide sensitive headers
+          Content-Type: keep
