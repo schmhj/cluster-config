@@ -44,8 +44,8 @@ spec:
           namespace: traefik
       services:
         - name: microservice
-          namespace: workloads
-          port: 8080
+          namespace: workload
+          port: 9000
           weight: 1
     
     # ── Sample Service ────────────────────────────────────────
@@ -60,6 +60,6 @@ spec:
         - name: secure-headers
           namespace: traefik
       services:
-        - name: microservice-template-dev
-          namespace: workloads
+        - name: sample-app-dev-simple-go
+          namespace: workload
           port: 8080
