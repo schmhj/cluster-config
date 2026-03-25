@@ -46,12 +46,12 @@ spec:
     - web
   routes:
     # ── Microservie template Service ──────────────────────────────────────────
-    - match: Host(`127.0.0.1`) && PathPrefix(`/api/templates/`)
+    - match: Host(`127.0.0.1`) && PathPrefix(`/test`)
       kind: Rule
       priority: 10
-      middlewares:
-        - name: strip-api-prefix
-          namespace: traefik
+      # middlewares:
+      #   - name: strip-api-prefix
+      #     namespace: traefik
       #   - name: rate-limit
       #     namespace: traefik
       #   - name: secure-headers
@@ -69,10 +69,10 @@ spec:
       middlewares:
         - name: strip-api-prefix
           namespace: traefik
-        - name: rate-limit
-          namespace: traefik
-        - name: secure-headers
-          namespace: traefik
+        # - name: rate-limit
+        #   namespace: traefik
+        # - name: secure-headers
+        #   namespace: traefik
       services:
         - name: sample-app-dev-simple-go
           namespace: workload
