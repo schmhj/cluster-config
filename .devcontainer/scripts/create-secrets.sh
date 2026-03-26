@@ -14,7 +14,14 @@ kubectl create secret generic grafana-cloud-credentials \
   --from-literal=loki-username='672823' \
   --from-literal=tempo-url='https://tempo-prod-04-prod-us-east-0.grafana.net/tempo' \
   --from-literal=tempo-username='669326' \
-  --from-literal=password=' \
+  --from-literal=password='***' \
   --dry-run=client -o yaml | \
   kubeseal --controller-namespace kube-system \
   --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/base/grafana-cloud-secret.yaml
+
+kubectl create secret generic traefik-secret \
+  --namespace=infrastructure \
+  --from-literal=users=`echo $(htpasswd -nbs admin ***)` \
+  --dry-run=client -o yaml | \
+  kubeseal --controller-namespace kube-system \
+  --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/dev/traefik-secret.yaml
