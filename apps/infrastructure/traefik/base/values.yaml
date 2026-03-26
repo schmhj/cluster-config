@@ -80,13 +80,3 @@ logs:
           User-Agent: keep
           Authorization: redact    # hide sensitive headers
           Content-Type: keep
-
-  oltp:
-    enabled: true
-    grpc:
-      enabled: true
-      endpoint: "http://grafana-alloy.monitoring.svc.cluster.local:4318/v1/logs"  # OpenTelemetry collector endpoint
-
-# Traefik experimental features
-experimental:
-  otlpLogs: true
