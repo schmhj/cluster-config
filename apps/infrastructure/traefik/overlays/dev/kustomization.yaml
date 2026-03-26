@@ -21,6 +21,6 @@ patches:
   
   - target:
       kind: HelmChart
-      name: traefik-config
+      name: traefik
       namespace: traefik
     path: traefik-config-patch.yaml

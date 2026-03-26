@@ -69,7 +69,7 @@ logs:
     level: INFO          # traefik system logs
 
   access:
-    enabled: false        # ← request/response logs (disabled by default)
+    enabled: true         # ← enable request/response logs for ingestion
     format: json         # json or clf (common log format)
     fields:
       general:

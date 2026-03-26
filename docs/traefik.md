@@ -1097,3 +1097,17 @@ argocd app get cert-manager
 - [ ] Review cipher suites against your compliance requirements (PCI-DSS, FIPS, etc.)
 - [ ] Enable `serviceMonitor` if using Prometheus Operator for alerting on Traefik metrics
 - [ ] Rotate dashboard BasicAuth password via a sealed secret or external secrets operator
+
+## Sending Traefik access logs to Grafana Cloud
+
+- **What we changed:** Traefik access logs are enabled and formatted as JSON in the base values (`apps/infrastructure/traefik/base/values.yaml`).
+- **Create Grafana Cloud credentials:** Run the helper script which creates a sealed secret for `grafana-cloud-credentials`:
+
+```bash
+bash scripts/create-secrets.sh
+```
+
+- **Ensure the Grafana Alloy collector is installed:** The alloy chart (`apps/infrastructure/grafana-alloy`) reads `grafana-cloud-credentials` and forwards logs to Grafana Cloud Loki.
+- **Verify logs in Grafana Cloud:** Open the Grafana Cloud Logs explorer and search for Traefik logs, e.g. use a query filtering by namespace or pod labels such as `{namespace="traefik"}`.
+
+If you need me to deploy the sealed secret, or wire a node-level log collector (fluent-bit/promtail) to forward container stdout to the Alloy collector, tell me which option you prefer and I will add manifests.
