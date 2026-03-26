@@ -4,6 +4,7 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
   - ../../base
+  - ingress-routes.yaml
 
 patches:
   - target:
@@ -18,11 +19,11 @@ patches:
       namespace: traefik
     path: traefik-service-patch.yaml
 
-  - target:
-      kind: IngressRoute
-      name: traefik
-      namespace: traefik
-    path: ingress-routes-patch.yaml
+  # - target:
+  #     kind: IngressRoute
+  #     name: traefik
+  #     namespace: traefik
+  #   path: ingress-routes-patch.yaml
   
   - target:
       kind: HelmChart
