@@ -24,7 +24,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`))
       kind: Rule
       services:
         - name: api@internal     # Built-in Traefik API service
