@@ -45,6 +45,8 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
 spec:
+  # tls:
+  #   secretName: letsencrypt-staging-account-key - for prod use only
   entryPoints:
     - web
   routes:
