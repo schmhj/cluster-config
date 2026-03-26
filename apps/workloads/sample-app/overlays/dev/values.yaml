@@ -1,8 +1,8 @@
 replicaCount: 1
 
-# service:
-#   type: NodePort
-#   port: 30280
+service:
+  type: NodePort
+  port: 30280
 
 appconfig: |
   {"spec":{"stage":"dev"}}

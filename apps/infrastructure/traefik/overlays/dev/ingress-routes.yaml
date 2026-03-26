@@ -69,10 +69,10 @@ spec:
       middlewares:
         - name: strip-api-prefix
           namespace: traefik
-        # - name: rate-limit
-        #   namespace: traefik
-        # - name: secure-headers
-        #   namespace: traefik
+        - name: rate-limit
+          namespace: traefik
+        - name: secure-headers
+          namespace: traefik
       services:
         - name: sample-app-dev-simple-go
           namespace: workload

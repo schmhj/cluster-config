@@ -18,12 +18,6 @@ patches:
       name: traefik
       namespace: traefik
     path: traefik-service-patch.yaml
-
-  # - target:
-  #     kind: IngressRoute
-  #     name: traefik
-  #     namespace: traefik
-  #   path: ingress-routes-patch.yaml
   
   - target:
       kind: HelmChart
