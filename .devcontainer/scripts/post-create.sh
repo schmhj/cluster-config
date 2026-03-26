@@ -10,7 +10,7 @@ SECRETS_GITOPS_AUTH_KEY="${SECRETS_DIR}/gitops-secret.key"
 
 # Install Git LFS
 sudo apt-get update && sudo apt-get install -y git-lfs | tee -a ~/.status.log
-sudo apt install apache2-utils | tee -a ~/.status.log
+sudo apt install -y apache2-utils | tee -a ~/.status.log
 
 # Set up Sealed Secrets keys. Keys are stored in GitHub secrets and passed as environment variables to the container. We need to write them to files for Sealed Secrets to use.
 mkdir -p $SECRETS_DIR

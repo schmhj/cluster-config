@@ -19,9 +19,9 @@ kubectl create secret generic grafana-cloud-credentials \
   kubeseal --controller-namespace kube-system \
   --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/base/grafana-cloud-secret.yaml
 
-kubectl create secret generic traefik-secret \
+kubectl create secret generic traefik-dashboard-secret \
   --namespace=infrastructure \
-  --from-literal=users=`echo $(htpasswd -nbs admin ***)` \
+  --from-literal=users=`echo $(htpasswd -nbs admin password)` \
   --dry-run=client -o yaml | \
   kubeseal --controller-namespace kube-system \
   --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/dev/traefik-secret.yaml
