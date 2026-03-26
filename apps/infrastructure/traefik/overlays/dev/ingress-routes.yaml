@@ -27,6 +27,9 @@ spec:
   routes:
     - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`))
       kind: Rule
+      middlewares:
+        - name: dashboard-auth
+          namespace: traefik
       services:
         - name: api@internal     # Built-in Traefik API service
           kind: TraefikService
