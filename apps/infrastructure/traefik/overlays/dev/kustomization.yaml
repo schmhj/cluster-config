@@ -22,9 +22,10 @@ patches:
       kind: IngressRoute
       name: traefik
       namespace: traefik
-    patch: ingress-routes-patch.yaml
+    path: ingress-routes-patch.yaml
   
   - target:
       kind: HelmChart
       name: traefik-config
       namespace: traefik
+    path: traefik-config-patch.yaml
