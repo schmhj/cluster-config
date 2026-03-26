@@ -9,18 +9,18 @@ resources:
 patches:
   - target:
       kind: Deployment
-      name: traefik-deployment
+      name: traefik
       namespace: traefik
     path: traefik-deployment-patch.yaml
   
   - target:
       kind: Service
-      name: traefik-service
+      name: traefik
       namespace: traefik
     path: traefik-service-patch.yaml
   
-  - path: traefik-config-patch.yaml
-    target:
-      kind: HelmChart
-      name: traefik-config
-      namespace: traefik
+  # - path: traefik-config-patch.yaml
+  #   target:
+  #     kind: HelmChart
+  #     name: traefik-config
+  #     namespace: traefik
