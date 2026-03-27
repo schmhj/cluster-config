@@ -4,11 +4,10 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "2"
 resources:
   - ../../base
-  - reflector-deployment-patch.yaml
 
 patches:
   - target:
       kind: Deployment
       name: reflector
-      namespace: kube-system
+      namespace: infrastructure
     path: reflector-deployment-patch.yaml

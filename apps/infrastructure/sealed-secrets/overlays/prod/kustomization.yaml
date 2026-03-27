@@ -9,6 +9,6 @@ resources:
 patches:
   - target:
       name: sealed-secrets
-      namespace: kube-system
+      namespace: infrastructure
       kind: Deployment
-    path: sealed-secret-patch.yaml
+    path: sealed-secret-deployment-patch.yaml
