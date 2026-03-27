@@ -4,3 +4,10 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "0"
 resources:
   - ../../base
+
+patches:
+  - target:
+      group: kustomize.config.k8s.io
+      namespace: kube-system
+      kind: Deployment
+    path: cert-manager-patch.yaml
