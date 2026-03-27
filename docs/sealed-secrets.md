@@ -58,8 +58,18 @@ cat /tmp/ghcr-secret.yaml | kubeseal \
 
 Running 'kubectl get secret secret-name -o [json|yaml]' will show the decrypted secret that was generated from the sealed secret.
 
+
+Decrypt sealed secred
+```
+kubeseal --recovery-unseal --recovery-private-key ~/.secrets/secret-key < sealed-secret.yaml -o yaml
+
+```
+
+
 Both the SealedSecret and generated Secret must have the same name and namespace.
 
 For practical examples of using sealed secrets, see:
 - [GitHub App Credentials Setup](./github-app-setup.md) - Sealing GitHub App secrets
 - [Docker Registry Credentials Setup](./docker-registry-setup.md) - Using sealed secrets for GHCR
+
+
