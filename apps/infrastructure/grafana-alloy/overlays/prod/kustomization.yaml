@@ -4,3 +4,10 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
   - ../../base
+
+patches:
+  - target:
+      kind: Deployment
+      name: grafana-alloy
+      namespace: monitoring
+    path: grafana-alloy-patch.yaml

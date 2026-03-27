@@ -17,13 +17,13 @@ spec:
       name: "{{index .path.segments 2}}-prod"
       namespace: argocd
       annotations:
-        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}0{{ else if eq (index .path.segments 2) "infra-secrets" }}1{{ else }}5{{ end }}'
+        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}'
       labels:
         layer: "3"
         env: prod
         domain: infrastructure
     spec:
-      project: infrastructure
+      project: infrastructure-prod
       source:
         repoURL: https://github.com/schmhj/cluster-config.git
         targetRevision: HEAD
@@ -39,3 +39,9 @@ spec:
           - CreateNamespace=true
           - ServerSideApply=true
           - SkipDryRunOnMissingResource=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            maxDuration: 3m0s
+            factor: 2

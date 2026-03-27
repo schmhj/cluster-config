@@ -1,1 +1,2 @@
+fullnameOverride: cert-manager
 replicaCount: 1

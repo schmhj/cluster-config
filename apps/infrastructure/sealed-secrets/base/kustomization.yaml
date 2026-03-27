@@ -6,15 +6,8 @@ helmCharts:
   - name: sealed-secrets
     repo: https://bitnami-labs.github.io/sealed-secrets
     version: "2.18.3"
-    namespace: kube-system
+    namespace: infrastructure
     releaseName: sealed-secrets
     includeCrds: true
-    valuesInline:
-      fullnameOverride: sealed-secrets
-      resources:
-        requests:
-          cpu: "50m"
-          memory: "64Mi"
-        limits:
-          cpu: "200m"
-          memory: "256Mi"
+    valuesFile: values.yaml
+      

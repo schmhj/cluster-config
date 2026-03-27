@@ -4,6 +4,8 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
   - ../../base
+  - dockerconfig-sealedsecret.yaml
+  - grafana-cloud-sealedsecret.yaml
   - traefik-secret.yaml
 
 patches:

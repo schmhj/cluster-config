@@ -4,5 +4,4 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
   - argocd-configmap.yaml
-  - github-app-secret.yaml
-  - ghcr-oci-secret.yaml
+

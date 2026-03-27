@@ -4,12 +4,3 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "0"
 resources:
   - ../../base
-patches:
-  - target:
-      group: kustomize.config.k8s.io
-      version: v1beta1
-      kind: Kustomization
-    patch: |-
-      - op: replace
-        path: /helmCharts/0/valuesInline/fullnameOverride
-        value: cert-manager

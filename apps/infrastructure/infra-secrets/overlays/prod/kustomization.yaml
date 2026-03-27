@@ -2,7 +2,23 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
-  
 resources:
   - ../../base
-  
+  - dockerconfig-sealedsecret.yaml
+  - grafana-cloud-sealedsecret.yaml
+  - traefik-secret.yaml
+
+patches:
+  - target:
+      group: bitnami.com
+      version: v1alpha1
+      kind: SealedSecret
+      name: infra-docker-config
+      namespace: infrastructure
+    patch: |-
+      - op: replace
+        path: /metadata/annotations/reflector.v1.k8s.emberstack.com~1reflection-allowed-namespaces
+        value: "workload"
+      - op: replace
+        path: /spec/template/metadata/annotations/reflector.v1.k8s.emberstack.com~1reflection-allowed-namespaces
+        value: "workload"

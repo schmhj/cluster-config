@@ -6,6 +6,6 @@ helmCharts:
   - name: cert-manager
     repo: https://charts.jetstack.io
     version: "v1.20.0"
-    namespace: kube-system
+    namespace: infrastructure
     releaseName: cert-manager
     valuesFile: values.yaml

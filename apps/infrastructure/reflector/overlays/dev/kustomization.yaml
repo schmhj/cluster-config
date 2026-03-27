@@ -4,17 +4,11 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "2"
 resources:
   - ../../base
+  - reflector-deployment-patch.yaml
 
 patches:
   - target:
-      group: kustomize.config.k8s.io
-      version: v1beta1
-      kind: Kustomization
-    patch: |-
-      - op: add
-        path: /helmCharts/0/valuesInline/replicaCount
-        value: 1
-      - op: add
-        path: /helmCharts/0/valuesInline/serviceMonitor
-        value:
-          enabled: false
+      kind: Deployment
+      name: reflector
+      namespace: kube-system
+    path: reflector-deployment-patch.yaml

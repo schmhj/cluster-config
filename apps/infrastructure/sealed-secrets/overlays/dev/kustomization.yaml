@@ -8,10 +8,7 @@ resources:
 
 patches:
   - target:
-      group: kustomize.config.k8s.io
-      version: v1beta1
-      kind: Kustomization
-    patch: |-
-      - op: replace
-        path: /helmCharts/0/valuesInline/resources/requests/memory
-        value: "128Mi"
+      name: sealed-secrets
+      namespace: kube-system
+      kind: Deployment
+    path: sealed-secret-patch.yaml
