@@ -17,3 +17,25 @@ spec:
       services:
         - name: noop@internal
           kind: TraefikService
+
+---
+# ── IngressRoute: Traefik Dashboard (HTTPS) ──────────────────
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      kind: Rule
+      middlewares:
+        - name: dashboard-auth
+          namespace: traefik
+      services:
+        - name: api@internal     # Built-in Traefik API service
+          kind: TraefikService
