@@ -58,20 +58,20 @@ spec:
 ---
 # ── IngressRoute: HTTP → HTTPS redirect catch-all ────────────
 # Handles the edge case where LB doesn't terminate HTTP itself
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: http-to-https-redirect
-  namespace: traefik
-spec:
-  entryPoints:
-    - web                        # Port 80
-  routes:
-    - match: HostRegexp(`{host:.+}`)
-      kind: Rule
-      priority: 1
-      middlewares: []
-      services:
-        - name: noop@internal
-          kind: TraefikService
+# apiVersion: traefik.io/v1alpha1
+# kind: IngressRoute
+# metadata:
+#   name: http-to-https-redirect
+#   namespace: traefik
+# spec:
+#   entryPoints:
+#     - web                        # Port 80
+#   routes:
+#     - match: HostRegexp(`{host:.+}`)
+#       kind: Rule
+#       priority: 1
+#       middlewares: []
+#       services:
+#         - name: noop@internal
+#           kind: TraefikService
 
