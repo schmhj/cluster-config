@@ -1,0 +1,9 @@
+# Change service type
+- op: replace
+  path: /spec/type
+  value: NodePort
+
+# web port
+- op: replace
+  path: /spec/ports/0/nodePort
+  value: 30480
