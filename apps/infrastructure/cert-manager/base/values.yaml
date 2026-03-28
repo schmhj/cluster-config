@@ -1,2 +1,4 @@
 fullnameOverride: cert-manager
 replicaCount: 1
+
+installCRDs: true
