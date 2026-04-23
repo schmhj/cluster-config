@@ -13,3 +13,4 @@ helmCharts:
     namespace: traefik
     releaseName: traefik
     valuesFile: values.yaml
+    installCRDs: true
