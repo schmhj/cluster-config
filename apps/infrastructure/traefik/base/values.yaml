@@ -1,6 +1,9 @@
 # Traefik configuration for dashboard via NodePort (based on official Helm chart)
 # Ref: https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml
 
+# ── CRDs ──────────────────────────────────────────────────────
+installCRDs: true
+
 # ── Deployment ───────────────────────────────────────────────
 deployment:
   enabled: true
