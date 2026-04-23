@@ -5,6 +5,7 @@ commonAnnotations:
 
 resources:
   - ingress-routes.yaml
+  - crds.yaml
 
 helmCharts:
   - name: traefik
@@ -13,4 +14,3 @@ helmCharts:
     namespace: traefik
     releaseName: traefik
     valuesFile: values.yaml
-    installCRDs: true
