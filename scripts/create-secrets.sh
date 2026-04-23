@@ -1,3 +1,17 @@
+#!/bin/bash
+
+env=$1
+
+if [ -z "$env" ]; then
+  echo "Usage: $0 <environment>"
+  exit 1
+fi
+
+if [ "$env" != "dev" ] && [ "$env" != "prod" ]; then
+  echo "Invalid environment: $env. Must be 'dev' or 'prod'."
+  exit 1
+fi
+
 # Grafana admin credentials. These are used to secure access to the Grafana dashboard, which provides insights into the cluster's performance and health. The credentials are stored as secrets in Kubernetes and sealed using kubeseal for secure storage in Git.
 kubectl create secret generic grafana-admin-secret \
   --namespace=monitoring \
