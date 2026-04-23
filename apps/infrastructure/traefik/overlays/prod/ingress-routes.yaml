@@ -31,7 +31,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: Host(`129.213.129.162`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
       middlewares:
         - name: dashboard-auth
@@ -39,3 +39,35 @@ spec:
       services:
         - name: api@internal     # Built-in Traefik API service
           kind: TraefikService
+
+---
+# ── IngressRoute: Argocd (HTTPS) ──────────────────────
+# Covers: /argocd
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-microservices
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  # tls:
+  #   secretName: letsencrypt-staging-account-key - for prod use only
+  entryPoints:
+    - websecure
+  routes:
+    # ── Microservie template Service ──────────────────────────────────────────
+    - match: Host(`129.213.129.162`) && PathPrefix(`/argocd`)
+      kind: Rule
+      priority: 10
+      middlewares:
+        - name: strip-api-prefix
+          namespace: traefik
+        - name: rate-limit
+          namespace: traefik
+        - name: secure-headers
+          namespace: traefik
+      services:
+        - name: argocd-server 
+          namespace: argocd
+          port: 30179

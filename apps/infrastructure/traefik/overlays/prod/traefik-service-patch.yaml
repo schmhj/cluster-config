@@ -6,4 +6,4 @@
 # web port
 - op: replace
   path: /spec/ports/0/nodePort
-  value: 30480
+  value: 30443
