@@ -1,3 +1,3 @@
 #!/bin/bash
 
-export ENVIRONMENT=prod
+export ENVIRONMENT=dev

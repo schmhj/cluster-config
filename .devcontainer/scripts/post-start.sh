@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source config.sh
+source .devcontainer/scripts/config.sh
 
 echo "post-start start" >>  ~/.status.log 
 
