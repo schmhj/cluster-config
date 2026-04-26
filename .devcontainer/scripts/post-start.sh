@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source config.sh
+
 echo "post-start start" >>  ~/.status.log 
 
 # this runs in background each time the container starts
@@ -37,13 +39,16 @@ kubectl patch cm/argocd-cm -n argocd --type=json  -p="[{\"op\": \"replace\", \"p
 kubectl apply -f .devcontainer/manifests/argocd-configupdate.yaml | tee -a  ~/.status.log
 
 # Bootstrap apps
-# kubectl apply -f bootstrap/dev/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
-# sleep 2
-# kubectl apply -f bootstrap/dev/root-app.yaml -n argocd | tee -a  ~/.status.log
 
-kubectl apply -f bootstrap/dev/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
-sleep 2
-kubectl apply -f bootstrap/dev/root-app.yaml -n argocd | tee -a  ~/.status.log
+if [[ $ENVIRONMENT=="dev" ]]; then
+    kubectl apply -f bootstrap/dev/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
+    sleep 2
+    kubectl apply -f bootstrap/dev/root-app.yaml -n argocd | tee -a  ~/.status.log
+else
+    kubectl apply -f bootstrap/prod/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
+    sleep 2
+    kubectl apply -f bootstrap/prod/root-app.yaml -n argocd | tee -a  ~/.status.log
+fi 
 
 # Best effort env load
 source ~/.bashrc
