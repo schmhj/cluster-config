@@ -31,7 +31,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`129.213.129.162`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: Host(`150.136.10.186`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
       middlewares:
         - name: dashboard-auth
@@ -57,7 +57,7 @@ spec:
     - websecure
   routes:
     # ── Microservie template Service ──────────────────────────────────────────
-    - match: Host(`129.213.129.162`) && PathPrefix(`/argocd`)
+    - match: Host(`150.136.10.186`) && PathPrefix(`/argocd`)
       kind: Rule
       priority: 10
       middlewares:
