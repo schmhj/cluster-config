@@ -59,7 +59,7 @@ metadata:
 spec:
   secretName: traefik-tls-prod   # Secret Traefik will use
   issuerRef:
-    name: letsencrypt-prod
+    name: letsencrypt-staging
     kind: ClusterIssuer
   dnsNames:
     - traefik.newyeti.qzz.io
