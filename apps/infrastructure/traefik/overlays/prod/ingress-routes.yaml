@@ -9,8 +9,7 @@ metadata:
 spec:
   stripPrefix:
     prefixes:
-      - /app/api/templates
-      - /app/api/samples
+      - /argocd
   entryPoints:
     - websecure                        # Port 443
   routes:
