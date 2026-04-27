@@ -25,7 +25,7 @@ spec:
   entryPoints:
     - web
   routes:
-    - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
       middlewares:
         - name: dashboard-auth

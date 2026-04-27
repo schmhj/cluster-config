@@ -2,6 +2,7 @@
 
 source .devcontainer/scripts/config.sh
 
+echo "Creating $ENVIRONMENT environment" >> ~/.status.log
 echo "post-create start" >> ~/.status.log
 
 SECRETS_DIR="$HOME/.secrets"

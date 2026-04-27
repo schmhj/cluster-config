@@ -2,6 +2,7 @@
 
 source .devcontainer/scripts/config.sh
 
+echo "Starting $ENVIRONMENT environment" >> ~/.status.log
 echo "post-start start" >>  ~/.status.log 
 
 # this runs in background each time the container starts
