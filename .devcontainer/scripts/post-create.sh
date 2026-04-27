@@ -18,15 +18,15 @@ sudo apt install -y apache2-utils | tee -a ~/.status.log
 mkdir -p $SECRETS_DIR
 
 if [[ $ENVIRONMENT == "prod" ]]; then
-  echo "$SEALED_SECRETS_PRIVATE_KEY" > "$SECRETS_PRIV_KEY_PROD"
-  echo "$SEALED_SECRETS_CERT" > "$SECRETS_PUB_KEY_PROD"
+  echo "$SEALED_SECRETS_PRIVATE_KEY_PROD" > "$SECRETS_PRIV_KEY"
+  echo "$SEALED_SECRETS_CERT_PROD" > "$SECRETS_PUB_KEY"
 else
   echo "$SEALED_SECRETS_PRIVATE_KEY" > "$SECRETS_PRIV_KEY"
   echo "$SEALED_SECRETS_CERT" > "$SECRETS_PUB_KEY"
 fi
 
 echo "$ARGOCD_GITOPS_AUTH_BOT_KEY" > "$SECRETS_GITOPS_AUTH_KEY"
-chmod 600 "$SECRETS_DIR/$SECRETS_PRIV_KEY"
+chmod 600 "$SECRETS_PRIV_KEY"
 
 # Install the K3D cluster for Argo CD
 k3d cluster create --config .devcontainer/manifests/k3d-dev.yaml --wait | tee -a ~/.status.log

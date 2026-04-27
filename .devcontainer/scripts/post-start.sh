@@ -45,7 +45,6 @@ if [[ $ENVIRONMENT == "prod" ]]; then
     kubectl apply -f bootstrap/prod/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
     sleep 2
     kubectl apply -f bootstrap/prod/root-app.yaml -n argocd | tee -a  ~/.status.log
-    
 else
     kubectl apply -f bootstrap/dev/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
     sleep 2
