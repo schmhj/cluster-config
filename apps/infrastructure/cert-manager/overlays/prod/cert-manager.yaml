@@ -46,25 +46,23 @@ spec:
             ingressClassName: traefik
 
 ---
-# Certificate: wildcard or per-service cert issued by cert-manager
+# Certificate: TLS cert issued by cert-manager for newyeti.qzz.io
 # cert-manager creates and renews the TLS secret automatically.
 # Traefik IngressRoute references this secret by name.
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: example-com-tls
+  name: traefik-tls-prod
   namespace: traefik             # Must be in the same ns as Traefik
   annotations:
     argocd.argoproj.io/sync-wave: "3"
 spec:
-  secretName: example-com-tls   # Secret Traefik will use
+  secretName: traefik-tls-prod   # Secret Traefik will use
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - example.com
-    - api.example.com
-    - dashboard.example.com
-    # Add all hostnames your IngressRoutes serve
+    - traefik.newyeti.qzz.io
+    - argocd.newyeti.qzz.io
   duration: 2160h               # 90 days (Let's Encrypt max)
   renewBefore: 360h             # Renew 15 days before expiry

@@ -1,6 +1,40 @@
 ---
+# ── Middleware: Redirect HTTP → HTTPS ────────────────────────
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: redirect-https
+  namespace: traefik
+spec:
+  redirectScheme:
+    scheme: https
+    permanent: true
+
+---
 # ── IngressRoute: HTTP → HTTPS redirect catch-all ────────────
-# Handles the edge case where LB doesn't terminate HTTP itself
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: http-to-https-redirect
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: HostRegexp(`{host:.+}`)
+      kind: Rule
+      priority: 1
+      middlewares:
+        - name: redirect-https
+          namespace: traefik
+      services:
+        - name: noop@internal
+          kind: TraefikService
+
+---
+# ── Middleware: strip path prefix before forwarding ──────────
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
@@ -23,8 +57,10 @@ metadata:
 spec:
   entryPoints:
     - websecure
+  tls:
+    secretName: traefik-tls-prod
   routes:
-    - match: Host(`obscure-acorn-g9x7j697rjpc75x-30443.app.github.dev`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: Host(`traefik.newyeti.qzz.io`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
       middlewares:
         - name: dashboard-auth
@@ -34,8 +70,7 @@ spec:
           kind: TraefikService
 
 ---
-# ── IngressRoute: Argocd (HTTPS) ──────────────────────
-# Covers: /argocd
+# ── IngressRoute: ArgoCD (HTTPS) ──────────────────────────────
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -44,13 +79,12 @@ metadata:
   annotations:
     argocd.argoproj.io/sync-wave: "5"
 spec:
-  # tls:
-  #   secretName: letsencrypt-staging-account-key - for prod use only
   entryPoints:
     - websecure
+  tls:
+    secretName: traefik-tls-prod
   routes:
-    # ── Microservie template Service ──────────────────────────────────────────
-    - match: Host(`obscure-acorn-g9x7j697rjpc75x-30443.app.github.dev`) && PathPrefix(`/argocd`)
+    - match: Host(`argocd.newyeti.qzz.io`)
       kind: Rule
       priority: 10
       middlewares:
@@ -61,6 +95,6 @@ spec:
         - name: secure-headers
           namespace: traefik
       services:
-        - name: argocd-server 
+        - name: argocd-server
           namespace: argocd
-          port: 30080
+          port: 8080

@@ -6,3 +6,10 @@ resources:
   - ../../base
   - github-app-secret.yaml
   - ghcr-oci-secret.yaml
+
+patches:
+  - target:
+      kind: ArgoCD
+      name: argocd
+      namespace: argocd
+    path: argocd-insecure-patch.yaml
