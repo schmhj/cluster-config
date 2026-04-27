@@ -10,16 +10,6 @@ spec:
   stripPrefix:
     prefixes:
       - /argocd
-  entryPoints:
-    - websecure                        # Port 443
-  routes:
-    - match: HostRegexp(`{host:.+}`)
-      kind: Rule
-      priority: 1
-      middlewares: []
-      services:
-        - name: noop@internal
-          kind: TraefikService
 
 ---
 # ── IngressRoute: Traefik Dashboard (HTTPS) ──────────────────
