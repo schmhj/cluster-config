@@ -22,9 +22,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   entryPoints:
-    - web
+    - websecure
   routes:
-    - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: Host(`obscure-acorn-g9x7j697rjpc75x-30443.app.github.dev`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
       middlewares:
         - name: dashboard-auth
@@ -47,10 +47,10 @@ spec:
   # tls:
   #   secretName: letsencrypt-staging-account-key - for prod use only
   entryPoints:
-    - web
+    - websecure
   routes:
     # ── Microservie template Service ──────────────────────────────────────────
-    - match: Host(`127.0.0.1`) && PathPrefix(`/argocd`)
+    - match: Host(`obscure-acorn-g9x7j697rjpc75x-30443.app.github.dev`) && PathPrefix(`/argocd`)
       kind: Rule
       priority: 10
       middlewares:

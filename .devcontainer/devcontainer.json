@@ -22,7 +22,7 @@
 	"postCreateCommand": "/bin/bash -c .devcontainer/scripts/post-create.sh",
 	"postStartCommand": "/bin/bash -c .devcontainer/scripts/post-start.sh",
 
-	"forwardPorts": [30179, 30280, 32056, 30480],
+	"forwardPorts": [30179, 30280, 32056, 30443, 30480],
 	"portsAttributes": {
 		"30179": {
 			"label": "Argo CD Dashboard",
@@ -34,6 +34,10 @@
 		},
 		"32056": {
 			"label": "Microservice Template App",
+			"protocol": "http"
+		},
+		"30443": {
+			"label": "Traefik Dashboard",
 			"protocol": "http"
 		},
 		"30480": {
