@@ -7,8 +7,12 @@ metadata:
   name: http-to-https-redirect
   namespace: traefik
 spec:
+  stripPrefix:
+    prefixes:
+      - /app/api/templates
+      - /app/api/samples
   entryPoints:
-    - web                        # Port 80
+    - websecure                        # Port 443
   routes:
     - match: HostRegexp(`{host:.+}`)
       kind: Rule
@@ -29,7 +33,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   entryPoints:
-    - web
+    - websecure
   routes:
     - match: Host(`150.136.10.186`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
