@@ -41,7 +41,7 @@ kubectl apply -f .devcontainer/manifests/argocd-configupdate.yaml | tee -a  ~/.s
 
 # Bootstrap apps
 
-if [[ $ENVIRONMENT=="prod" ]]; then
+if [[ $ENVIRONMENT == "prod" ]]; then
     kubectl apply -f bootstrap/prod/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
     sleep 2
     kubectl apply -f bootstrap/prod/root-app.yaml -n argocd | tee -a  ~/.status.log
