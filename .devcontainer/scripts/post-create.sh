@@ -17,12 +17,12 @@ sudo apt install -y apache2-utils | tee -a ~/.status.log
 # Set up Sealed Secrets keys. Keys are stored in GitHub secrets and passed as environment variables to the container. We need to write them to files for Sealed Secrets to use.
 mkdir -p $SECRETS_DIR
 
-if [[ $ENVIRONMENT=="dev" ]]; then
-  echo "$SEALED_SECRETS_PRIVATE_KEY" > "$SECRETS_PRIV_KEY"
-  echo "$SEALED_SECRETS_CERT" > "$SECRETS_PUB_KEY"
-else
+if [[ $ENVIRONMENT=="prod" ]]; then
   echo "$SEALED_SECRETS_PRIVATE_KEY" > "$SECRETS_PRIV_KEY_PROD"
   echo "$SEALED_SECRETS_CERT" > "$SECRETS_PUB_KEY_PROD"
+else
+  echo "$SEALED_SECRETS_PRIVATE_KEY" > "$SECRETS_PRIV_KEY"
+  echo "$SEALED_SECRETS_CERT" > "$SECRETS_PUB_KEY"
 fi
 
 echo "$ARGOCD_GITOPS_AUTH_BOT_KEY" > "$SECRETS_GITOPS_AUTH_KEY"
