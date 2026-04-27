@@ -58,7 +58,7 @@ spec:
   entryPoints:
     - websecure
   tls:
-    secretName: example-com-tls-sxkhr
+    secretName: letsencrypt-staging
   routes:
     - match: Host(`traefik.newyeti.qzz.io`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
@@ -82,7 +82,7 @@ spec:
   entryPoints:
     - websecure
   tls:
-    secretName: example-com-tls-sxkhr
+    secretName: letsencrypt-staging
   routes:
     - match: Host(`argocd.newyeti.qzz.io`)
       kind: Rule
