@@ -2,9 +2,9 @@
 # ── IngressRoute: HTTP → HTTPS redirect catch-all ────────────
 # Handles the edge case where LB doesn't terminate HTTP itself
 apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
+kind: Middleware
 metadata:
-  name: http-to-https-redirect
+  name: strip-api-prefix
   namespace: traefik
 spec:
   stripPrefix:
@@ -22,7 +22,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   entryPoints:
-    - websecure
+    - web
   routes:
     - match: Host(`127.0.0.1`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
@@ -47,7 +47,7 @@ spec:
   # tls:
   #   secretName: letsencrypt-staging-account-key - for prod use only
   entryPoints:
-    - websecure
+    - web
   routes:
     # ── Microservie template Service ──────────────────────────────────────────
     - match: Host(`127.0.0.1`) && PathPrefix(`/argocd`)
