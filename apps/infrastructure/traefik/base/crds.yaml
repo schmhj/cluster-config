@@ -1781,3 +1781,331 @@ spec:
         type: object
     served: true
     storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: traefikservices.traefik.io
+spec:
+  group: traefik.io
+  names:
+    kind: TraefikService
+    listKind: TraefikServiceList
+    plural: traefikservices
+    singular: traefikservice
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: TraefikService is the CRD implementation of a Traefik service.
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: TraefikServiceSpec defines the desired state of TraefikService.
+            properties:
+              weighted:
+                description: Weighted holds the weighted load-balancer configuration.
+                properties:
+                  services:
+                    description: Services defines the list of Kubernetes Service to load-balance.
+                    items:
+                      description: Service is a reference to a Kubernetes Service.
+                      properties:
+                        kind:
+                          description: Kind is the kind of the referenced Kubernetes Service.
+                          enum:
+                          - Service
+                          - TraefikService
+                          type: string
+                        name:
+                          description: Name is the name of the referenced Kubernetes Service.
+                          type: string
+                        namespace:
+                          description: Namespace is the namespace of the referenced Kubernetes Service.
+                          type: string
+                        port:
+                          anyOf:
+                          - type: integer
+                          - type: string
+                          description: Port is the port of the referenced Kubernetes Service.
+                          x-kubernetes-int-or-string: true
+                        weight:
+                          description: Weight is the weight of the Service.
+                          type: integer
+                      required:
+                      - name
+                      type: object
+                    type: array
+                type: object
+              mirroring:
+                description: Mirroring holds the mirroring configuration.
+                properties:
+                  kind:
+                    description: Kind is the kind of the mirrored service.
+                    enum:
+                    - Service
+                    - TraefikService
+                    type: string
+                  name:
+                    description: Name is the name of the mirrored service.
+                    type: string
+                  namespace:
+                    description: Namespace is the namespace of the mirrored service.
+                    type: string
+                  port:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: Port is the port of the mirrored service.
+                    x-kubernetes-int-or-string: true
+                  percent:
+                    description: Percent is the percentage of the traffic to mirror.
+                    type: integer
+                  mirrors:
+                    description: Mirrors defines the mirrors configuration.
+                    items:
+                      type: object
+                      x-kubernetes-preserve-unknown-fields: true
+                    type: array
+                required:
+                - name
+                type: object
+            type: object
+        required:
+        - metadata
+        - spec
+        type: object
+    served: true
+    storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: middlewaretcps.traefik.io
+spec:
+  group: traefik.io
+  names:
+    kind: MiddlewareTCP
+    listKind: MiddlewareTCPList
+    plural: middlewaretcps
+    singular: middlewaretcp
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: MiddlewareTCP is the CRD implementation of a Traefik TCP Middleware.
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: MiddlewareTCPSpec defines the desired state of MiddlewareTCP.
+            properties:
+              ipWhiteList:
+                description: IPWhiteList is an IP whitelisting middleware for TCP.
+                properties:
+                  sourceRange:
+                    description: SourceRange defines the list of allowed IP ranges.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              ipAllowList:
+                description: IPAllowList is an IP allowlisting middleware for TCP.
+                properties:
+                  sourceRange:
+                    description: SourceRange defines the list of allowed IP ranges.
+                    items:
+                      type: string
+                    type: array
+                type: object
+            type: object
+        required:
+        - metadata
+        - spec
+        type: object
+    served: true
+    storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: serverstransports.traefik.io
+spec:
+  group: traefik.io
+  names:
+    kind: ServersTransport
+    listKind: ServersTransportList
+    plural: serverstransports
+    singular: serverstransport
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ServersTransport is the CRD implementation of a Traefik HTTP servers transport.
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ServersTransportSpec defines the desired state of ServersTransport.
+            properties:
+              insecureSkipVerify:
+                description: InsecureSkipVerify disables SSL certificate verification.
+                type: boolean
+              rootCAsSecrets:
+                description: RootCAsSecrets defines the secret names that contain root CAs.
+                items:
+                  type: string
+                type: array
+              clientAuth:
+                description: ClientAuth defines the client certificate authentication settings.
+                properties:
+                  clientAuthType:
+                    description: ClientAuthType defines the client auth type.
+                    type: string
+                  secretNames:
+                    description: SecretNames defines the secret names for client auth.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              maxIdleConnsPerHost:
+                description: MaxIdleConnsPerHost is the maximum number of idle connections per host.
+                type: integer
+              disableHTTP2:
+                description: DisableHTTP2 disables HTTP/2 support.
+                type: boolean
+              forwardingTimeouts:
+                description: ForwardingTimeouts defines the forwarding timeouts.
+                properties:
+                  dialTimeout:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    type: string
+                  responseHeaderTimeout:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    type: string
+                  idleConnTimeout:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    type: string
+                type: object
+              spiffe:
+                description: Spiffe defines the SPIFFE configuration.
+                properties:
+                  ids:
+                    description: IDs defines the allowed SPIFFE IDs.
+                    items:
+                      type: string
+                    type: array
+                  trustDomain:
+                    description: TrustDomain defines the SPIFFE trust domain.
+                    type: string
+                type: object
+            type: object
+        required:
+        - metadata
+        - spec
+        type: object
+    served: true
+    storage: true
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.19.0
+  name: serverstransporttcps.traefik.io
+spec:
+  group: traefik.io
+  names:
+    kind: ServersTransportTCP
+    listKind: ServersTransportTCPList
+    plural: serverstransporttcps
+    singular: serverstransporttcp
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: ServersTransportTCP is the CRD implementation of a Traefik TCP servers transport.
+        properties:
+          apiVersion:
+            type: string
+          kind:
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: ServersTransportTCPSpec defines the desired state of ServersTransportTCP.
+            properties:
+              insecureSkipVerify:
+                description: InsecureSkipVerify disables SSL certificate verification.
+                type: boolean
+              rootCAsSecrets:
+                description: RootCAsSecrets defines the secret names that contain root CAs.
+                items:
+                  type: string
+                type: array
+              clientAuth:
+                description: ClientAuth defines the client certificate authentication settings.
+                properties:
+                  clientAuthType:
+                    description: ClientAuthType defines the client auth type.
+                    type: string
+                  secretNames:
+                    description: SecretNames defines the secret names for client auth.
+                    items:
+                      type: string
+                    type: array
+                type: object
+              dialTimeout:
+                anyOf:
+                - type: integer
+                - type: string
+                description: DialTimeout is the dial timeout.
+                type: string
+              spiffe:
+                description: Spiffe defines the SPIFFE configuration.
+                properties:
+                  ids:
+                    description: IDs defines the allowed SPIFFE IDs.
+                    items:
+                      type: string
+                    type: array
+                  trustDomain:
+                    description: TrustDomain defines the SPIFFE trust domain.
+                    type: string
+                type: object
+            type: object
+        required:
+        - metadata
+        - spec
+        type: object
+    served: true
+    storage: true
