@@ -125,6 +125,8 @@ spec:
       middlewares:
         - name: dashboard-redirect
           namespace: traefik
+        - name: dashboard-auth
+          namespace: traefik
       services:
         - name: api@internal
           kind: TraefikService
