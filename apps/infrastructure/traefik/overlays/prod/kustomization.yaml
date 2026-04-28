@@ -5,6 +5,7 @@ commonAnnotations:
 resources:
   - ../../base
   - ingress-routes.yaml
+  - certificate.yaml
 
 patches:
   - target:

@@ -1,4 +1,17 @@
 ---
+# ── TLSStore: Default certificate store ──────────────────────
+apiVersion: traefik.io/v1alpha1
+kind: TLSStore
+metadata:
+  name: default
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  defaultCertificate:
+    secretName: newyeti-tls-cert
+
+---
 # ── Middleware: Redirect HTTP → HTTPS ────────────────────────
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -11,6 +24,20 @@ spec:
   redirectScheme:
     scheme: https
     permanent: true
+
+---
+# ── Middleware: strip path prefix before forwarding ──────────
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: strip-api-prefix
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  stripPrefix:
+    prefixes:
+      - /argocd
 
 ---
 # ── IngressRoute: HTTP → HTTPS redirect catch-all ────────────
@@ -35,17 +62,7 @@ spec:
         - name: noop@internal
           kind: TraefikService
 
----
-# ── Middleware: strip path prefix before forwarding ──────────
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: strip-api-prefix
-  namespace: traefik
-spec:
-  stripPrefix:
-    prefixes:
-      - /argocd
+
 
 ---
 # ── IngressRoute: Traefik Dashboard (HTTPS) ──────────────────
@@ -68,6 +85,8 @@ spec:
       services:
         - name: api@internal     # Built-in Traefik API service
           kind: TraefikService
+  tls:
+    secretName: newyeti-tls-cert
 
 ---
 # ── IngressRoute: ArgoCD (HTTPS) ──────────────────────────────
@@ -94,3 +113,6 @@ spec:
         - name: argocd-server
           namespace: argocd
           port: 80
+          scheme: h2c  # Enable gRPC support for ArgoCD
+  tls:
+    secretName: newyeti-tls-cert

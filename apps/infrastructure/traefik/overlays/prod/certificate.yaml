@@ -1,0 +1,35 @@
+---
+# ── Certificate: Self-signed for newyeti.qzz.io ────────────────
+# You may replace this with a proper certificate from a CA
+# For production, consider using Let's Encrypt via cert-manager
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: newyeti-tls-cert
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  secretName: newyeti-tls-cert
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days
+  commonName: newyeti.qzz.io
+  dnsNames:
+    - newyeti.qzz.io
+    - traefik.newyeti.qzz.io
+  issuerRef:
+    name: self-signed-issuer
+    kind: Issuer
+
+---
+# ── Issuer: Self-signed (for testing/dev) ────────────────────
+# For production, replace with Let's Encrypt or another CA
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: self-signed-issuer
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  selfSigned: {}
