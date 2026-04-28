@@ -62,9 +62,9 @@ spec:
   routes:
     - match: Host(`traefik.newyeti.qzz.io`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
-      middlewares:
-        - name: dashboard-auth
-          namespace: traefik
+      # middlewares:
+      #   - name: dashboard-auth
+      #     namespace: traefik
       services:
         - name: api@internal     # Built-in Traefik API service
           kind: TraefikService
@@ -85,11 +85,11 @@ spec:
     - match: Host(`newyeti.qzz.io`)
       kind: Rule
       priority: 10
-      middlewares:
-        - name: strip-api-prefix
-          namespace: traefik
-        - name: secure-headers
-          namespace: traefik
+      # middlewares:
+      #   - name: strip-api-prefix
+      #     namespace: traefik
+      #   - name: secure-headers
+      #     namespace: traefik
       services:
         - name: argocd-server
           namespace: argocd
