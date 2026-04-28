@@ -24,7 +24,10 @@ spec:
   headers:
     customRequestHeaders:
       X-Forwarded-Proto: "https"
-      X-Forwarded-For: "true"
+      X-Forwarded-Scheme: "https"
+      X-Forwarded-Host: "argocd.newyeti.qzz.io"
+      X-Forwarded-Port: "443"
+      X-Real-IP: "127.0.0.1"
 
 ---
 # ── Middleware: Redirect HTTP → HTTPS ────────────────────────
