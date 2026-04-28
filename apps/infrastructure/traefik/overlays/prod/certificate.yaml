@@ -13,23 +13,17 @@ spec:
   secretName: newyeti-tls-cert
   duration: 2160h # 90 days
   renewBefore: 360h # 15 days
-  commonName: argocd.newyeti.qzz.io
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  subject:
+    organizations:
+      - newyeti
   dnsNames:
-    - argocd.newyeti.qzz.io
-    - traefik.newyeti.qzz.io
+    - newyeti.qzz.io
+    - *.newyeti.qzz.io
   issuerRef:
-    name: self-signed-issuer
-    kind: Issuer
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+    group: cert-manager.io
 
----
-# ── Issuer: Self-signed (for testing/dev) ────────────────────
-# For production, replace with Let's Encrypt or another CA
-apiVersion: cert-manager.io/v1
-kind: Issuer
-metadata:
-  name: self-signed-issuer
-  namespace: traefik
-  annotations:
-    argocd.argoproj.io/sync-wave: "2"
-spec:
-  selfSigned: {}

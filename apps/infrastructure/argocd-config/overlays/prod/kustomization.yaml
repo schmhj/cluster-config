@@ -6,16 +6,4 @@ resources:
   - ../../base
   - github-app-secret.yaml
   - ghcr-oci-secret.yaml
-  - argocd-server-service-patch.yaml
 
-patches:
-  - target:
-      kind: ConfigMap
-      name: argocd-cm
-      namespace: argocd
-    path: argocd-cm-patch.yaml
-  - target:
-      kind: ArgoCD
-      name: argocd
-      namespace: argocd
-    path: argocd-insecure-patch.yaml
