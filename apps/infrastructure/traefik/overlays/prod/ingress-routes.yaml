@@ -119,7 +119,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`argocd.newyeti.qzz.io`)
+    - match: Host(`argocd.newyeti.qzz.io`) && PathPrefix(`/argocd`)
       kind: Rule
       priority: 10
       # middlewares:
@@ -130,7 +130,7 @@ spec:
       services:
         - name: argocd-server
           namespace: argocd
-          port: 8080
-          scheme: http
+          port: 80
+          passHostHeader: true
   tls:
     secretName: newyeti-tls-cert

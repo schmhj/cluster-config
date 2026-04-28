@@ -1,0 +1,18 @@
+# argocd-server-service-patch.yaml
+# Patches the existing argocd-server Service from NodePort → ClusterIP
+apiVersion: v1
+kind: Service
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  type: ClusterIP          # ← Demoted; no longer needs direct NodePort exposure
+  selector:
+    app.kubernetes.io/name: argocd-server
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8080
+    - name: https
+      port: 443
+      targetPort: 8080     # ArgoCD server serves both on 8080 internally

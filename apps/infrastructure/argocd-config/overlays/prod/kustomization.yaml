@@ -6,6 +6,7 @@ resources:
   - ../../base
   - github-app-secret.yaml
   - ghcr-oci-secret.yaml
+  - argocd-server-service-patch.yaml
 
 patches:
   - target:
