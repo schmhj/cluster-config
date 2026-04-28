@@ -6,7 +6,7 @@ metadata:
 data:
   url: https://argocd.newyeti.qzz.io
   application.instanceLabelKey: argocd.argoproj.io/instance
-  server.insecure: "false"
+  server.insecure: "true"
   server.secure.protocol: h2c
   server.x_forwarded_proto: "https"
   server.disable.auth: "false"

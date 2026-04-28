@@ -130,7 +130,7 @@ spec:
       services:
         - name: argocd-server
           namespace: argocd
-          port: 443
-          scheme: https
+          port: 80
+          scheme: http
   tls:
     secretName: newyeti-tls-cert
