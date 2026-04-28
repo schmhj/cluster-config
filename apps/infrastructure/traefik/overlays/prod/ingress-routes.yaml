@@ -82,7 +82,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`argocd.newyeti.qzz.io`)
+    - match: Host(`newyeti.qzz.io`)
       kind: Rule
       priority: 10
       middlewares:
