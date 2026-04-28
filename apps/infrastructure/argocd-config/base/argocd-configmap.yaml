@@ -7,6 +7,5 @@ data:
   url: https://argocd.newyeti.qzz.io
   application.instanceLabelKey: argocd.argoproj.io/instance
   server.insecure: "true"
-  server.rootpath: "/argocd"
   accounts.ghapp: login=ghapp
   account.ghapp.tokens: $ghaap-auth-secret:githubAppID!$ghaap-auth-secret:githubAppInstallationID!$ghaap-auth-secret:githubAppPrivateKey

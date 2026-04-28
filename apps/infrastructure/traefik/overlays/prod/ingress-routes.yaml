@@ -119,18 +119,13 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`argocd.newyeti.qzz.io`) && PathPrefix(`/argocd`)
+    - match: Host(`argocd.newyeti.qzz.io`)
       kind: Rule
       priority: 10
-      # middlewares:
-      #   - name: strip-api-prefix
-      #     namespace: traefik
-      #   - name: secure-headers
-      #     namespace: traefik
       services:
         - name: argocd-server
           namespace: argocd
           port: 80
-          passHostHeader: true
+          scheme: http
   tls:
     secretName: newyeti-tls-cert
