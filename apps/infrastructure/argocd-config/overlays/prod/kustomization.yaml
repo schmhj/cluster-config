@@ -10,6 +10,11 @@ resources:
 
 patches:
   - target:
+      kind: ConfigMap
+      name: argocd-cm
+      namespace: argocd
+    path: argocd-cm-patch.yaml
+  - target:
       kind: ArgoCD
       name: argocd
       namespace: argocd

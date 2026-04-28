@@ -1,0 +1,12 @@
+- op: add
+  path: /data/url
+  value: https://argocd.newyeti.qzz.io
+- op: add
+  path: /data/server.insecure
+  value: "true"
+- op: add
+  path: /data/server.x_forwarded_proto
+  value: "https"
+- op: add
+  path: /data/server.x_forwarded_for
+  value: "true"
