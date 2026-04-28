@@ -6,3 +6,4 @@ resources:
   - infrastructure-ns.yaml
   - monitoring-ns.yaml
   - traefik-ns.yaml
+  - cert-manager-ns.yaml
