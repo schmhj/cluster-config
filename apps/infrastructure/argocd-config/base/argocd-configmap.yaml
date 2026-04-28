@@ -4,7 +4,7 @@ metadata:
   name: argocd-cm-ghaap-secret
   namespace: argocd
 data:
-  url: https://newyeti.qzz.io
+  url: https://argocd.newyeti.qzz.io
   application.instanceLabelKey: argocd.argoproj.io/instance
   server.insecure: "false"
   server.secure.protocol: h2c
