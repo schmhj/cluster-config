@@ -12,6 +12,21 @@ spec:
     secretName: newyeti-tls-cert
 
 ---
+# ── Middleware: Forward HTTPS headers for ArgoCD ──────────────
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: argocd-headers
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Proto: "https"
+      X-Forwarded-For: "true"
+
+---
 # ── Middleware: Redirect HTTP → HTTPS ────────────────────────
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -107,7 +122,10 @@ spec:
     secretName: newyeti-tls-cert
 
 ---
-# ── IngressRoute: ArgoCD (HTTPS) ──────────────────────────────
+# ── Imiddlewares:
+        - name: argocd-headers
+          namespace: traefik
+      ngressRoute: ArgoCD (HTTPS) ──────────────────────────────
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
