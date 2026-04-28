@@ -57,8 +57,8 @@ metadata:
 spec:
   entryPoints:
     - websecure
-  tls:
-    secretName: letsencrypt-staging
+  # tls:
+  #   secretName: letsencrypt-staging
   routes:
     - match: Host(`traefik.newyeti.qzz.io`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
@@ -81,8 +81,8 @@ metadata:
 spec:
   entryPoints:
     - websecure
-  tls:
-    secretName: letsencrypt-staging
+  # tls:
+  #   secretName: letsencrypt-staging
   routes:
     - match: Host(`argocd.newyeti.qzz.io`)
       kind: Rule
