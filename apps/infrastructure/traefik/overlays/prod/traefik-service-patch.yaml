@@ -3,7 +3,12 @@
   path: /spec/type
   value: NodePort
 
-# websecure port
+# websecure port (service port)
+- op: replace
+  path: /spec/ports/1/port
+  value: 8443
+
+# websecure port (nodePort)
 - op: replace
   path: /spec/ports/1/nodePort
   value: 30443

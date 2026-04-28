@@ -112,7 +112,7 @@ spec:
       services:
         - name: argocd-server
           namespace: argocd
-          port: 80
-          scheme: h2c  # Enable gRPC support for ArgoCD
+          port: 443
+          scheme: https
   tls:
     secretName: newyeti-tls-cert
