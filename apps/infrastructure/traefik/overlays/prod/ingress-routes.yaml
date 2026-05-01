@@ -80,8 +80,8 @@ metadata:
     argocd.argoproj.io/sync-wave: "4"
 spec:
   redirectRegex:
-    regex: ^https://(.+)\.traefik\.newyeti\.qzz\.io/dashboard$
-    replacement: https://$1.traefik.newyeti.qzz.io/dashboard/
+    regex: ^https://traefik\.newyeti\.qzz\.io/dashboard$
+    replacement: https://traefik.newyeti.qzz.io/dashboard/
     permanent: true
 
 ---
@@ -120,7 +120,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`*.traefik.newyeti.qzz.io`) && PathPrefix(`/dashboard`)
+    - match: Host(`traefik.newyeti.qzz.io`) && PathPrefix(`/dashboard`)
       kind: Rule
       middlewares:
         - name: dashboard-redirect
@@ -130,7 +130,7 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
-    - match: Host(`*.traefik.newyeti.qzz.io`) && PathPrefix(`/api`)
+    - match: Host(`traefik.newyeti.qzz.io`) && PathPrefix(`/api`)
       kind: Rule
       services:
         - name: api@internal
@@ -151,7 +151,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-    - match: Host(`*.argocd.newyeti.qzz.io`)
+    - match: Host(`argocd.newyeti.qzz.io`)
       kind: Rule
       services:
         - name: argocd-server

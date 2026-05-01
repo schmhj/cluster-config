@@ -22,7 +22,6 @@ spec:
   dnsNames:
     - newyeti.qzz.io
     - "*.newyeti.qzz.io"
-    - "*.*.newyeti.qzz.io"
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
