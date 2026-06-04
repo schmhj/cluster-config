@@ -339,7 +339,7 @@ flowchart TD
 | `appsets/prod/us-chicago-1/infrastructure-appset.yaml` | **NEW** — scans `region/us-chicago-1` dirs |
 | `appsets/prod/us-chicago-1/workload-appset.yaml` | **NEW** — scans `region/us-chicago-1` dirs |
 | `appsets/prod/infrastructure-appset.yaml` | **DELETED** — superseded by region-specific versions |
-| `appsets/prod/workloads-appset.yaml` | **DELETED** — superseded by region-specific versions |
+| `appsets/prod/workload-appset.yaml` | **DELETED** — superseded by region-specific versions |
 | `bootstrap/prod/appprojects-app.yaml` | **DELETED** — superseded by region-specific versions |
 | `bootstrap/prod/root-app.yaml` | **DELETED** — superseded by region-specific versions |
 | `appprojects/dev/infrastructure.yaml` | Unchanged (single `kubernetes.default.svc` destination) |
