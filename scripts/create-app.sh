@@ -234,6 +234,7 @@ fi
 # ── Create directory tree ─────────────────────
 mkdir -p "$BASE_DIR"
 for od in "${OVERLAY_DIRS[@]}"; do
+  mkdir -p "$od"
   if [[ ${#REGIONS[@]} -gt 0 && "$od" == */prod ]]; then
     for region in "${REGIONS[@]}"; do
       mkdir -p "${od}/region/${region}"
