@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infrastructure-appset-prod-us-chicago-1
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/schmhj/cluster-config.git
+        revision: HEAD
+        directories:
+          - path: apps/infrastructure/*/overlays/prod/region/us-chicago-1
+  template:
+    metadata:
+      name: "{{index .path.segments 2}}-prod-us-chicago-1"
+      namespace: argocd
+      annotations:
+        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}'
+      labels:
+        layer: "3"
+        env: prod
+        domain: infrastructure
+        region: us-chicago-1
+    spec:
+      project: infrastructure-prod
+      source:
+        repoURL: https://github.com/schmhj/cluster-config.git
+        targetRevision: HEAD
+        path: "{{.path.path}}"
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: argocd
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+          - ServerSideApply=true
+          - SkipDryRunOnMissingResource=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            maxDuration: 3m0s
+            factor: 2

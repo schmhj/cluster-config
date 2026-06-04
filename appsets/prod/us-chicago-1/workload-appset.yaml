@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: workload-appset-dev
+  name: workload-appset-prod-us-chicago-1
   namespace: argocd
 spec:
   goTemplate: true
@@ -13,7 +13,7 @@ spec:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: HEAD
           directories:
-          - path: apps/workloads/*/overlays/dev
+          - path: apps/workloads/*/overlays/prod/region/us-chicago-1
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: HEAD
@@ -22,16 +22,17 @@ spec:
 
   template:
     metadata:
-      name: "{{index .path.segments 2}}-dev"
+      name: "{{index .path.segments 2}}-prod-us-chicago-1"
       namespace: argocd
       annotations:
         argocd.argoproj.io/sync-wave: "5"
       labels:
         layer: "3"
-        env: dev
+        env: prod
         domain: workload
+        region: us-chicago-1
     spec:
-      project: workload-dev
+      project: workload-prod
       destination:
         server: https://kubernetes.default.svc
         namespace: workload
@@ -60,7 +61,8 @@ spec:
           helm:
             valueFiles:
               - $values/apps/workloads/{{index .path.segments 2}}/base/values.yaml
-              - $values/apps/workloads/{{index .path.segments 2}}/overlays/dev/values.yaml
+              - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/values.yaml
+              - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/region/{{index .path.segments 6}}/values.yaml
               
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD

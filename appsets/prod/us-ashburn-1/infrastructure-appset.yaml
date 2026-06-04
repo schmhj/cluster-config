@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: infrastructure-appset-prod
+  name: infrastructure-appset-prod-us-ashburn-1
   namespace: argocd
 spec:
   goTemplate: true
@@ -11,10 +11,10 @@ spec:
         repoURL: https://github.com/schmhj/cluster-config.git
         revision: HEAD
         directories:
-          - path: apps/infrastructure/*/overlays/prod
+          - path: apps/infrastructure/*/overlays/prod/region/us-ashburn-1
   template:
     metadata:
-      name: "{{index .path.segments 2}}-prod"
+      name: "{{index .path.segments 2}}-prod-us-ashburn-1"
       namespace: argocd
       annotations:
         argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}'
@@ -22,6 +22,7 @@ spec:
         layer: "3"
         env: prod
         domain: infrastructure
+        region: us-ashburn-1
     spec:
       project: infrastructure-prod
       source:
