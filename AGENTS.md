@@ -28,7 +28,7 @@ apps/{infrastructure,workloads}/  Layer 3 — Generated Apps
 - **Workload apps use a matrix generator**: The workload appset reads [`config.json`](apps/workloads/sample-app/overlays/dev/config.json) from each overlay directory to determine chart source, repo, version, and whether it's a Git or Helm repo (`isGitRepo` flag).
 - **Multi-source Helm values**: Workload appsets use a [`$values` ref](appsets/dev/workload-appset.yaml:65) pointing back to this repo, so values.yaml files are served from the same repo even when the chart comes from a different repo.
 - **Infra apps use `ServerSideApply=true`** ([example](appsets/dev/infrastructure-appset.yaml:40)); workload appsets do NOT. This is intentional.
-- **`selfHeal: false` on prod root-app** ([`bootstrap/prod/root-app.yaml`](bootstrap/prod/root-app.yaml:19)) — dev uses `selfHeal: true`.
+- **`selfHeal: false` on prod root-app** (see `bootstrap/prod/us-ashburn-1/root-app.yaml` and `bootstrap/prod/us-chicago-1/root-app.yaml`) — dev uses `selfHeal: true`.
 - **Namespace manifests are centralized** in [`apps/infrastructure/namespaces/base/`](apps/infrastructure/namespaces/base/) and auto-registered by the scaffolder script.
 
 ## Commands (Shell-based, no package.json)
