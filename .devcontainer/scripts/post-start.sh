@@ -42,14 +42,15 @@ kubectl apply -f .devcontainer/manifests/argocd-configupdate.yaml | tee -a  ~/.s
 # Bootstrap apps
 
 if [[ $ENVIRONMENT == "prod" ]]; then
-    kubectl apply -f bootstrap/prod/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
+    echo "Bootstrapping prod environment for region: ${REGION:-us-ashburn-1}" | tee -a ~/.status.log
+    kubectl apply -f bootstrap/prod/${REGION:-us-ashburn-1}/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
     sleep 2
-    kubectl apply -f bootstrap/prod/root-app.yaml -n argocd | tee -a  ~/.status.log
+    kubectl apply -f bootstrap/prod/${REGION:-us-ashburn-1}/root-app.yaml -n argocd | tee -a  ~/.status.log
 else
     kubectl apply -f bootstrap/dev/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
     sleep 2
     kubectl apply -f bootstrap/dev/root-app.yaml -n argocd | tee -a  ~/.status.log
-fi 
+fi
 
 # Best effort env load
 source ~/.bashrc
