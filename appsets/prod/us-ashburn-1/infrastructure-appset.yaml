@@ -9,7 +9,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/schmhj/cluster-config.git
-        revision: HEAD
+        revision: feature/deployment-strategy
         directories:
           - path: apps/infrastructure/*/overlays/prod-region/us-ashburn-1
   template:
