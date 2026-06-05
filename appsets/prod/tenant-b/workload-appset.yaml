@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: workload-appset-prod-us-chicago-1
+  name: workload-appset-prod-tenant-b
   namespace: argocd
 spec:
   goTemplate: true
@@ -13,7 +13,7 @@ spec:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: feature/deployment-strategy
           directories:
-          - path: apps/workloads/*/overlays/prod/region/us-chicago-1
+          - path: apps/workloads/*/overlays/prod/tenant/tenant-b
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: feature/deployment-strategy
@@ -22,7 +22,7 @@ spec:
 
   template:
     metadata:
-      name: "{{index .path.segments 2}}-prod-us-chicago-1"
+      name: "{{index .path.segments 2}}-prod-tenant-b"
       namespace: argocd
       annotations:
         argocd.argoproj.io/sync-wave: "5"
@@ -30,7 +30,7 @@ spec:
         layer: "3"
         env: prod
         domain: workload
-        region: us-chicago-1
+        tenant: tenant-b
     spec:
       project: workload-prod
       destination:
@@ -62,7 +62,7 @@ spec:
             valueFiles:
               - $values/apps/workloads/{{index .path.segments 2}}/base/values.yaml
               - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/values.yaml
-              - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/region/{{index .path.segments 6}}/values.yaml
+              - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/tenant/{{index .path.segments 6}}/values.yaml
               
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: HEAD

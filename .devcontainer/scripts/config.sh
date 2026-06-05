@@ -1,4 +1,4 @@
 #!/bin/bash
 
-export ENVIRONMENT=prod
-export REGION=us-ashburn-1
+export ENVIRONMENT=dev
+export TENANT=tenant-a
