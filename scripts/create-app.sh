@@ -101,23 +101,23 @@ while true; do
 done
 
 # ════════════════════════════════════════════
-#  STEP 4 – Target regions (prod only)
+#  STEP 4 – Target tenants (prod only)
 # ════════════════════════════════════════════
-REGIONS=()
-# Determine if any selected env is prod; if so, ask for region
+TENANTS=()
+# Determine if any selected env is prod; if so, ask for tenant
 if [[ " ${ENVS[*]} " =~ " prod " ]]; then
   echo ""
-  cyan "── Step 4/5: Target Regions (prod) ───"
+  cyan "── Step 4/5: Target Tenants (prod) ───"
   while true; do
-    echo "  (1) us-ashburn-1 only"
-    echo "  (2) us-chicago-1 only"
-    echo "  (3) both regions (default)"
+    echo "  (1) tenant-a only"
+    echo "  (2) tenant-b only"
+    echo "  (3) both tenants (default)"
     printf "  Enter choice [1/2/3]: "
-    read -r region_choice
-    case "$region_choice" in
-      1) REGIONS=("us-ashburn-1");        break ;;
-      2) REGIONS=("us-chicago-1");        break ;;
-      3|"") REGIONS=("us-ashburn-1" "us-chicago-1"); break ;;
+    read -r tenant_choice
+    case "$tenant_choice" in
+      1) TENANTS=("tenant-a");        break ;;
+      2) TENANTS=("tenant-b");        break ;;
+      3|"") TENANTS=("tenant-a" "tenant-b"); break ;;
       *) red "  Invalid choice. Please enter 1, 2, or 3." ;;
     esac
   done
@@ -198,8 +198,8 @@ bold "─────────────────── Summary ──�
 echo "  Type         : $APP_TYPE"
 echo "  Name         : $APP_NAME"
 echo "  Environments : ${ENVS[*]}"
-if [[ ${#REGIONS[@]} -gt 0 ]]; then
-  echo "  Regions      : ${REGIONS[*]}"
+if [[ ${#TENANTS[@]} -gt 0 ]]; then
+  echo "  Tenants      : ${TENANTS[*]}"
 fi
 if $HELM_DETAILS; then
   echo "  Chart name   : $CHART_NAME"
@@ -235,9 +235,9 @@ fi
 mkdir -p "$BASE_DIR"
 for od in "${OVERLAY_DIRS[@]}"; do
   mkdir -p "$od"
-  if [[ ${#REGIONS[@]} -gt 0 && "$od" == */prod ]]; then
-    for region in "${REGIONS[@]}"; do
-      mkdir -p "${od}/region/${region}"
+  if [[ ${#TENANTS[@]} -gt 0 && "$od" == */prod ]]; then
+    for tenant in "${TENANTS[@]}"; do
+      mkdir -p "${od}/tenant/${tenant}"
     done
   fi
 done
@@ -347,16 +347,16 @@ patches:
 "
     write_file "${overlay_dir}/kustomization.yaml" "$overlay_content"
 
-    # ── region/{region}/kustomization.yaml (prod only) ───
-    if [[ ${#REGIONS[@]} -gt 0 && "$overlay_dir" == */prod ]]; then
-      for region in "${REGIONS[@]}"; do
-        local region_dir="${overlay_dir}/region/${region}"
+    # ── tenant/{tenant}/kustomization.yaml (prod only) ───
+    if [[ ${#TENANTS[@]} -gt 0 && "$overlay_dir" == */prod ]]; then
+      for tenant in "${TENANTS[@]}"; do
+        local tenant_dir="${overlay_dir}/tenant/${tenant}"
 
-        local region_kustom="apiVersion: kustomize.config.k8s.io/v1beta1
+        local tenant_kustom="apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../.."
-        write_file "${region_dir}/kustomization.yaml" "$region_kustom"
+        write_file "${tenant_dir}/kustomization.yaml" "$tenant_kustom"
       done
     fi
   done
@@ -383,7 +383,7 @@ create_workload_files() {
     cv="{chartVersion}"
   fi
 
-  # ── overlays/{env}/ & region/{region}/ ──
+  # ── overlays/{env}/ & tenant/{tenant}/ ──
   for overlay_dir in "${OVERLAY_DIRS[@]}"; do
     # env-level shared values.yaml (used by dev; also a placeholder for prod)
     write_file "${overlay_dir}/values.yaml" ""
@@ -395,14 +395,14 @@ create_workload_files() {
     \"chartVersion\": \"${cv}\",
     \"isGitRepo\": ${IS_GIT_REPO}
 }
-"
+ "
 
-    if [[ "$overlay_dir" == */prod && ${#REGIONS[@]} -gt 0 ]]; then
-      # Prod: config.json lives in region/ subdirs (scanned by region appset)
-      for region in "${REGIONS[@]}"; do
-        local region_dir="${overlay_dir}/region/${region}"
-        write_file "${region_dir}/values.yaml" ""
-        write_file "${region_dir}/config.json" "$config_content"
+    if [[ "$overlay_dir" == */prod && ${#TENANTS[@]} -gt 0 ]]; then
+      # Prod: config.json lives in tenant/ subdirs (scanned by tenant appset)
+      for tenant in "${TENANTS[@]}"; do
+        local tenant_dir="${overlay_dir}/tenant/${tenant}"
+        write_file "${tenant_dir}/values.yaml" ""
+        write_file "${tenant_dir}/config.json" "$config_content"
       done
     else
       # Dev: config.json lives directly in the overlay dir (scanned by dev appset)

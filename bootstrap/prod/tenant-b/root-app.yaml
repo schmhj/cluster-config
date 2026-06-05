@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-app-prod-us-chicago-1
+  name: root-app-prod-tenant-b
   namespace: argocd
   finalizers:
     - argoproj.io/resources-finalizer
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/schmhj/cluster-config.git
     targetRevision: HEAD
-    path: appsets/prod/us-chicago-1
+    path: appsets/prod/tenant-b
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
