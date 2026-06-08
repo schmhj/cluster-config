@@ -5,3 +5,8 @@
       operator: "Equal"
       value: "infra"
       effect: "NoSchedule"
+
+- op: add
+  path: /spec/template/spec/nodeSelector
+  value:
+    tier: infra
