@@ -1,0 +1,7 @@
+- op: add
+  path: /spec/template/spec/tolerations
+  value:
+    - key: "tier"
+      operator: "Equal"
+      value: "infra"
+      effect: "NoSchedule"
