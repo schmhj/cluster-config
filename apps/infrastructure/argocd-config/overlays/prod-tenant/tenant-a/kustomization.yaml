@@ -9,3 +9,40 @@ patches:
       name: argocd
       namespace: argocd
     path: tolerations-patch.yaml
+
+
+   - target:
+      kind: Deployment
+      name: argocd-application-controller
+      namespace: argocd
+    path: tolerations-patch.yaml
+
+   - target:
+      kind: Deployment
+      name: argocd-redis
+      namespace: argocd
+    path: tolerations-patch.yaml
+
+  - target:
+      kind: Deployment
+      name: argocd-notifications-controller
+      namespace: argocd
+    path: tolerations-patch.yaml
+
+  - target:
+      kind: Deployment
+      name: argocd-notifications-controller
+      namespace: argocd
+    path: tolerations-patch.yaml
+
+   - target:
+      kind: Deployment
+      name: argocd-server
+      namespace: argocd
+    path: tolerations-patch.yaml
+
+  - target:
+      kind: Deployment
+      name: argocd-dex-server
+      namespace: argocd
+    path: tolerations-patch.yaml

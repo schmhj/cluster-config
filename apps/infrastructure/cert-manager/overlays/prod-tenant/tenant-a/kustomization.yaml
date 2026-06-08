@@ -10,3 +10,15 @@ patches:
       name: cert-manager
       namespace: cert-manager
     path: tolerations-patch.yaml
+
+  - target:
+      kind: Deployment
+      name: cert-manager-webhook
+      namespace: cert-manager
+    path: tolerations-patch.yaml
+
+  - target:
+      kind: Deployment
+      name: cert-manager-cainjector
+      namespace: cert-manager
+    path: tolerations-patch.yaml
