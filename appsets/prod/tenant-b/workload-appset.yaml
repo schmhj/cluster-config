@@ -11,12 +11,12 @@ spec:
       generators:
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
-          revision: feature/deployment-strategy
+          revision: HEAD
           directories:
           - path: apps/workloads/*/overlays/prod/tenant/tenant-b
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
-          revision: feature/deployment-strategy
+          revision: HEAD
           files:
           - path: "{{.path.path}}/config.json"
 

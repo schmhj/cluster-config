@@ -9,7 +9,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/schmhj/cluster-config.git
-        revision: feature/deployment-strategy
+        revision: HEAD  
         directories:
           - path: apps/infrastructure/*/overlays/prod-tenant/tenant-b
   template:
@@ -27,7 +27,7 @@ spec:
       project: infrastructure-prod
       source:
         repoURL: https://github.com/schmhj/cluster-config.git
-        targetRevision: feature/deployment-strategy
+        targetRevision: HEAD
         path: "{{.path.path}}"
       destination:
         server: https://kubernetes.default.svc
