@@ -8,4 +8,4 @@ patches:
       kind: Deployment
       name: traefik
       namespace: traefik
-    path: tolerations-patch.yaml
+    path: ../../../../tolerations-patch.yaml
