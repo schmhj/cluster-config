@@ -63,7 +63,6 @@ providers:
     allowCrossNamespace: true
     allowExternalNameServices: true 
 
-
 logs:
   general:
     level: INFO          # traefik system logs
