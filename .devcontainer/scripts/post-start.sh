@@ -46,6 +46,12 @@ if [[ $ENVIRONMENT == "prod" ]]; then
     kubectl apply -f bootstrap/prod/${TENANT:-tenant-a}/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
     sleep 2
     kubectl apply -f bootstrap/prod/${TENANT:-tenant-a}/root-app.yaml -n argocd | tee -a  ~/.status.log
+
+    # If running on tenant-a, also bootstrap tenant-b
+    if [[ "${TENANT:-tenant-a}" == "tenant-a" ]]; then
+        echo "Also bootstrapping tenant-b from tenant-a" | tee -a ~/.status.log
+        kubectl apply -f bootstrap/prod/tenant-b/root-app.yaml -n argocd | tee -a  ~/.status.log
+    fi
 else
     kubectl apply -f bootstrap/dev/appprojects-app.yaml -n argocd | tee -a  ~/.status.log
     sleep 2

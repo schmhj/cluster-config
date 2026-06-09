@@ -71,5 +71,3 @@ Both the SealedSecret and generated Secret must have the same name and namespace
 For practical examples of using sealed secrets, see:
 - [GitHub App Credentials Setup](./github-app-setup.md) - Sealing GitHub App secrets
 - [Docker Registry Credentials Setup](./docker-registry-setup.md) - Using sealed secrets for GHCR
-
-

@@ -12,10 +12,15 @@ spec:
   destinations:
     - namespace: "*"
       server: "https://kubernetes.default.svc"
+    - namespace: "*"
+      server: "https://129.158.33.235:6443"
   clusterResourceWhitelist:
     - group: "*"
       kind: "*"
   destinationServiceAccounts:
     - server: https://kubernetes.default.svc
+      namespace: "*"
+      defaultServiceAccount: kube-system:argocd-cluster-admin
+    - server: https://129.158.33.235:6443
       namespace: "*"
       defaultServiceAccount: kube-system:argocd-cluster-admin
