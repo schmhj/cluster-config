@@ -34,7 +34,7 @@ spec:
     spec:
       project: workload-prod
       destination:
-        server: https://kubernetes.default.svc
+        server: https://129.158.33.235:6443
         namespace: workload
       syncPolicy:
         automated:
