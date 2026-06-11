@@ -126,6 +126,8 @@ This repository follows a hierarchical pattern in ArgoCD for managing deployment
 
 ### Architecture Diagram
 
+![ArgoCD Architecture Diagram](docs/assets/argocd-architecture.png)
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                         ARGOCD NAMESPACE                                 │
