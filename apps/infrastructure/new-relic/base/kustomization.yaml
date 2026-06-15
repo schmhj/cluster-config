@@ -5,7 +5,7 @@ commonAnnotations:
 helmCharts:
   - name: nri-bundle
     repo: https://helm-charts.newrelic.com
-    version: "2.13.0"
+    version: "v2.13.0"
     namespace: monitoring
     releaseName: nri-bundle
     valuesFile: values.yaml
