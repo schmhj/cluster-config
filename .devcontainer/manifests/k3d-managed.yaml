@@ -4,6 +4,12 @@ metadata:
   name: managed
 servers: 1
 image: rancher/k3s:v1.32.3-k3s1
+registries:
+  config: |
+    mirrors:
+      docker.io:
+        endpoint:
+          - "https://registry-1.docker.io"
 options:
   k3d:
     wait: true

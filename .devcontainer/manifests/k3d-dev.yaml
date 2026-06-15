@@ -18,6 +18,12 @@ ports:
   - port: 30480:30480
     nodeFilters:
       - server:*
+registries:
+  config: |
+    mirrors:
+      docker.io:
+        endpoint:
+          - "https://registry-1.docker.io"
 options:
   k3d:
     wait: true
