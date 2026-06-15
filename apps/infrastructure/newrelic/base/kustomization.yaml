@@ -7,5 +7,5 @@ helmCharts:
     repo: https://helm-charts.newrelic.com
     version: "v2.13.0"
     namespace: monitoring
-    releaseName: nri-bundle
+    releaseName: newrelic-bundle
     valuesFile: values.yaml
