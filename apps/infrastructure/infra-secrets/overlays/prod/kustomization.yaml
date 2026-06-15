@@ -8,6 +8,7 @@ resources:
   - grafana-cloud-sealedsecret.yaml
   - traefik-secret.yaml
   - certmanager-sealedsecret.yaml
+  - newrelic-sealedsecret.yaml
 
 patches:
   - target:
