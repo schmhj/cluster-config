@@ -2,13 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
-helmCharts:
-  - name: nri-bundle
-    repo: https://helm-charts.newrelic.com
-    version: "7.0.19"
-    namespace: monitoring
-    releaseName: newrelic-bundle
-    valuesFile: ../../../base/values.yaml
-    valuesInline:
-      global:
-        cluster: oke-tenant-a
+resources:
+  - ../../../base
+patches:
+  - path: cluster-patch.yaml
