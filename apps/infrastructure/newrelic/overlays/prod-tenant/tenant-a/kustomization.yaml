@@ -7,10 +7,10 @@ resources:
 
 patches:
   - target:
-      kind: Deployment
-      name: newrelic-bundle
+      kind: DaemonSet
+      name: newrelic-bundle-nrk8s-infrastructure
       namespace: monitoring
-    patch: |-
+    patch: |
       - op: replace
-        path: /global/cluster
+        path: /spec/template/spec/containers/0/env/0/value
         value: oke-cluster-tenant-a
