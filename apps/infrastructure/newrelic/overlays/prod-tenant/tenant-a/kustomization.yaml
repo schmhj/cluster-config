@@ -10,7 +10,7 @@ patches:
       kind: Deployment
       name: newrelic-bundle
       namespace: monitoring
-    patch:
+    patch: |-
       - op: replace
         path: /global/cluster
-        value: oke-tenant-a
+        value: oke-cluster-tenant-a
