@@ -8,7 +8,7 @@ resources:
 patches:
   - target:
       kind: DaemonSet
-      name: newrelic-bundle-nrk8s-infrastructure
+      name: newrelic-bundle-nrk8s-kubelet
       namespace: monitoring
     patch: |
       - op: replace
