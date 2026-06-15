@@ -8,7 +8,7 @@ helmCharts:
     version: "7.0.19"
     namespace: monitoring
     releaseName: newrelic-bundle
-    valuesFile: ../../../../base/values.yaml
+    valuesFile: ../../../base/values.yaml
     valuesInline:
       global:
         cluster: oke-tenant-a
