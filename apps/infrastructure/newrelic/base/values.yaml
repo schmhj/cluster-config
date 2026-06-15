@@ -92,7 +92,7 @@ global:
 
   images:
     # -- Changes the registry where to get the images. Useful when there is an internal image cache/proxy
-    registry: ghcr.io
+    registry: 
     # -- Set secrets to be able to fetch images
     pullSecrets: []
 
