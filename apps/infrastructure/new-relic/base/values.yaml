@@ -59,8 +59,6 @@ nr-ebpf-agent:
   # nr-ebpf-agent.enabled -- Install the [`nr-ebpf-agent`](https://github.com/newrelic/helm-charts/tree/master/charts/nr-ebpf-agent)
   enabled: false
   
-  
-
 k8s-agents-operator:
   # k8s-agents-operator.enabled -- Install the [`k8s-agents-operator` chart](https://github.com/newrelic/k8s-agents-operator/tree/main/charts/k8s-agents-operator)
   enabled: false
@@ -77,15 +75,12 @@ global:
   # -- The cluster name for the Kubernetes cluster.
   cluster: oke-tenant-a
 
-  # -- The license key for your New Relic Account. This will be preferred configuration option if both `licenseKey` and `customSecret` are specified.
-  customSecretName: new-relic-key
-  customSecretLicenseKey: licenseKey  
   # -- The license key for your New Relic Account. This will be preferred configuration option if both `insightsKey` and `customSecret` are specified.
   insightsKey: ""
   # -- Name of the Secret object where the license key is stored
-  customSecretName: ""
+  customSecretName: "newrelic-secret"
   # -- Key in the Secret object where the license key is stored
-  customSecretLicenseKey: ""
+  customSecretLicenseKey: "licenseKey"
 
   # -- The provider that's running your cluster
   provider: 
