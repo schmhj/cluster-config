@@ -51,3 +51,11 @@ kubectl create secret generic traefik-dashboard-secret \
   --dry-run=client -o yaml | \
   kubeseal --controller-namespace kube-system \
   --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/dev/cert-manager-secret.yaml
+
+kubectl create secret generic new-relic-key \
+     --namespace=monitoring \
+     --dry-run=client \
+     --from-literal=licenseKey=*** \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/new-relic-key.sealed.yaml
