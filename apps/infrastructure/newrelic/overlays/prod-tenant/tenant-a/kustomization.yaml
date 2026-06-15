@@ -3,6 +3,4 @@ kind: Kustomization
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
-  - ../../../base
-patches:
-  - path: cluster-patch.yaml
+  - ../../prod
