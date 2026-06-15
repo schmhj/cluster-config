@@ -5,14 +5,14 @@ commonAnnotations:
 resources:
   - ../../prod
 
-patches:
-  - target:
-      kind: DaemonSet
-      name: newrelic-bundle-nrk8s-kubelet
-      namespace: monitoring
-    patch: |
-      - op: add
-        path: /spec/template/spec/containers/0/env/-
-        value:
-          name: NRI_KUBERNETES_CLUSTERNAME
-        value: oke-cluster-tenant-a
+# patches:
+#   - target:
+#       kind: DaemonSet
+#       name: newrelic-bundle-nrk8s-kubelet
+#       namespace: monitoring
+#     patch: |
+#       - op: add
+#         path: /spec/template/spec/containers/0/env/-
+#         value:
+#           name: NRI_KUBERNETES_CLUSTERNAME
+#         value: oke-cluster-tenant-a
