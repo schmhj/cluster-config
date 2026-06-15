@@ -4,3 +4,13 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
   - ../../prod
+
+patches:
+  - target:
+      kind: Deployment
+      name: newrelic-bundle
+      namespace: monitoring
+    patch:
+      - op: replace
+        path: /global/cluster
+        value: oke-tenant-b
