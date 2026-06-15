@@ -1,11 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: monitoring
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "2"
 helmCharts:
   - name: nri-bundle
     repo: https://helm-charts.newrelic.com
-    version: "v2.13.0"
+    version: "7.0.18"
     namespace: monitoring
     releaseName: newrelic-bundle
     valuesFile: values.yaml
