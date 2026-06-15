@@ -11,6 +11,8 @@ patches:
       name: newrelic-bundle-nrk8s-kubelet
       namespace: monitoring
     patch: |
-      - op: replace
-        path: /spec/template/spec/containers/0/env/0/value
+      - op: add
+        path: /spec/template/spec/containers/0/env/-
+        value:
+          name: NRI_KUBERNETES_CLUSTERNAME
         value: oke-cluster-tenant-a
