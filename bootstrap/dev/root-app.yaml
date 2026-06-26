@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/schmhj/cluster-config.git
-    targetRevision: HEAD
+    targetRevision: develop
     path: appsets/dev
   destination:
     server: https://kubernetes.default.svc

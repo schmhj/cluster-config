@@ -11,12 +11,12 @@ spec:
       generators:
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
-          revision: HEAD
+          revision: develop
           directories:
           - path: apps/workloads/*/overlays/dev
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
-          revision: HEAD
+          revision: develop
           files:
           - path: "{{.path.path}}/config.json"
 
@@ -63,5 +63,5 @@ spec:
               - $values/apps/workloads/{{index .path.segments 2}}/overlays/dev/values.yaml
               
         - repoURL: https://github.com/schmhj/cluster-config.git
-          targetRevision: HEAD
+          targetRevision: develop
           ref: values
