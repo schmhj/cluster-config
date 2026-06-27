@@ -1,0 +1,8 @@
+{
+    "appName": "postgres",
+    "chartRepo": "https://charts.bitnami.com/bitnami",
+    "chartName": "postgresql",
+    "chartVersion": "latest",
+    "isGitRepo": false
+}
+ 
