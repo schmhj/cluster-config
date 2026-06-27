@@ -52,7 +52,7 @@ helm repo update | tee -a  ~/.status.log
 helm install argocd argo/argo-cd --version 7.8.26 --namespace argocd --create-namespace --set server.service.type="NodePort" --set server.service.nodePortHttps=30179 --set configs.cm."kustomize\.buildOptions"="--enable-helm" --set configs.cm."application\.sync\.impersonation\.enabled"="true" | tee -a  ~/.status.log 
 
 # Install Sealed Secrets
-# helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets | tee -a ~/.status.log
+# helm repo add sealed-secrets https://bitnami.github.io/sealed-secrets | tee -a ~/.status.log
 # helm install sealed-secrets sealed-secrets/sealed-secrets --namespace kube-system --set existingSecret="$SECRETS_PRIV_KEY" | tee -a ~/.status.log
 
 # Install emberstack to reflect secrets across namespaces

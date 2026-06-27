@@ -1,0 +1,44 @@
+global:
+  postgresql:
+    auth:
+      username: app_user
+      database: app_db
+
+primary:
+  resources:
+    limits:
+      cpu: "2"
+      memory: 4Gi
+    requests:
+      cpu: "1"
+      memory: 2Gi
+
+  persistence:
+    enabled: true
+    storageClass: ""
+    size: 20Gi
+    mountPath: /bitnami/postgresql
+
+  extendedConfiguration: |
+    max_connections = 200
+    shared_buffers = 1GB
+    effective_cache_size = 3GB
+    work_mem = 16MB
+    maintenance_work_mem = 256MB
+
+readReplicas:
+  replicaCount: 1
+  resources:
+    limits:
+      cpu: "1"
+      memory: 2Gi
+    requests:
+      cpu: "500m"
+      memory: 1Gi
+  persistence:
+    enabled: true
+    storageClass: ""
+    size: 20Gi
+
+metrics:
+  enabled: true

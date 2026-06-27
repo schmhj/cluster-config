@@ -34,7 +34,7 @@ spec:
       project: workload-dev
       destination:
         server: https://kubernetes.default.svc
-        namespace: workload
+        namespace: '{{ .namespace | default "workload" }}'
       syncPolicy:
         automated:
           prune: true
