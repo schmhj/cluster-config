@@ -9,7 +9,7 @@ spec:
   generators:
     - git:
         repoURL: https://github.com/schmhj/cluster-config.git
-        revision: HEAD  
+        revision: main
         directories:
           - path: apps/infrastructure/*/overlays/prod-tenant/tenant-b
   template:
@@ -27,7 +27,7 @@ spec:
       project: infrastructure-prod
       source:
         repoURL: https://github.com/schmhj/cluster-config.git
-        targetRevision: HEAD
+        targetRevision: main
         path: "{{.path.path}}"
       destination:
         server: https://129.158.33.235:6443

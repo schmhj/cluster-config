@@ -11,12 +11,12 @@ spec:
       generators:
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
-          revision: HEAD
+          revision: main
           directories:
           - path: apps/workloads/*/overlays/prod/tenant/tenant-b
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
-          revision: HEAD
+          revision: main
           files:
           - path: "{{.path.path}}/config.json"
 
@@ -65,5 +65,5 @@ spec:
               - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/tenant/{{index .path.segments 6}}/values.yaml
               
         - repoURL: https://github.com/schmhj/cluster-config.git
-          targetRevision: HEAD
+          targetRevision: main
           ref: values
