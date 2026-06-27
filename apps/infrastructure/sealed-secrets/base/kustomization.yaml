@@ -4,8 +4,8 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "2"
 helmCharts:
   - name: sealed-secrets
-    repo: https://bitnami-labs.github.io/sealed-secrets
-    version: "2.18.3"
+    repo: https://bitnami.github.io/sealed-secrets
+    version: "2.19.0"
     namespace: kube-system
     releaseName: sealed-secrets
     includeCrds: true
