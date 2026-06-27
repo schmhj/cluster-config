@@ -1,5 +1,6 @@
 {
     "appName": "sample-app",
+    "namespace": "workload",
     "chartRepo": "https://akuity.github.io/demo-helm-charts",
     "chartName": "simple-go",
     "chartVersion": "0.2.1",

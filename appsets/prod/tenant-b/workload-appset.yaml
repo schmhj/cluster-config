@@ -35,7 +35,7 @@ spec:
       project: workload-prod
       destination:
         server: https://129.158.33.235:6443
-        namespace: workload
+        namespace: '{{ .namespace | default "workload" }}'
       syncPolicy:
         automated:
           prune: true

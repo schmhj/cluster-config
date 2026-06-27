@@ -1,8 +1,8 @@
 {
-    "appName": "postgres",
+    "appName": "postgresql",
+    "namespace": "postgresql",
     "chartRepo": "https://charts.bitnami.com/bitnami",
     "chartName": "postgresql",
-    "chartVersion": "latest",
+    "chartVersion": "18.7.5",
     "isGitRepo": false
 }
- 

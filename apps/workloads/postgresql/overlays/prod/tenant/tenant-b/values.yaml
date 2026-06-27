@@ -1,0 +1,10 @@
+global:
+  postgresql:
+    auth:
+      password: ""
+      postgresPassword: ""
+
+primary:
+  persistence:
+    storageClass: "gp3"
+    size: 50Gi

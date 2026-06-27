@@ -1,5 +1,6 @@
 {
     "appName": "microservice-app",
+    "namespace": "workload",
     "chartRepo": "ghcr.io/schmhj/charts",
     "chartName": "microservice",
     "chartVersion": "0.1.1",

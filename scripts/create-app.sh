@@ -370,17 +370,19 @@ create_workload_files() {
   write_file "${BASE_DIR}/values.yaml" ""
 
   # Resolve values or keep placeholders
-  local an cr cn cv
+  local an cr cn cv ns
   if $HELM_DETAILS; then
     an="$APP_NAME"
     cr="$CHART_REPO"
     cn="$CHART_NAME"
     cv="$CHART_VERSION"
+    ns="$NAMESPACE"
   else
     an="{appName}"
     cr="{chartRepo}"
     cn="{chartName}"
     cv="{chartVersion}"
+    ns="workload"
   fi
 
   # ── overlays/{env}/ & tenant/{tenant}/ ──
@@ -390,12 +392,13 @@ create_workload_files() {
 
     local config_content="{
     \"appName\": \"${an}\",
+    \"namespace\": \"${ns}\",
     \"chartRepo\": \"${cr}\",
     \"chartName\": \"${cn}\",
     \"chartVersion\": \"${cv}\",
     \"isGitRepo\": ${IS_GIT_REPO}
 }
- "
+"
 
     if [[ "$overlay_dir" == */prod && ${#TENANTS[@]} -gt 0 ]]; then
       # Prod: config.json lives in tenant/ subdirs (scanned by tenant appset)
