@@ -55,16 +55,16 @@ kubectl create secret generic traefik-dashboard-secret \
 kubectl create secret generic newrelic-secret \
      --namespace=infrastructure \
      --dry-run=client \
-     --from-literal=licenseKey=c5ef9335dddd73d241cd4ad3d6377afd0bceNRAL \
+     --from-literal=licenseKey=*** \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/newrelic-sealedsecret.yaml
 
 kubectl create secret generic postgresql-secret \
-     --namespace=database \
+     --namespace=infrastructure \
      --dry-run=client \
-     --from-literal=postgresql-admin-password=YEoKYDiib9QPcSBrSndfGDzmMDdKPoFfZKAe9WWy15M= \
-     --from-literal=postgresql-immich-password=z7tvvVrJWHCrUJo1KENda9T7m/aAVmmZXwOMTcvFuH0= \
+     --from-literal=postgresql-admin-password=*** \
+     --from-literal=postgresql-immich-password=*** \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/postgresql-sealedsecret.yaml
