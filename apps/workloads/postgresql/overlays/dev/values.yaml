@@ -15,10 +15,10 @@ primary:
   # Resource allocation for the database container
   resources:
     limits:
-      cpu: "250m"
+      cpu: "1000m"
       memory: "256Mi"
     requests:
-      cpu: "1000m"
+      cpu: "250m"
       memory: "512Mi"
 
   # Persistence configuration

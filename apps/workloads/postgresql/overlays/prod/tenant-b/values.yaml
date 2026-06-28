@@ -1,0 +1,74 @@
+global:
+  postgresql:
+    auth:
+      existingSecret: postgresql-secret
+      secretKeys:
+        adminPasswordKey: postgresql-admin-password
+        userPasswordKey: postgresql-immich-password
+
+auth:
+  username: immich
+  database: immich
+  # password is sourced from the existing secret defined in global.postgresql.auth.existingSecret
+
+primary:
+  # Resource allocation for the database container
+  resources:
+    limits:
+      cpu: "1000m"
+      memory: "256Mi"
+    requests:
+      cpu: "250m"
+      memory: "512Mi"
+
+  # Persistence configuration
+  persistence:
+    enabled: true
+    storageClass: "oci-bv" # Leave empty to use the cluster's default StorageClass, or specify your own (e.g., standard, gp3)
+    size: 10Gi
+    accessMode:
+      - ReadWriteOnce
+
+  # Custom PostgreSQL configuration parameters (postgresql.conf)
+  extendedConfiguration: |
+    max_connections = 100
+    shared_buffers = 256MB
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                  - workload
+              - key: workload
+                operator: In
+                values:
+                  - workload-0
+  tolerations:
+    - key: "tier"
+      operator: "Equal"
+      value: "workload"
+      effect: "NoSchedule"
+
+  podSecurityContext:
+    fsGroup: 1001
+    seccompProfile:
+      type: RuntimeDefault
+
+  containerSecurityContext:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
+
+# Disable metrics architecture by default (set to true if using Prometheus)
+metrics:
+  enabled: false
+
+architecture: standalone
