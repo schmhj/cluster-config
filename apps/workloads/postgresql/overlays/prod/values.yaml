@@ -1,17 +1,2 @@
-global:
-  postgresql:
-    auth:
-      username: app_user
-      database: app_db
-
-primary:
-  resources:
-    limits:
-      cpu: "250m"
-      memory: 512Mi
-    requests:
-      cpu: "250m"
-      memory: 256Mi
-
 metrics:
   enabled: false
