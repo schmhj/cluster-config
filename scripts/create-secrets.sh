@@ -59,3 +59,12 @@ kubectl create secret generic newrelic-secret \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/newrelic-sealedsecret.yaml
+
+kubectl create secret generic postgresql-secret \
+     --namespace=database \
+     --dry-run=client \
+     --from-literal=postgresql-admin-password=*** \
+     --from-literal=postgresql-immich-password=*** \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/dev/postgresql-sealedsecret.yaml
