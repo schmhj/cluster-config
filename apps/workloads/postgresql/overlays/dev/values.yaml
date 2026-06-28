@@ -1,21 +1,25 @@
 global:
   postgresql:
     auth:
-      username: app_user
-      password: "YourSecurePasswordHere" # Replace with a strong password
-      database: app_db
-      # Optional: Define a specific password for the 'postgres' admin user
-      postgresPassword: "YourAdminPasswordHere" 
+      existingSecret: postgresql-secret
+      secretKeys:
+        adminPasswordKey: postgresql-admin-password
+        userPasswordKey: postgresql-immich-password
+
+auth:
+  username: immich
+  database: immich
+  # password is sourced from the existing secret defined in global.postgresql.auth.existingSecret
 
 primary:
   # Resource allocation for the database container
   resources:
     limits:
-      cpu: "1"
-      memory: 1Gi
+      cpu: "1000m"
+      memory: "256Mi"
     requests:
-      cpu: "500m"
-      memory: 512Mi
+      cpu: "250m"
+      memory: "512Mi"
 
   # Persistence configuration
   persistence:
@@ -32,3 +36,5 @@ primary:
 # Disable metrics architecture by default (set to true if using Prometheus)
 metrics:
   enabled: false
+
+architecture: standalone

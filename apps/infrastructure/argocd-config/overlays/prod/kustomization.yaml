@@ -6,4 +6,5 @@ resources:
   - ../../base
   - github-app-secret.yaml
   - ghcr-oci-secret.yaml
+  - dockerhub-oci-secret.yaml
 
