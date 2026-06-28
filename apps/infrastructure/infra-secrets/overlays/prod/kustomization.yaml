@@ -9,6 +9,7 @@ resources:
   - traefik-secret.yaml
   - certmanager-sealedsecret.yaml
   - newrelic-sealedsecret.yaml
+  - postgresql-sealedsecret.yaml
 
 # patches:
 #   - target:
