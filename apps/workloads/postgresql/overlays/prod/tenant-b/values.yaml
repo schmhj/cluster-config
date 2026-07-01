@@ -12,6 +12,11 @@ auth:
   # password is sourced from the existing secret defined in global.postgresql.auth.existingSecret
 
 primary:
+  # Prevent voluntary pod disruption during node drains or cluster operations
+  pdb:
+    create: true
+    minAvailable: 1
+
   # Resource allocation for the database container
   resources:
     limits:
@@ -31,8 +36,11 @@ primary:
 
   # Custom PostgreSQL configuration parameters (postgresql.conf)
   extendedConfiguration: |
-    max_connections = 100
-    shared_buffers = 256MB
+    max_connections = 50
+    shared_buffers = 128MB
+    work_mem = 2MB
+    effective_cache_size = 384MB
+    maintenance_work_mem = 32MB
 
   affinity:
     nodeAffinity:
