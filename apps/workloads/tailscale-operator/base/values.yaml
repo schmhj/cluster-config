@@ -8,7 +8,8 @@ installCRDs: true
 
 operatorConfig:
   image:
-    repository: ghcr.io/coreweave/tailscale/k8s-operator
+    repository: tailscale/k8s-operator
+    tag: v1.98.5
     pullPolicy: Always
   logging: "info"
   hostname: "tailscale-operator"
@@ -21,7 +22,8 @@ ingressClass:
 
 proxyConfig:
   image:
-    repository: ghcr.io/coreweave/tailscale/tailscale
+    repository: tailscale/tailscale
+    tag: v1.98.5
   defaultTags: "tag:k8s"
   firewallMode: auto
 
