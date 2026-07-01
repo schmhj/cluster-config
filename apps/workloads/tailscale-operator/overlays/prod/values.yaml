@@ -1,5 +1,5 @@
 operatorConfig:
-    
+  defaultTags: []
   resources:
     limits:
       cpu: "200m"
