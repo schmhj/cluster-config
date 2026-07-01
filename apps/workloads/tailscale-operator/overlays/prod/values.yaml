@@ -1,8 +1,5 @@
 operatorConfig:
-  defaultTags:
-    - "tag:k8s-operator"
-    - "tag:prod"
-    
+  defaultTags: []
   resources:
     limits:
       cpu: "200m"
