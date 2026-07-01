@@ -1,0 +1,45 @@
+operatorConfig:
+  defaultTags:
+    - "tag:k8s-operator"
+    - "tag:prod"
+
+  resources:
+    limits:
+      cpu: "200m"
+      memory: 256Mi
+    requests:
+      cpu: "100m"
+      memory: 128Mi
+
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                  - workload
+              - key: workload
+                operator: In
+                values:
+                  - workload-0
+
+  tolerations:
+    - key: "tier"
+      operator: "Equal"
+      value: "workload"
+      effect: "NoSchedule"
+
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContext:
+    runAsNonRoot: true
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault

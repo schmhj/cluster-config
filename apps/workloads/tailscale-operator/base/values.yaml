@@ -1,0 +1,27 @@
+oauth: {}
+
+oauthSecretVolume:
+  secret:
+    secretName: tailscale-secret
+
+installCRDs: true
+
+operatorConfig:
+  image:
+    pullPolicy: Always
+  logging: "info"
+  hostname: "tailscale-operator"
+  nodeSelector:
+    kubernetes.io/os: linux
+
+ingressClass:
+  name: "tailscale"
+  enabled: true
+
+proxyConfig:
+  defaultTags: "tag:k8s"
+  firewallMode: auto
+
+apiServerProxyConfig:
+  mode: "false"
+  allowImpersonation: "false"

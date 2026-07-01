@@ -8,3 +8,4 @@ resources:
   - traefik-ns.yaml
   - cert-manager-ns.yaml
   - database-ns.yaml
+  - tailscale-ns.yaml
