@@ -1,7 +1,4 @@
 operatorConfig:
-  defaultTags:
-    - "tag:k8s-operator"
-    - "tag:prod"
     
   resources:
     limits:
