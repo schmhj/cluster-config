@@ -36,7 +36,6 @@ operatorConfig:
       type: RuntimeDefault
 
   securityContext:
-    runAsNonRoot: true
     allowPrivilegeEscalation: false
     capabilities:
       drop:
