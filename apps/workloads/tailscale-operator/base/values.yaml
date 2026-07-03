@@ -4,7 +4,7 @@ oauthSecretVolume:
   secret:
     secretName: tailscale-secret
 
-installCRDs: true
+installCRDs: false
 
 operatorConfig:
   image:
