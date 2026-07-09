@@ -103,9 +103,9 @@ server:
         http:
           port: 2283
 
-# -- Machine Learning component
+# -- Machine Learning component (disabled to save resources)
 machine-learning:
-  enabled: true
+  enabled: false
 
   controllers:
     main:
