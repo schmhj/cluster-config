@@ -22,8 +22,8 @@ controllers:
           DB_PASSWORD:
             valueFrom:
               secretKeyRef:
-                name: postgresql-secret
-                key: postgresql-immich-password
+                name: immich-secret
+                key: db-password
 
           # -- S3 storage (Garage)
           IMMICH_STORAGE_TYPE: s3
