@@ -21,10 +21,10 @@ primary:
   resources:
     limits:
       cpu: "1000m"
-      memory: 512Mi
+      memory: 2Gi
     requests:
       cpu: "250m"
-      memory: 256Mi
+      memory: 512Mi
 
   # Persistence configuration (shared PVC with Immich)
   persistence:
@@ -34,10 +34,10 @@ primary:
   # Custom PostgreSQL configuration parameters (postgresql.conf)
   extendedConfiguration: |
     max_connections = 50
-    shared_buffers = 128MB
-    work_mem = 2MB
-    effective_cache_size = 384MB
-    maintenance_work_mem = 32MB
+    shared_buffers = 64MB
+    work_mem = 1MB
+    effective_cache_size = 192MB
+    maintenance_work_mem = 16MB
 
   affinity:
     nodeAffinity:

@@ -51,7 +51,7 @@ controllers:
             memory: 512Mi
           limits:
             cpu: 1000m
-            memory: 1Gi
+            memory: 4Gi
 
 # -- Immich-specific settings
 immich:
