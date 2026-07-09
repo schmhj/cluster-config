@@ -78,3 +78,13 @@ kubectl create secret generic tailscale-secret \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/tailscale-secret.yaml
+
+kubectl create secret generic immich-secret \
+     --namespace=infrastructure \
+     --dry-run=client \
+     --from-literal=db-password='***' \
+     --from-literal=s3-access-key='***' \
+     --from-literal=s3-secret-key='***' \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/immich-sealedsecret.yaml

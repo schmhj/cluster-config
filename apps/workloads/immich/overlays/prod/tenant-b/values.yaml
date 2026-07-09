@@ -1,0 +1,22 @@
+# =============================================================================
+# Immich - Tenant-B Specific Values
+# Overrides for tenant-b deployment.
+# =============================================================================
+
+# -- No tenant-specific overrides needed at this time.
+# Add tenant-b specific values here (e.g., resource adjustments,
+# custom hostnames, additional ingress configuration).
+podScheduling:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                  - workload
+              - key: workload
+                operator: In
+                values:
+                  - workload-0

@@ -9,3 +9,4 @@ resources:
   - cert-manager-ns.yaml
   - database-ns.yaml
   - tailscale-ns.yaml
+  - immich-ns.yaml

@@ -11,6 +11,7 @@ resources:
   - newrelic-sealedsecret.yaml
   - postgresql-sealedsecret.yaml
   - tailscale-sealedsecret.yaml
+  - immich-sealedsecret.yaml
 
 # patches:
 #   - target:

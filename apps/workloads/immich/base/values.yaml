@@ -1,0 +1,138 @@
+# =============================================================================
+# Immich - Base Values
+# Chart: oci://ghcr.io/immich-app/immich-charts/immich
+# Docs: https://immich.app/docs/install/kubernetes
+# =============================================================================
+
+# -- Global controller settings (applied to all components)
+controllers:
+  main:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/immich-app/immich-server
+          tag: v3.0.0
+          pullPolicy: IfNotPresent
+
+        env:
+          # -- Database connection (PostgreSQL in database namespace)
+          # NOTE: Verify the service FQDN after first deploy. The Bitnami
+          #       PostgreSQL chart names its primary service:
+          #       <release-name>-postgresql-primary.<namespace>.svc.cluster.local
+          DB_HOSTNAME: postgresql-prod-tenant-b-primary.database.svc.cluster.local
+          DB_USERNAME: immich
+          DB_DATABASE_NAME: immich
+          DB_PASSWORD:
+            valueFrom:
+              secretKeyRef:
+                name: immich-secret
+                key: db-password
+
+          # -- S3 storage (Garage)
+          IMMICH_STORAGE_TYPE: s3
+          IMMICH_STORAGE_S3_BUCKET: immich-library
+          IMMICH_STORAGE_S3_REGION: us-east-1
+          IMMICH_STORAGE_S3_ENDPOINT: "http://100.73.152.123:3900"
+          IMMICH_STORAGE_S3_ACCESS_KEY:
+            valueFrom:
+              secretKeyRef:
+                name: immich-secret
+                key: s3-access-key
+          IMMICH_STORAGE_S3_SECRET_KEY:
+            valueFrom:
+              secretKeyRef:
+                name: immich-secret
+                key: s3-secret-key
+
+          # -- Machine Learning URL (internal service)
+          IMMICH_MACHINE_LEARNING_URL: "http://immich-machine-learning:3003"
+
+    # -- Resource limits for the main server container
+    resources:
+      requests:
+        cpu: 250m
+        memory: 512Mi
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+
+  # -- Machine Learning controller
+  machine-learning:
+    containers:
+      main:
+        image:
+          repository: ghcr.io/immich-app/immich-machine-learning
+          pullPolicy: IfNotPresent
+
+        env:
+          TRANSFORMERS_CACHE: /cache
+          HF_XET_CACHE: /cache/huggingface-xet
+          MPLCONFIGDIR: /cache/matplotlib-config
+
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 2000m
+            memory: 4Gi
+
+    persistence:
+      cache:
+        enabled: true
+        type: emptyDir
+
+# -- Immich-specific settings
+immich:
+  metrics:
+    enabled: false
+
+  persistence:
+    # -- Library volume for thumbnails, generated files, and config
+    # PVC is deployed via apps/infrastructure/immich-storage/
+    library:
+      existingClaim: immich-library
+
+  # -- Immich configuration (immich-config.json converted to YAML)
+  # Ref: https://immich.app/docs/install/config-file/
+  configuration: {}
+
+# -- Built-in Valkey (Redis-compatible) for job queues
+valkey:
+  enabled: true
+
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: docker.io/valkey/valkey
+            tag: 9.1-alpine
+            pullPolicy: IfNotPresent
+
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+
+  persistence:
+    data:
+      enabled: true
+      type: emptyDir
+
+# -- Immich Server component
+server:
+  enabled: true
+
+  service:
+    main:
+      ports:
+        http:
+          port: 2283
+
+# -- Machine Learning component
+machine-learning:
+  enabled: true

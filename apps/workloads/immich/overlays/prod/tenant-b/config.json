@@ -1,0 +1,8 @@
+{
+    "appName": "immich",
+    "namespace": "immich",
+    "chartRepo": "oci://ghcr.io/immich-app/immich-charts/immich",
+    "chartName": "immich",
+    "chartVersion": "0.13.1",
+    "isGitRepo": false
+}
