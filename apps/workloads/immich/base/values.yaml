@@ -41,6 +41,10 @@ controllers:
                 name: immich-secret
                 key: s3-secret-key
 
+          # -- Disable Machine Learning
+          IMMICH_MACHINE_LEARNING_ENABLED: "false"
+          IMMICH_MACHINE_LEARNING_URL: ""
+
         resources:
           requests:
             cpu: 250m
@@ -100,32 +104,6 @@ server:
         http:
           port: 2283
 
-# -- Machine Learning component (disabled to save resources)
+# -- Machine Learning component (disabled)
 machine-learning:
   enabled: false
-
-  controllers:
-    main:
-      containers:
-        main:
-          image:
-            repository: ghcr.io/immich-app/immich-machine-learning
-            pullPolicy: IfNotPresent
-
-          env:
-            TRANSFORMERS_CACHE: /cache
-            HF_XET_CACHE: /cache/huggingface-xet
-            MPLCONFIGDIR: /cache/matplotlib-config
-
-          resources:
-            requests:
-              cpu: 500m
-              memory: 1Gi
-            limits:
-              cpu: 2000m
-              memory: 4Gi
-
-  persistence:
-    cache:
-      enabled: true
-      type: emptyDir
