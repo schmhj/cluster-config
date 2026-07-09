@@ -4,7 +4,7 @@
 # Docs: https://immich.app/docs/install/kubernetes
 # =============================================================================
 
-# -- Global controller settings (applied to all components)
+# -- Top-level controller settings (applied to all components via bjw-s common library)
 controllers:
   main:
     containers:
@@ -47,40 +47,13 @@ controllers:
           # -- Machine Learning URL (internal service)
           IMMICH_MACHINE_LEARNING_URL: "http://immich-machine-learning:3003"
 
-    # -- Resource limits for the main server container
-    resources:
-      requests:
-        cpu: 250m
-        memory: 512Mi
-      limits:
-        cpu: 1000m
-        memory: 1Gi
-
-  # -- Machine Learning controller
-  machine-learning:
-    containers:
-      main:
-        image:
-          repository: ghcr.io/immich-app/immich-machine-learning
-          pullPolicy: IfNotPresent
-
-        env:
-          TRANSFORMERS_CACHE: /cache
-          HF_XET_CACHE: /cache/huggingface-xet
-          MPLCONFIGDIR: /cache/matplotlib-config
-
         resources:
           requests:
-            cpu: 500m
-            memory: 1Gi
+            cpu: 250m
+            memory: 512Mi
           limits:
-            cpu: 2000m
-            memory: 4Gi
-
-    persistence:
-      cache:
-        enabled: true
-        type: emptyDir
+            cpu: 1000m
+            memory: 1Gi
 
 # -- Immich-specific settings
 immich:
@@ -136,3 +109,29 @@ server:
 # -- Machine Learning component
 machine-learning:
   enabled: true
+
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: ghcr.io/immich-app/immich-machine-learning
+            pullPolicy: IfNotPresent
+
+          env:
+            TRANSFORMERS_CACHE: /cache
+            HF_XET_CACHE: /cache/huggingface-xet
+            MPLCONFIGDIR: /cache/matplotlib-config
+
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1Gi
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+
+  persistence:
+    cache:
+      enabled: true
+      type: emptyDir
