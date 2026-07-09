@@ -16,10 +16,7 @@ controllers:
 
         env:
           # -- Database connection (PostgreSQL in database namespace)
-          # NOTE: Verify the service FQDN after first deploy. The Bitnami
-          #       PostgreSQL chart names its primary service:
-          #       <release-name>-postgresql-primary.<namespace>.svc.cluster.local
-          DB_HOSTNAME: postgresql-prod-tenant-b-primary.database.svc.cluster.local
+          DB_HOSTNAME: postgresql-prod-tenant-b.database.svc.cluster.local
           DB_USERNAME: immich
           DB_DATABASE_NAME: immich
           DB_PASSWORD:
