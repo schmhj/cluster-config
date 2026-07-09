@@ -15,8 +15,8 @@ controllers:
           pullPolicy: IfNotPresent
 
         env:
-          # -- Database connection (PostgreSQL in database namespace)
-          DB_HOSTNAME: postgresql-prod-tenant-b.database.svc.cluster.local
+          # -- Database connection (PostgreSQL in same namespace)
+          DB_HOSTNAME: postgresql-prod-tenant-b
           DB_USERNAME: immich
           DB_DATABASE_NAME: immich
           DB_PASSWORD:
@@ -61,7 +61,7 @@ immich:
     # -- Library volume for thumbnails, generated files, and config
     # PVC is deployed via apps/infrastructure/immich-storage/
     library:
-      existingClaim: immich-library
+      existingClaim: data-storage
 
   # -- Immich configuration (immich-config.json converted to YAML)
   # Ref: https://immich.app/docs/install/config-file/

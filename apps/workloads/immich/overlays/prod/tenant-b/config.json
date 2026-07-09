@@ -1,6 +1,6 @@
 {
     "appName": "immich",
-    "namespace": "immich",
+    "namespace": "workloads",
     "chartRepo": "oci://ghcr.io/immich-app/immich-charts/immich",
     "chartName": "immich",
     "chartVersion": "0.13.1",
