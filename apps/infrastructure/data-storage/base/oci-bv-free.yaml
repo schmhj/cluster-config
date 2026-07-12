@@ -8,5 +8,9 @@ provisioner: blockvolume.csi.oraclecloud.com
 parameters:
   # 10 VPUs per GB matches the "Balanced" Always Free performance tier
   vpusPerGB: "10"
+
+  # Explicitly forces OCI to register this as an Always Free resource
+  oci.oraclecloud.com/initial-freeform-tags-override: '{"Oracle-AlwaysFree": "true"}'
+  
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
