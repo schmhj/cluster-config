@@ -12,6 +12,19 @@ auth:
   # password is sourced from the existing secret defined in global.postgresql.auth.existingSecret
 
 primary:
+  image:
+    registry: ghcr.io
+    repository: immich-app/postgres
+    tag: 18-vectorchord0.4-pgvector0.8.1
+
+  initdb:
+    scripts:
+      create-extensions.sql: |
+        CREATE EXTENSION IF NOT EXISTS cube;
+        CREATE EXTENSION IF NOT EXISTS earthdistance;
+        CREATE EXTENSION IF NOT EXISTS vector;
+        CREATE EXTENSION IF NOT EXISTS vchord;
+
   # Resource allocation for the database container
   resources:
     limits:
