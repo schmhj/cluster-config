@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: oci-bv-free
+  storageClassName: oci-bv
   resources:
     requests:
-      storage: 50Gi
+      storage: 100Gi
