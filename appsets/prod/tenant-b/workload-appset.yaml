@@ -18,7 +18,7 @@ spec:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: main
           files:
-          - path: "{{trimSuffix "/tenant-b" .path.path}}/config.json"
+          - path: '{{trimSuffix "/tenant-b" .path.path}}/config.json'
 
   template:
     metadata:
