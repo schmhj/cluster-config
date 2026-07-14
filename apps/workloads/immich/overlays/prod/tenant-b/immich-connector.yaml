@@ -1,0 +1,13 @@
+apiVersion: tailscale.com/v1alpha1
+kind: Connector
+metadata:
+  name: immich-connector
+  namespace: workloads
+spec:
+  hostname: immich
+  service:
+    kubernetes:
+      name: immich-prod-tenant-b
+      namespace: workloads
+      ports:
+        - port: 2283
