@@ -4,5 +4,7 @@ metadata:
   name: immich-connector
   namespace: traefik
 spec:
-  type: ExternalName
-  externalName: immich.taila9d5d4.ts.net
+  clusterIP: None
+  ports:
+    - port: 2283
+      targetPort: 2283
