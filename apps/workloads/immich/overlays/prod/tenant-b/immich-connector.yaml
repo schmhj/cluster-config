@@ -6,6 +6,7 @@ metadata:
 spec:
   hostname: immich
   appConnector: {}
+  exitNode: false
   tags:
     - tag:k8s-operator
   service:
