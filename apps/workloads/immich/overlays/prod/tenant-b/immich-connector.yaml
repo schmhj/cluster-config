@@ -6,6 +6,8 @@ metadata:
 spec:
   hostname: immich
   appConnector: {}
+  tags:
+    - tag:k8s-operator
   service:
     kubernetes:
       name: immich-prod-tenant-b
