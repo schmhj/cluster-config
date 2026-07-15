@@ -9,9 +9,3 @@ spec:
   exitNode: false
   tags:
     - tag:k8s-operator
-  service:
-    kubernetes:
-      name: immich-prod-tenant-b
-      namespace: workloads
-      ports:
-        - port: 2283
