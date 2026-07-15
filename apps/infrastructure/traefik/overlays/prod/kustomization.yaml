@@ -6,7 +6,6 @@ resources:
   - ../../base
   - ingress-routes.yaml
   - certificate.yaml
-  - immich-connector-service.yaml
 
 patches:
   - target:

@@ -173,12 +173,13 @@ metadata:
 spec:
   entryPoints:
     - websecure
+  ingressClassName: tailscale
   routes:
     - match: Host(`immich.newyeti.qzz.io`)
       kind: Rule
       services:
-        - name: immich-connector
-          namespace: traefik
+        - name: immich
+          namespace: workloads
           port: 2283
   tls:
     secretName: newyeti-tls-cert
