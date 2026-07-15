@@ -188,6 +188,5 @@ spec:
             backend:
               service:
                 name: immich
-                namespace: workloads
                 port:
                   number: 2283
