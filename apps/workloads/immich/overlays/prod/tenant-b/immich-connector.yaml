@@ -5,6 +5,7 @@ metadata:
   namespace: workloads
 spec:
   hostname: immich
+  appConnector: {}
   service:
     kubernetes:
       name: immich-prod-tenant-b
