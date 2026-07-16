@@ -4,6 +4,7 @@ commonAnnotations:
   argocd.argoproj.io/sync-wave: "0"
 resources:
   - ../../base
+  - cluster-issuer.yaml
   
 patches:
   - target:
