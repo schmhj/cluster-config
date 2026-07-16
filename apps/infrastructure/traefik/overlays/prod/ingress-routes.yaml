@@ -160,33 +160,3 @@ spec:
       middlewares: []
   tls:
     secretName: newyeti-tls-cert
-
----
-# ── Ingress: Immich via Tailscale (HTTPS) ───────────────────
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: immich-server
-  namespace: traefik
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"
-    traefik.ingress.kubernetes.io/router.tls.certresolver: ""
-spec:
-  ingressClassName: tailscale
-  tls:
-    - hosts:
-        - immich.newyeti.qzz.io
-      secretName: newyeti-tls-cert
-  rules:
-    - host: immich.newyeti.qzz.io
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: immich
-                port:
-                  number: 2283
