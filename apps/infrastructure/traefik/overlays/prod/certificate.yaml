@@ -1,7 +1,4 @@
 ---
-# ── Certificate: Self-signed for traefik and ArgoCD ───────────
-# You may replace this with a proper certificate from a CA
-# For production, consider using Let's Encrypt via cert-manager
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -22,7 +19,6 @@ spec:
   dnsNames:
     - newyeti.qzz.io
     - "*.newyeti.qzz.io"
-    - immich.newyeti.qzz.io
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
