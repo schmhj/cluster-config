@@ -16,6 +16,14 @@ primary:
     registry: ghcr.io
     repository: immich-app/postgres
     tag: 18-vectorchord0.4-pgvector0.8.1
+    initdb:
+      scripts:
+        create-extensions.sql: |
+          \c immich
+          CREATE EXTENSION IF NOT EXISTS cube CASCADE;
+          CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+          CREATE EXTENSION IF NOT EXISTS vector CASCADE;
+          CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
 
   # Resource allocation for the database container
   resources:

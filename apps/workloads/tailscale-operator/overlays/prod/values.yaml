@@ -10,6 +10,14 @@ operatorConfig:
 
   affinity:
     nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: workload
+                operator: In
+                values:
+                  - workload-0
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
           - matchExpressions:
@@ -17,10 +25,6 @@ operatorConfig:
                 operator: In
                 values:
                   - workload
-              - key: workload
-                operator: In
-                values:
-                  - workload-0
 
   tolerations:
     - key: "tier"

@@ -60,7 +60,7 @@ immich:
 
   persistence:
     # -- Library volume for thumbnails, generated files, and config
-    # PVC is deployed via apps/infrastructure/immich-storage/
+    # PVC is deployed via immich-pvc.yaml
     library:
       existingClaim: immich-data
 
