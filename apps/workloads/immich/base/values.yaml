@@ -29,7 +29,7 @@ controllers:
           IMMICH_STORAGE_TYPE: s3
           IMMICH_STORAGE_S3_BUCKET: immich-library
           IMMICH_STORAGE_S3_REGION: us-east-1
-          IMMICH_STORAGE_S3_ENDPOINT: "http://100.73.152.123:3900"
+          IMMICH_STORAGE_S3_ENDPOINT: "http://garage-s3.workloads.svc.cluster.local:3900"
           IMMICH_STORAGE_S3_ACCESS_KEY:
             valueFrom:
               secretKeyRef:
