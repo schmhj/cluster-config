@@ -24,7 +24,7 @@ proxyConfig:
   image:
     repository: docker.io/tailscale/tailscale
     tag: latest
-  defaultTags: "tag:k8s"
+  defaultTags: "tag:k8s-operator"
   firewallMode: auto
 
 apiServerProxyConfig:
