@@ -1,19 +1,15 @@
 # =============================================================================
-# Immich - Base Values
+# Immich/Gallery - Base Values
 # Chart: oci://ghcr.io/immich-app/immich-charts/immich
-# Docs: https://immich.app/docs/install/kubernetes
+# Fork: ghcr.io/open-noodle/gallery (S3-native, based on Immich v3.0.3)
+# Docs: https://docs.opennoodle.de/features/s3-storage
 # =============================================================================
 
-# -- Top-level controller settings (applied to all components via bjw-s common library)
+# -- Top-level controller settings (shared env vars via bjw-s common library)
 controllers:
   main:
     containers:
       main:
-        image:
-          repository: ghcr.io/immich-app/immich-server
-          tag: v3.0.0
-          pullPolicy: IfNotPresent
-
         env:
           # -- Database connection (PostgreSQL in same namespace)
           DB_HOSTNAME: postgresql-prod-tenant-b
@@ -25,17 +21,18 @@ controllers:
                 name: immich-secret
                 key: db-password
 
-          # -- S3 storage (Garage)
-          IMMICH_STORAGE_TYPE: s3
-          IMMICH_STORAGE_S3_BUCKET: immich-library
-          IMMICH_STORAGE_S3_REGION: us-east-1
-          IMMICH_STORAGE_S3_ENDPOINT: "http://garage-s3.workloads.svc.cluster.local:3900"
-          IMMICH_STORAGE_S3_ACCESS_KEY:
+          # -- S3 storage (Garage, via Tailscale egress proxy)
+          IMMICH_STORAGE_BACKEND: s3
+          IMMICH_S3_BUCKET: immich-library
+          IMMICH_S3_REGION: us-east-1
+          IMMICH_S3_ENDPOINT: "http://garage-s3.workloads.svc.cluster.local:3900"
+          IMMICH_S3_SERVE_MODE: proxy
+          IMMICH_S3_ACCESS_KEY_ID:
             valueFrom:
               secretKeyRef:
                 name: immich-secret
                 key: s3-access-key
-          IMMICH_STORAGE_S3_SECRET_KEY:
+          IMMICH_S3_SECRET_ACCESS_KEY:
             valueFrom:
               secretKeyRef:
                 name: immich-secret
@@ -94,10 +91,17 @@ valkey:
       enabled: true
       type: emptyDir
 
-# -- Immich Server component
+# -- Noodle Gallery server (Immich fork with native S3 support)
 server:
   enabled: true
-
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: ghcr.io/open-noodle/gallery-server
+            tag: v5
+            pullPolicy: IfNotPresent
   service:
     main:
       ports:
