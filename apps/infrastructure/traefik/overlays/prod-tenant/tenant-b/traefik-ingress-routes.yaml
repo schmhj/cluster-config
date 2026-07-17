@@ -45,9 +45,9 @@ spec:
     - match: Host(`immich.newyeti.qzz.io`)
       kind: Rule
       services:
-        - name: immich
+        - name: immich-server
           namespace: workloads
           port: 2283
+      middlewares: []
   tls:
     secretName: newyeti-tls-cert
-    
