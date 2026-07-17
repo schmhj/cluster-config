@@ -24,7 +24,7 @@ controllers:
           # -- S3 storage (Garage, via Tailscale egress proxy)
           IMMICH_STORAGE_BACKEND: s3
           IMMICH_S3_BUCKET: immich-library
-          IMMICH_S3_REGION: us-east-1
+          IMMICH_S3_REGION: garage
           IMMICH_S3_ENDPOINT: "http://garage-s3.workloads.svc.cluster.local:3900"
           IMMICH_S3_SERVE_MODE: proxy
           IMMICH_S3_ACCESS_KEY_ID:
