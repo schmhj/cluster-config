@@ -45,7 +45,7 @@ spec:
     - match: Host(`immich.newyeti.qzz.io`)
       kind: Rule
       services:
-        - name: immich-server
+        - name: immich-prod-tenant-b-server
           namespace: workloads
           port: 2283
       middlewares: []
