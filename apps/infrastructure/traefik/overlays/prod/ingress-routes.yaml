@@ -80,7 +80,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "4"
 spec:
   redirectRegex:
-    regex: ^https://(traefik|traefik-b)\.newyeti\.qzz\.io/dashboard$
+    regex: ^https://(traefik-a|traefik-b)\.newyeti\.qzz\.io/dashboard$
     replacement: https://$1.newyeti.qzz.io/dashboard/
     permanent: true
 
