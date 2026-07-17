@@ -23,7 +23,6 @@ primary:
           CREATE EXTENSION IF NOT EXISTS cube CASCADE;
           CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
           CREATE EXTENSION IF NOT EXISTS vector CASCADE;
-          CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
 
   # Prevent voluntary pod disruption during node drains or cluster operations
   pdb:

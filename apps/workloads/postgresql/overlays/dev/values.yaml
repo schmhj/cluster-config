@@ -23,7 +23,6 @@ primary:
           CREATE EXTENSION IF NOT EXISTS cube CASCADE;
           CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
           CREATE EXTENSION IF NOT EXISTS vector CASCADE;
-          CREATE EXTENSION IF NOT EXISTS vchord CASCADE;
 
   # Resource allocation for the database container
   resources:
