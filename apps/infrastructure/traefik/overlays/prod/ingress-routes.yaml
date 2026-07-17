@@ -85,21 +85,6 @@ spec:
     permanent: true
 
 ---
-# ── Middleware: Rate Limit ───────────────────────────────────
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: rate-limit
-  namespace: traefik
-  annotations:
-    argocd.argoproj.io/sync-wave: "4"
-spec:
-  rateLimit:
-    average: 100
-    burst: 50
-    period: 1s
-
----
 # ── IngressRoute: HTTP → HTTPS redirect catch-all ────────────
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
