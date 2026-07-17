@@ -18,6 +18,8 @@ spec:
           namespace: traefik
         - name: dashboard-auth
           namespace: traefik
+        - name: rate-limit
+          namespace: traefik
       services:
         - name: api@internal
           kind: TraefikService
@@ -48,6 +50,8 @@ spec:
         - name: immich-prod-tenant-b-server
           namespace: workloads
           port: 2283
-      middlewares: []
+      middlewares:
+        - name: rate-limit
+          namespace: traefik
   tls:
     secretName: newyeti-tls-cert
