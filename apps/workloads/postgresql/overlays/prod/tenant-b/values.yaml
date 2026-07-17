@@ -34,7 +34,7 @@ primary:
   # Persistence configuration (shared PVC with Immich)
   persistence:
     enabled: true
-    existingClaim: data-storage
+    existingClaim: postgres-data
 
   # Custom PostgreSQL configuration parameters (postgresql.conf)
   extendedConfiguration: |
