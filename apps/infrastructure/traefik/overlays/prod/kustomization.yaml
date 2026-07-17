@@ -5,7 +5,7 @@ commonAnnotations:
 resources:
   - ../../base
   - ingress-routes.yaml
-  - immich-ingress-route.yaml
+  # - immich-ingress-route.yaml
   - certificate.yaml
 
 patches:
