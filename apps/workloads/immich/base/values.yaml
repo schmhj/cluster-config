@@ -42,6 +42,10 @@ controllers:
           IMMICH_MACHINE_LEARNING_ENABLED: "false"
           IMMICH_MACHINE_LEARNING_URL: ""
 
+          # -- Disable AWS SDK v3 checksum validation (Garage S3 CRC32 incompatibility)
+          AWS_REQUEST_CHECKSUM_CALCULATION: "when_required"
+          AWS_RESPONSE_CHECKSUM_VALIDATION: "when_required"
+
         resources:
           requests:
             cpu: 250m
