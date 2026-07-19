@@ -4,7 +4,7 @@ newrelic-infrastructure:
   common:
     config:
       # Matches lowDataMode to ensure strict 30-second sampling intervals
-      interval: 30s
+      interval: 120s
 
 nri-prometheus:
   # nri-prometheus.enabled -- Install the [`nri-prometheus` chart](https://github.com/newrelic/nri-prometheus/tree/main/charts/nri-prometheus)
