@@ -5,47 +5,49 @@
 # Docs: https://docs.opennoodle.de/features/s3-storage
 # =============================================================================
 
+# -- Shared environment configurations using YAML anchors to prevent drift
+.s3_env: &s3_env
+  # -- Database connection (PostgreSQL in same namespace)
+  DB_HOSTNAME: postgresql-prod-tenant-b
+  DB_USERNAME: immich
+  DB_DATABASE_NAME: immich
+  DB_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: immich-secret
+        key: db-password
+
+  # -- S3 storage (Garage, via Tailscale egress proxy)
+  IMMICH_STORAGE_BACKEND: s3
+  IMMICH_S3_BUCKET: immich-library
+  IMMICH_S3_REGION: garage
+  IMMICH_S3_ENDPOINT: "http://garage-s3.workloads.svc.cluster.local:3900"
+  IMMICH_S3_SERVE_MODE: proxy
+  IMMICH_S3_ACCESS_KEY_ID:
+    valueFrom:
+      secretKeyRef:
+        name: immich-secret
+        key: s3-access-key
+  IMMICH_S3_SECRET_ACCESS_KEY:
+    valueFrom:
+      secretKeyRef:
+        name: immich-secret
+        key: s3-secret-key
+
+  # -- Disable Machine Learning
+  IMMICH_MACHINE_LEARNING_ENABLED: "false"
+  IMMICH_MACHINE_LEARNING_URL: ""
+
+  # -- Disable AWS SDK v3 checksum validation (Garage S3 CRC32 incompatibility)
+  AWS_REQUEST_CHECKSUM_CALCULATION: "when_required"
+  AWS_RESPONSE_CHECKSUM_VALIDATION: "when_required"
+
 # -- Top-level controller settings (shared env vars via bjw-s common library)
 controllers:
   main:
     containers:
       main:
-        env:
-          # -- Database connection (PostgreSQL in same namespace)
-          DB_HOSTNAME: postgresql-prod-tenant-b
-          DB_USERNAME: immich
-          DB_DATABASE_NAME: immich
-          DB_PASSWORD:
-            valueFrom:
-              secretKeyRef:
-                name: immich-secret
-                key: db-password
-
-          # -- S3 storage (Garage, via Tailscale egress proxy)
-          IMMICH_STORAGE_BACKEND: s3
-          IMMICH_S3_BUCKET: immich-library
-          IMMICH_S3_REGION: garage
-          IMMICH_S3_ENDPOINT: "http://garage-s3.workloads.svc.cluster.local:3900"
-          IMMICH_S3_SERVE_MODE: proxy
-          IMMICH_S3_ACCESS_KEY_ID:
-            valueFrom:
-              secretKeyRef:
-                name: immich-secret
-                key: s3-access-key
-          IMMICH_S3_SECRET_ACCESS_KEY:
-            valueFrom:
-              secretKeyRef:
-                name: immich-secret
-                key: s3-secret-key
-
-          # -- Disable Machine Learning
-          IMMICH_MACHINE_LEARNING_ENABLED: "false"
-          IMMICH_MACHINE_LEARNING_URL: ""
-
-          # -- Disable AWS SDK v3 checksum validation (Garage S3 CRC32 incompatibility)
-          AWS_REQUEST_CHECKSUM_CALCULATION: "when_required"
-          AWS_RESPONSE_CHECKSUM_VALIDATION: "when_required"
-
+        env: *s3_env
         resources:
           requests:
             cpu: 250m
@@ -58,21 +60,14 @@ controllers:
 immich:
   metrics:
     enabled: false
-
   persistence:
-    # -- Library volume for thumbnails, generated files, and config
-    # PVC is deployed via immich-pvc.yaml
     library:
       existingClaim: immich-data
-
-  # -- Immich configuration (immich-config.json converted to YAML)
-  # Ref: https://immich.app/docs/install/config-file/
   configuration: {}
 
 # -- Built-in Valkey (Redis-compatible) for job queues
 valkey:
   enabled: true
-
   controllers:
     main:
       containers:
@@ -81,7 +76,6 @@ valkey:
             repository: docker.io/valkey/valkey
             tag: 9.1-alpine
             pullPolicy: IfNotPresent
-
           resources:
             requests:
               cpu: 100m
@@ -89,13 +83,12 @@ valkey:
             limits:
               cpu: 250m
               memory: 256Mi
-
   persistence:
     data:
       enabled: true
       type: emptyDir
 
-# -- Noodle Gallery server (Immich fork with native S3 support)
+# -- Noodle Gallery API/Web Server
 server:
   enabled: true
   controllers:
@@ -111,6 +104,22 @@ server:
       ports:
         http:
           port: 2283
+
+# =============================================================================
+# CRITICAL CORRECTION: Background Microservices Worker
+# Without this, background storage templating completely bypasses OpenNoodle S3 logic.
+# =============================================================================
+microservices:
+  enabled: true
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: ghcr.io/open-noodle/gallery-server
+            tag: v5
+            pullPolicy: IfNotPresent
+          env: *s3_env
 
 # -- Machine Learning component (disabled)
 machine-learning:
