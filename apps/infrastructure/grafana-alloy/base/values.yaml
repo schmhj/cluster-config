@@ -118,6 +118,10 @@ alloy:
         forward_to = [loki.process.immich.receiver]
       }
       loki.process "immich" {
+        // Merge multi-line log entries (JSON payloads) by matching first line
+        stage.multiline {
+          firstline = "^\\[Nest\\]"
+        }
         stage.static_labels {
           values = {
             service = "immich",
