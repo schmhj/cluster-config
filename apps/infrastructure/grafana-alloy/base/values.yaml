@@ -100,6 +100,17 @@ alloy:
         password = sys.env("GRAFANA_CLOUD_API_KEY")
       }
 
+      // 5. COLLECT SELECTIVE POD LOGS: Tail container logs via Kubernetes API
+      // Add more selectors for additional apps as needed.
+      loki.source.kubernetes "selected" {
+        forward_to = [loki.write.cloud.receiver]
+        namespaces = ["workloads"]
+        selectors  = [
+          "app.kubernetes.io/instance=immich",
+          "app.kubernetes.io/instance=postgresql"
+        ]
+      }
+
   # Ensure correct ports are matched
   extraPorts:
     - name: "otlp-grpc"
