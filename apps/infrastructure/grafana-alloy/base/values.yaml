@@ -100,9 +100,8 @@ alloy:
         password = sys.env("GRAFANA_CLOUD_API_KEY")
       }
 
-      // 5. DISCOVER SELECTIVE PODS: Find pods by label/namespace
-      // Add more selectors or discovery components for additional apps.
-      discovery.kubernetes "selected" {
+      // 5. DISCOVER IMMICH SERVER PODS
+      discovery.kubernetes "immich" {
         role = "pod"
         namespaces {
           names = ["workloads"]
@@ -113,9 +112,27 @@ alloy:
         }
       }
 
-      // 6. COLLECT LOGS FROM SELECTED PODS via Kubernetes API
-      loki.source.kubernetes "selected" {
-        targets    = discovery.kubernetes.selected.targets
+      // 6. COLLECT IMMICH SERVER LOGS
+      loki.source.kubernetes "immich" {
+        targets    = discovery.kubernetes.immich.targets
+        forward_to = [loki.write.cloud.receiver]
+      }
+
+      // 7. DISCOVER POSTGRESQL PODS
+      discovery.kubernetes "postgresql" {
+        role = "pod"
+        namespaces {
+          names = ["workloads"]
+        }
+        selectors {
+          role  = "pod"
+          label = "app.kubernetes.io/name=postgresql"
+        }
+      }
+
+      // 8. COLLECT POSTGRESQL LOGS
+      loki.source.kubernetes "postgresql" {
+        targets    = discovery.kubernetes.postgresql.targets
         forward_to = [loki.write.cloud.receiver]
       }
 
