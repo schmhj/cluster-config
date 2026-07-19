@@ -53,7 +53,5 @@ spec:
       middlewares:
         - name: rate-limit
           namespace: traefik
-        # - name: immich-buffering
-        #   namespace: traefik
   tls:
     secretName: newyeti-tls-cert
