@@ -112,9 +112,17 @@ alloy:
         }
       }
 
-      // 6. COLLECT IMMICH SERVER LOGS
+      // 6. COLLECT AND LABEL IMMICH SERVER LOGS
       loki.source.kubernetes "immich" {
         targets    = discovery.kubernetes.immich.targets
+        forward_to = [loki.process.immich.receiver]
+      }
+      loki.process "immich" {
+        stage.static_labels {
+          values = {
+            service = "immich",
+          }
+        }
         forward_to = [loki.write.cloud.receiver]
       }
 
@@ -130,9 +138,17 @@ alloy:
         }
       }
 
-      // 8. COLLECT POSTGRESQL LOGS
+      // 8. COLLECT AND LABEL POSTGRESQL LOGS
       loki.source.kubernetes "postgresql" {
         targets    = discovery.kubernetes.postgresql.targets
+        forward_to = [loki.process.postgresql.receiver]
+      }
+      loki.process "postgresql" {
+        stage.static_labels {
+          values = {
+            service = "postgresql",
+          }
+        }
         forward_to = [loki.write.cloud.receiver]
       }
 
