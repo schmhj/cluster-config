@@ -109,7 +109,7 @@ alloy:
         }
         selectors {
           role  = "pod"
-          label = "app.kubernetes.io/instance=immich"
+          label = "app.kubernetes.io/name=immich"
         }
       }
 
