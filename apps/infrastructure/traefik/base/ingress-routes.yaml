@@ -57,6 +57,18 @@ spec:
     removeHeader: true           # Strip Authorization header from upstream
 
 ---
+# ── Middleware: buffering for large uploads (Immich) ─────────
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: immich-buffering
+  namespace: traefik
+spec:
+  buffering:
+    maxRequestBodyBytes: 1073741824  # 10 GB
+    memRequestBodyBytes: 104857600    # 100 MB in-memory buffer
+
+---
 # ── IngressRoute: HTTP → HTTPS redirect catch-all ────────────
 # Handles the edge case where LB doesn't terminate HTTP itself
 # apiVersion: traefik.io/v1alpha1

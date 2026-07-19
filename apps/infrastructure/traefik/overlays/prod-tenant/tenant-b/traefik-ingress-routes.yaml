@@ -53,30 +53,7 @@ spec:
       middlewares:
         - name: rate-limit
           namespace: traefik
-  tls:
-    secretName: newyeti-tls-cert
-
----
-
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: immich-upload
-  namespace: traefik
-  annotations:
-    argocd.argoproj.io/sync-wave: "5"
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - match: Host(`immich-upload.newyeti.qzz.io`)
-      kind: Rule
-      services:
-        - name: immich-prod-tenant-b-server
-          namespace: workloads
-          port: 2283
-      middlewares:
-        - name: rate-limit
+        - name: immich-buffering
           namespace: traefik
   tls:
     secretName: newyeti-tls-cert
