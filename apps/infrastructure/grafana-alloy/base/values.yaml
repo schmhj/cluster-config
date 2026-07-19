@@ -66,10 +66,10 @@ alloy:
       }
       prometheus.remote_write "cloud" {
         endpoint {
-          url = env("PROMETHEUS_URL")
+          url = sys.env("PROMETHEUS_URL")
           basic_auth {
-            username = env("PROMETHEUS_USERNAME")
-            password = env("GRAFANA_CLOUD_API_KEY")
+            username = sys.env("PROMETHEUS_USERNAME")
+            password = sys.env("GRAFANA_CLOUD_API_KEY")
           }
         }
       }
@@ -80,10 +80,10 @@ alloy:
       }
       loki.write "cloud" {
         endpoint {
-          url = env("LOKI_URL")
+          url = sys.env("LOKI_URL")
           basic_auth {
-            username = env("LOKI_USERNAME")
-            password = env("GRAFANA_CLOUD_API_KEY")
+            username = sys.env("LOKI_USERNAME")
+            password = sys.env("GRAFANA_CLOUD_API_KEY")
           }
         }
       }
@@ -91,7 +91,7 @@ alloy:
       // 4. EXPORT TRACES: Send OTLP traces to Tempo
       otelcol.exporter.otlp "cloud" {
         client {
-          endpoint = env("TEMPO_URL")
+          endpoint = sys.env("TEMPO_URL")
           auth     = otelcol.auth.basic.cloud.handler
         }
       }
@@ -100,15 +100,23 @@ alloy:
         password = sys.env("GRAFANA_CLOUD_API_KEY")
       }
 
-      // 5. COLLECT SELECTIVE POD LOGS: Tail container logs via Kubernetes API
-      // Add more selectors for additional apps as needed.
+      // 5. DISCOVER SELECTIVE PODS: Find pods by label/namespace
+      // Add more selectors or discovery components for additional apps.
+      discovery.kubernetes "selected" {
+        role = "pod"
+        namespaces {
+          names = ["workloads"]
+        }
+        selectors {
+          role  = "pod"
+          label = "app.kubernetes.io/instance=immich"
+        }
+      }
+
+      // 6. COLLECT LOGS FROM SELECTED PODS via Kubernetes API
       loki.source.kubernetes "selected" {
+        targets    = discovery.kubernetes.selected.targets
         forward_to = [loki.write.cloud.receiver]
-        namespaces = ["workloads"]
-        selectors  = [
-          "app.kubernetes.io/instance=immich",
-          "app.kubernetes.io/instance=postgresql"
-        ]
       }
 
   # Ensure correct ports are matched
