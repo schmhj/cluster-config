@@ -63,10 +63,6 @@ immich:
   persistence:
     library:
       existingClaim: immich-data
-  configuration:
-    storageTemplate:
-      enabled: true
-      template: "{{y}}/{{MMMM}}/{{dd}}/{{filename}}"
 
 # -- Built-in Valkey (Redis-compatible) for job queues
 valkey:
@@ -107,22 +103,6 @@ server:
       ports:
         http:
           port: 2283
-
-# =============================================================================
-# CRITICAL CORRECTION: Background Microservices Worker
-# Without this, background storage templating completely bypasses OpenNoodle S3 logic.
-# =============================================================================
-microservices:
-  enabled: true
-  controllers:
-    main:
-      containers:
-        main:
-          image:
-            repository: ghcr.io/open-noodle/gallery-server
-            tag: v5
-            pullPolicy: IfNotPresent
-          env: *s3_env
 
 # -- Machine Learning component (disabled)
 machine-learning:
