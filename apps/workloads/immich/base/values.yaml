@@ -63,7 +63,10 @@ immich:
   persistence:
     library:
       existingClaim: immich-data
-  configuration: {}
+  configuration:
+    storageTemplate:
+      enabled: true
+      template: "{{y}}/{{MMMM}}/{{dd}}/{{filename}}"
 
 # -- Built-in Valkey (Redis-compatible) for job queues
 valkey:
