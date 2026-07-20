@@ -119,8 +119,9 @@ alloy:
       }
       loki.process "immich" {
         // Merge multi-line log entries (JSON payloads) by matching first line
+        // Merge multi-line log entries. ANSI color codes (\x1b[...m) may precede [Nest]
         stage.multiline {
-          firstline = "^\\[Nest\\]"
+          firstline = "^(?:\\x1b\\[[0-9;]*m)*\\[Nest\\]"
         }
         stage.static_labels {
           values = {
