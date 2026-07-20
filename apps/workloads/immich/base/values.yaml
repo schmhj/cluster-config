@@ -34,9 +34,10 @@
         name: immich-secret
         key: s3-secret-key
 
-  # -- Disable Machine Learning
-  IMMICH_MACHINE_LEARNING_ENABLED: "false"
-  IMMICH_MACHINE_LEARNING_URL: ""
+  # -- Machine Learning (smart search + facial recognition)
+  IMMICH_MACHINE_LEARNING_ENABLED: "true"
+  # Release-name-agnostic; bjw-s common runs tpl on env values.
+  IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
 
   # -- Disable AWS SDK v3 checksum validation (Garage S3 CRC32 incompatibility)
   AWS_REQUEST_CHECKSUM_CALCULATION: "when_required"
@@ -104,6 +105,38 @@ server:
         http:
           port: 2283
 
-# -- Machine Learning component (disabled)
+# =============================================================================
+# Machine Learning component
+# CPU hard-capped at 500m so it cannot starve PostgreSQL / server on the shared
+# 2 vCPU workload-0 node. Image pinned to match the gallery fork (Immich v3.0.3).
+# =============================================================================
 machine-learning:
-  enabled: false
+  enabled: true
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: ghcr.io/immich-app/immich-machine-learning
+            tag: v3.0.3
+            pullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 3Gi
+  # Pod scheduling (affinity + tolerations for workload-0) is set globally via
+  # defaultPodOptions in the tenant-b overlay, applying to all components.
+  persistence:
+    cache:
+      enabled: true
+      type: emptyDir
+
+# -- Post-rollout (Immich admin) model selection — NOT chart values:
+#    Administration -> Settings -> Machine Learning
+#      Smart Search (CLIP) model: ViT-B-32__openai
+#      Facial Recognition model: buffalo_s
+#    On a fresh library, jobs process new uploads at steady state; no large
+#    backfill expected. Watch the ML pod stays within the 500m CPU limit.

@@ -2,11 +2,3 @@
 # Immich - Prod Shared Values
 # Applied to all prod tenants. Sets node affinity for workload-0.
 # =============================================================================
-
-# -- Top-level pod scheduling (applied to all controllers via bjw-s common library)
-podScheduling:
-  tolerations:
-    - key: "tier"
-      operator: "Equal"
-      value: "workload"
-      effect: "NoSchedule"

@@ -3,10 +3,11 @@
 # Overrides for tenant-b deployment.
 # =============================================================================
 
-# -- No tenant-specific overrides needed at this time.
-# Add tenant-b specific values here (e.g., resource adjustments,
-# custom hostnames, additional ingress configuration).
-podScheduling:
+# -- Global pod scheduling for all Immich components (server, valkey,
+# machine-learning). This chart's bjw-s common library reads scheduling from
+# defaultPodOptions (strategy: overwrite), so setting it here pins every
+# component to the workload-0 node and adds the tier=workload toleration.
+defaultPodOptions:
   affinity:
     nodeAffinity:
       preferredDuringSchedulingIgnoredDuringExecution:
@@ -24,3 +25,8 @@ podScheduling:
                 operator: In
                 values:
                   - workload
+  tolerations:
+    - key: "tier"
+      operator: "Equal"
+      value: "workload"
+      effect: "NoSchedule"
