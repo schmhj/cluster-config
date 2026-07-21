@@ -1,15 +1,17 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+apiVersion: v1
+kind: Service
 metadata:
-  name: postgresql-tailscale
+  name: postgresql-nodeport
   namespace: workloads
-  annotations:
-    tailscale.com/expose: "true"
-    tailscale.com/hostname: "postgresql-tenant-b"
 spec:
-  ingressClassName: tailscale
-  defaultBackend:
-    service:
-      name: postgresql-prod-tenant-b
-      port:
-        number: 5432
+  type: NodePort
+  selector:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: postgresql-prod-tenant-b
+    app.kubernetes.io/name: postgresql
+  ports:
+    - port: 5432
+      targetPort: tcp-postgresql
+      nodePort: 30432
+      protocol: TCP
+      name: tcp-postgresql
