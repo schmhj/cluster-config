@@ -1,4 +1,8 @@
-// 5. DISCOVER IMMICH SERVER PODS
+// Workload log collection for tenant-b (Immich + PostgreSQL).
+// Sections 1-4 (OTLP pipeline + cloud exporters) come from base's config.alloy
+// in the same /etc/alloy/ directory; Alloy concatenates all *.alloy files.
+
+// 5. DISCOVER PODS (distinct selectors per workload)
 discovery.kubernetes "immich" {
   role = "pod"
   namespaces {
@@ -9,26 +13,6 @@ discovery.kubernetes "immich" {
     label = "app.kubernetes.io/instance=immich-prod-tenant-b,app.kubernetes.io/name=server"
   }
 }
-
-// 6. COLLECT AND LABEL IMMICH SERVER LOGS
-loki.source.kubernetes "immich" {
-  targets    = discovery.kubernetes.immich.targets
-  forward_to = [loki.process.immich.receiver]
-}
-loki.process "immich" {
-  // Merge multi-line log entries. ANSI color codes (\x1b[...m) may precede [Nest]
-  stage.multiline {
-    firstline = "^(?:\\x1b\\[[0-9;]*m)*\\[Nest\\]"
-  }
-  stage.static_labels {
-    values = {
-      service = "immich",
-    }
-  }
-  forward_to = [loki.write.cloud.receiver]
-}
-
-// 7. DISCOVER POSTGRESQL PODS
 discovery.kubernetes "postgresql" {
   role = "pod"
   namespaces {
@@ -40,15 +24,39 @@ discovery.kubernetes "postgresql" {
   }
 }
 
-// 8. COLLECT AND LABEL POSTGRESQL LOGS
-loki.source.kubernetes "postgresql" {
-  targets    = discovery.kubernetes.postgresql.targets
-  forward_to = [loki.process.postgresql.receiver]
+// 6. LABEL AT DISCOVERY (sets the `service` label so one process block can fan in)
+discovery.relabel "immich" {
+  targets = discovery.kubernetes.immich.targets
+  rule {
+    target_label = "service"
+    replacement  = "immich"
+  }
 }
-loki.process "postgresql" {
-  stage.static_labels {
-    values = {
-      service = "postgresql",
+discovery.relabel "postgresql" {
+  targets = discovery.kubernetes.postgresql.targets
+  rule {
+    target_label = "service"
+    replacement  = "postgresql"
+  }
+}
+
+// 7. COLLECT (both sources feed the single shared process block)
+loki.source.kubernetes "immich" {
+  targets    = discovery.relabel.immich.output
+  forward_to = [loki.process.workloads.receiver]
+}
+loki.source.kubernetes "postgresql" {
+  targets    = discovery.relabel.postgresql.output
+  forward_to = [loki.process.workloads.receiver]
+}
+
+// 8. PROCESS ONCE (multiline merge applies only to immich; ANSI color codes
+//    \x1b[...m may precede [Nest]). Single write path to Loki.
+loki.process "workloads" {
+  stage.match {
+    selector = "{service=\"immich\"}"
+    stage.multiline {
+      firstline = "^(?:\\x1b\\[[0-9;]*m)*\\[Nest\\]"
     }
   }
   forward_to = [loki.write.cloud.receiver]

@@ -1,10 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: postgresql-nodeport
+  name: postgresql-tailscale
   namespace: workloads
+  annotations:
+    tailscale.com/expose: "true"
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app.kubernetes.io/component: primary
     app.kubernetes.io/instance: postgresql-prod-tenant-b
@@ -12,6 +14,5 @@ spec:
   ports:
     - port: 5432
       targetPort: tcp-postgresql
-      nodePort: 30432
       protocol: TCP
       name: tcp-postgresql
