@@ -7,7 +7,7 @@ resources:
 
 patches:
   - target:
-      kind: Deployment
+      kind: DaemonSet
       name: grafana-alloy
       namespace: monitoring
     path: grafana-alloy-patch.yaml

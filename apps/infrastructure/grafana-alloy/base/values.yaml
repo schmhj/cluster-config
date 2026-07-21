@@ -100,62 +100,11 @@ alloy:
         password = sys.env("GRAFANA_CLOUD_API_KEY")
       }
 
-      // 5. DISCOVER IMMICH SERVER PODS
-      discovery.kubernetes "immich" {
-        role = "pod"
-        namespaces {
-          names = ["workloads"]
-        }
-        selectors {
-          role  = "pod"
-          label = "app.kubernetes.io/instance=immich-prod-tenant-b,app.kubernetes.io/name=server"
-        }
-      }
-
-      // 6. COLLECT AND LABEL IMMICH SERVER LOGS
-      loki.source.kubernetes "immich" {
-        targets    = discovery.kubernetes.immich.targets
-        forward_to = [loki.process.immich.receiver]
-      }
-      loki.process "immich" {
-        // Merge multi-line log entries (JSON payloads) by matching first line
-        // Merge multi-line log entries. ANSI color codes (\x1b[...m) may precede [Nest]
-        stage.multiline {
-          firstline = "^(?:\\x1b\\[[0-9;]*m)*\\[Nest\\]"
-        }
-        stage.static_labels {
-          values = {
-            service = "immich",
-          }
-        }
-        forward_to = [loki.write.cloud.receiver]
-      }
-
-      // 7. DISCOVER POSTGRESQL PODS
-      discovery.kubernetes "postgresql" {
-        role = "pod"
-        namespaces {
-          names = ["workloads"]
-        }
-        selectors {
-          role  = "pod"
-          label = "app.kubernetes.io/name=postgresql"
-        }
-      }
-
-      // 8. COLLECT AND LABEL POSTGRESQL LOGS
-      loki.source.kubernetes "postgresql" {
-        targets    = discovery.kubernetes.postgresql.targets
-        forward_to = [loki.process.postgresql.receiver]
-      }
-      loki.process "postgresql" {
-        stage.static_labels {
-          values = {
-            service = "postgresql",
-          }
-        }
-        forward_to = [loki.write.cloud.receiver]
-      }
+      // Workload-specific log collection (Immich, PostgreSQL) is defined per
+      // tenant, not here. Alloy loads every *.alloy file in /etc/alloy/, so a
+      // tenant overlay can drop in an extra config file (merged into this same
+      // ConfigMap) without repeating the generic pipeline above.
+      // See overlays/prod-tenant/tenant-b/workloads.alloy for tenant-b.
 
   # Ensure correct ports are matched
   extraPorts:

@@ -1,19 +1,17 @@
-- op: replace
-  path: /spec/replicas
-  value: 1
-
-- op: replace
-  path: /spec/template/spec/containers/0/resources/requests/cpu
-  value: "50m"
-
-- op: replace
-  path: /spec/template/spec/containers/0/resources/requests/memory
-  value: "64Mi"
-
-- op: replace
-  path: /spec/template/spec/containers/0/resources/limits/cpu
-  value: "100m"
-
-- op: replace
-  path: /spec/template/spec/containers/0/resources/limits/memory
-  value: "64Mi"
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: grafana-alloy
+  namespace: monitoring
+spec:
+  template:
+    spec:
+      containers:
+        - name: alloy
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "100m"
+              memory: "64Mi"
