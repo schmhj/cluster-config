@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: postgresql-tailscale
+  namespace: workloads
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/hostname: "postgresql-tenant-b"
+spec:
+  ingressClassName: tailscale
+  defaultBackend:
+    service:
+      name: postgresql-prod-tenant-b
+      port:
+        number: 5432

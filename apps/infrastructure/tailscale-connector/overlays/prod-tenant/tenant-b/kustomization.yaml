@@ -3,3 +3,4 @@ kind: Kustomization
 resources:
   - ../../prod
   - garage-s3-service.yaml
+  - postgresql-tailscale.yaml
