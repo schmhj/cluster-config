@@ -2,7 +2,7 @@
 // Sections 1-4 (OTLP pipeline + cloud exporters) come from base's config.alloy
 // in the same /etc/alloy/ directory; Alloy concatenates all *.alloy files.
 
-// 5. DISCOVER PODS (distinct selectors per workload)
+// 1. DISCOVER PODS (distinct selectors per workload)
 discovery.kubernetes "immich" {
   role = "pod"
   namespaces {
@@ -13,6 +13,18 @@ discovery.kubernetes "immich" {
     label = "app.kubernetes.io/instance=immich-prod-tenant-b,app.kubernetes.io/name=server"
   }
 }
+
+discovery.kubernetes "machine_learning" {
+  role = "pod"
+  namespaces {
+    names = ["workloads"]
+  }
+  selectors {
+    role  = "pod"
+    label = "app.kubernetes.io/instance=immich-prod-tenant-b,app.kubernetes.io/name=machine-learning"
+  }
+}
+
 discovery.kubernetes "postgresql" {
   role = "pod"
   namespaces {
@@ -24,7 +36,7 @@ discovery.kubernetes "postgresql" {
   }
 }
 
-// 6. LABEL AT DISCOVERY (sets the `service` label so one process block can fan in)
+// 2. LABEL AT DISCOVERY (sets the `service` label so one process block can fan in)
 discovery.relabel "immich" {
   targets = discovery.kubernetes.immich.targets
   rule {
@@ -32,6 +44,15 @@ discovery.relabel "immich" {
     replacement  = "immich"
   }
 }
+
+discovery.relabel "machine_learning" {
+  targets = discovery.kubernetes.machine_learning.targets
+  rule {
+    target_label = "service"
+    replacement  = "immich-machine-learning"
+  }
+}
+
 discovery.relabel "postgresql" {
   targets = discovery.kubernetes.postgresql.targets
   rule {
@@ -40,18 +61,26 @@ discovery.relabel "postgresql" {
   }
 }
 
-// 7. COLLECT (both sources feed the single shared process block)
+// 3. COLLECT (both sources feed the single shared process block)
 loki.source.kubernetes "immich" {
   targets    = discovery.relabel.immich.output
   forward_to = [loki.process.workloads.receiver]
 }
+
+loki.source.kubernetes "machine_learning" {
+  targets    = discovery.relabel.machine_learning.output
+  forward_to = [loki.process.workloads.receiver]
+}
+
 loki.source.kubernetes "postgresql" {
   targets    = discovery.relabel.postgresql.output
   forward_to = [loki.process.workloads.receiver]
 }
 
-// 8. PROCESS ONCE (multiline merge applies only to immich; ANSI color codes
-//    \x1b[...m may precede [Nest]). Single write path to Loki.
+// 4. PROCESS ONCE (multiline merge applies only to the NestJS immich server;
+//    ANSI color codes \x1b[...m may precede [Nest]. The Python machine-learning
+//    logs are NOT [Nest]-formatted, so they are excluded from the merge via the
+//    service selector.). Single write path to Loki.
 loki.process "workloads" {
   stage.match {
     selector = "{service=\"immich\"}"
