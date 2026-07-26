@@ -106,6 +106,31 @@ server:
           port: 2283
 
 # =============================================================================
+# CRITICAL CORRECTION: Background Microservices Worker
+# Without this, background thumbnail generation and other jobs won't run.
+# The chart creates a separate Deployment that processes the job queue
+# (backed by Valkey). Must share the same image and S3 env as the server.
+# =============================================================================
+microservices:
+  enabled: true
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: ghcr.io/open-noodle/gallery-server
+            tag: v5
+            pullPolicy: IfNotPresent
+          env: *s3_env
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+
+# =============================================================================
 # Machine Learning component
 # CPU hard-capped at 500m so it cannot starve PostgreSQL / server on the shared
 # 2 vCPU workload-0 node. Image pinned to match the gallery fork (Immich v3.0.3).
