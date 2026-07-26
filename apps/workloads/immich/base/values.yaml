@@ -97,7 +97,7 @@ server:
         main:
           image:
             repository: ghcr.io/open-noodle/gallery-server
-            tag: v5
+            tag: v5.2.2
             pullPolicy: IfNotPresent
   service:
     main:
@@ -119,7 +119,7 @@ microservices:
         main:
           image:
             repository: ghcr.io/open-noodle/gallery-server
-            tag: v5
+            tag: v5.2.2
             pullPolicy: IfNotPresent
           env: *s3_env
           resources:
