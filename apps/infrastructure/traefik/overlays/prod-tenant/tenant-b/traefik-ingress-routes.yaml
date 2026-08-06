@@ -42,12 +42,7 @@ metadata:
     argocd.argoproj.io/sync-wave: "5"
 spec:
   entryPoints:
-    - name: websecure
-      address: ":443"
-      transport:
-        respondingTimeouts:
-          readTimeout: 600s
-          idleTimeout: 600s
+    - websecure
 
   routes:
     - match: Host(`immich.newyeti.qzz.io`) || Host(`immich-upload.newyeti.qzz.io`)

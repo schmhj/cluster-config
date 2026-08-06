@@ -46,10 +46,10 @@ ports:
       default: true
     exposedPort: 443
     protocol: TCP
-    # transport:
-    #   respondingTimeouts:
-    #     readTimeout: 600s
-    #     idleTimeout: 600s
+    transport:
+      respondingTimeouts:
+        readTimeout: 600s
+        idleTimeout: 600s
 
 
 # ── Resources ─────────────────────────────────────────────────
