@@ -3,4 +3,5 @@ kind: Kustomization
 commonAnnotations:
   argocd.argoproj.io/sync-wave: "3"
 resources:
-  - argocd-configmap.yaml
+  - argocd-cm.yaml
+  - argocd-rbac-cm.yaml

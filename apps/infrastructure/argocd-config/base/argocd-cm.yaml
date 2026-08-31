@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: argocd-cm-ghaap-secret
+  name: argocd-cm
   namespace: argocd
 data:
   url: https://argocd.newyeti.qzz.io
@@ -9,4 +9,7 @@ data:
   server.insecure: "true"
   accounts.ghapp: login=ghapp
   account.ghapp.tokens: $ghaap-auth-secret:githubAppID!$ghaap-auth-secret:githubAppInstallationID!$ghaap-auth-secret:githubAppPrivateKey
-  accounts.cicd-pipeline: apiKey # Define a service account for automation
+  
+  # local accounts
+  accounts.automation-sa: apiKey
+  accounts.automation-sa: "true"
