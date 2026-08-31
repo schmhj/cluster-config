@@ -12,4 +12,3 @@ data:
   
   # local accounts
   accounts.automation-sa: apiKey
-  accounts.automation-sa: "true"
