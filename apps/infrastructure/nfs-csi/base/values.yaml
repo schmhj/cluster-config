@@ -1,0 +1,9 @@
+# Upstream csi-driver-nfs chart defaults we rely on.
+driver:
+  name: nfs.csi.k8s.io
+  mountPermissions: 0
+feature:
+  enableFSGroupPolicy: true
+controller:
+  defaultOnDeletePolicy: delete
+kubeletDir: /var/lib/kubelet
