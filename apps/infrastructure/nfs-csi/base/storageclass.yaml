@@ -7,7 +7,8 @@ parameters:
   server: 100.73.152.123
   share: /Volumes/HomeLab
 reclaimPolicy: Delete
-volumeBindingMode: Immediate
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
 mountOptions:
   - nfsvers=4.1
   - hard
