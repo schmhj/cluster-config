@@ -88,3 +88,17 @@ kubectl create secret generic immich-secret \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/immich-sealedsecret.yaml
+
+
+# Node-level tailscale auth key (tagged reusable key, tag:k8s-nfs-nodes) used by the
+# tailscaled DaemonSet in apps/infrastructure/tailscale-node. Regenerating this file
+# requires re-supplying client_id/client_secret literals as well — they are redacted here.
+kubectl create secret generic tailscale-secret \
+     --namespace=infrastructure \
+     --dry-run=client \
+     --from-literal=client_id='***' \
+     --from-literal=client_secret='***' \
+     --from-literal=nfs-auth-key='***' \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/tailscale-sealedsecret.yaml
