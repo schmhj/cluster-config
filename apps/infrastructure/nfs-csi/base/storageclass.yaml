@@ -6,7 +6,7 @@ provisioner: nfs.csi.k8s.io
 parameters:
   server: 100.73.152.123
   share: /Volumes/HomeLab
-  subDir: paperless/media
+  subDir: paperless
 reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
