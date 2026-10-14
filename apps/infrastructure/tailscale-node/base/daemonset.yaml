@@ -32,6 +32,8 @@ spec:
                   key: nfs-auth-key
             - name: TS_STATE_DIR
               value: /var/lib/tailscale
+            - name: TS_KUBE_SECRET
+              value: ""
             - name: TS_HOSTNAME
               valueFrom:
                 fieldRef:
