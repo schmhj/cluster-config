@@ -22,7 +22,7 @@ spec:
         - operator: Exists
       containers:
         - name: tailscale
-          image: docker.io/tailscale/tailscale:v1.98.10
+          image: docker.io/tailscale/tailscale:v1.104.1
           imagePullPolicy: IfNotPresent
           env:
             - name: TS_AUTHKEY
