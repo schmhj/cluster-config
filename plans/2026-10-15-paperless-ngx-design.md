@@ -49,6 +49,19 @@ via `tailscale.com/expose`) → ClusterIP → postgres pods. Mirrors the working
 - **Storage**: chart-created PVC `paperless-data`, StorageClass `nfs-paperless`
   (subDir `paperless` on the Mac Mini export), 20Gi, retain on uninstall.
   Bundled Valkey uses its default small PVC on oci-bv.
+  **As-built deviation**: the export is NFSv3-only (no file locking — the
+  server refuses NFSv4 mounts), so the paperless DATA_DIR cannot live on it
+  (`s6-setlock` on `migration_lock` fails with "No locks available"). The
+  chart hardcodes the storage mount at `/usr/src/paperless/data` and the API
+  server rejects duplicate mountPaths, so the data dir is an emptyDir
+  mounted at `/paperless-data` with `PAPERLESS_DATA_DIR` pointing at it
+  (media/consume/export stay on NFS; the search index rebuilds from the DB
+  if the emptyDir is lost). Chart-managed Secret env changes are rolled out
+  via `config.secretRevision`.
+- **Service-link env guard**: Kubernetes injects
+  `PAPERLESS_PORT=tcp://<svc>:80` for the chart's own `paperless` Service,
+  which the granian webserver rejects; `GRANIAN_PORT: "8000"` is pinned in
+  values (the webserver script prefers it over `PAPERLESS_PORT`).
 - **Exposure**: IngressRoute in the tenant-a traefik overlay (repo idiom),
   cross-ns service `paperless.workloads:80`, existing wildcard TLS secret
   `newyeti-tls-cert` in ns traefik. Chart ingress disabled. Manual DNS record
