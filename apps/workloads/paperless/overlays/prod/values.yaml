@@ -66,3 +66,15 @@ tolerations:
     operator: Equal
     value: workload
     effect: NoSchedule
+
+# The nfs-paperless export is NFSv3-only and does not support file locking
+# (s6-setlock: "No locks available"), and the server refuses NFSv4 mounts.
+# Keep media/consume on NFS but put the data dir (migration lock, search
+# index, logs) on local disk; the index rebuilds from the DB if lost.
+volumes:
+  - name: data-local
+    emptyDir: {}
+
+volumeMounts:
+  - name: data-local
+    mountPath: /usr/src/paperless/data
