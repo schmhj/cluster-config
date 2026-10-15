@@ -1,0 +1,68 @@
+# paperless-ngx (CodeOpsMS chart 0.4.0) — prod
+# DB lives in tenant-b postgres over the Tailscale egress service
+# postgresql-tenant-b (see tailscale-connector tenant-a overlay).
+
+fullnameOverride: paperless
+
+config:
+  url: "https://paperless.newyeti.qzz.io"
+  database:
+    host: "postgresql-tenant-b.workloads.svc.cluster.local"
+    port: 5432
+    name: "paperless"
+    user: "paperless"
+    existingSecret:
+      name: postgresql-secret
+      passwordKey: postgresql-paperless-password
+
+postgresql:
+  enabled: false
+
+valkey:
+  internal: true
+
+persistence:
+  existingClaim: null
+  storageClass: "nfs-paperless"
+  size: 20Gi
+  accessMode: ReadWriteOnce
+  retain: true
+
+# Exposure is handled by an IngressRoute in the traefik tenant-a overlay
+# (cross-ns service reference; wildcard TLS secret lives in ns traefik).
+ingress:
+  enabled: false
+
+# Modest footprint; leaves ~13 Gi on workload-0 for a future local LLM.
+resources:
+  requests:
+    cpu: 500m
+    memory: 750Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+# Pin to the workload node (same pattern as immich/postgresql).
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: tier
+              operator: In
+              values:
+                - workload
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: workload
+              operator: In
+              values:
+                - workload-0
+
+tolerations:
+  - key: tier
+    operator: Equal
+    value: workload
+    effect: NoSchedule
