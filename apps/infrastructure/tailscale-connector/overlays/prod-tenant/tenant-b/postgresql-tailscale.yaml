@@ -5,6 +5,7 @@ metadata:
   namespace: workloads
   annotations:
     tailscale.com/expose: "true"
+    tailscale.com/hostname: "postgresql-tenant-b"
 spec:
   type: ClusterIP
   selector:
