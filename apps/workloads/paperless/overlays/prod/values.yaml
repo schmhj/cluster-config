@@ -78,3 +78,5 @@ volumes:
 volumeMounts:
   - name: data-local
     mountPath: /usr/src/paperless/data
+
+# render-check: 1792078230
