@@ -65,6 +65,7 @@ kubectl create secret generic postgresql-secret \
      --dry-run=client \
      --from-literal=postgresql-admin-password=*** \
      --from-literal=postgresql-immich-password=*** \
+     --from-literal=postgresql-paperless-password=*** \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/postgresql-sealedsecret.yaml
