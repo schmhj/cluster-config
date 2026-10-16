@@ -58,10 +58,23 @@ via `tailscale.com/expose`) → ClusterIP → postgres pods. Mirrors the working
   (media/consume/export stay on NFS; the search index rebuilds from the DB
   if the emptyDir is lost). Chart-managed Secret env changes are rolled out
   via `config.secretRevision`.
+  **Media-side locking**: `MEDIA_LOCK` (`MEDIA_ROOT/media.lock`, taken by
+  `filelock` around document storing/rename/export) lives on the NFS mount
+  and also failed with ENOLCK — fixed by adding `local_lock=all` to the
+  `nfs-paperless` StorageClass (and the provisioned `PV.spec.mountOptions`,
+  which is what kubelet actually stages with — SC edits only affect newly
+  provisioned volumes). Client-side locking is sound: the PVC is RWO with a
+  single writer and paperless's lock only serializes threads in one pod.
 - **Service-link env guard**: Kubernetes injects
   `PAPERLESS_PORT=tcp://<svc>:80` for the chart's own `paperless` Service,
   which the granian webserver rejects; `GRANIAN_PORT: "8000"` is pinned in
   values (the webserver script prefers it over `PAPERLESS_PORT`).
+- **argocd v3.3.8 vs cluster 1.37 schema skew**: structured-merge diff fails
+  on `.spec.preventPodSchedulingIfMissing` (defaulted onto the CSIDriver when
+  it was re-applied post-upgrade), which left both nfs-csi apps permanently
+  `sync=Unknown`. Worked around by ignoring that field in both
+  infrastructure appsets; upgrade argocd to a 1.37-aware schema before
+  relying on other post-upgrade object fields.
 - **Exposure**: IngressRoute in the tenant-a traefik overlay (repo idiom),
   cross-ns service `paperless.workloads:80`, existing wildcard TLS secret
   `newyeti-tls-cert` in ns traefik. Chart ingress disabled. Manual DNS record
