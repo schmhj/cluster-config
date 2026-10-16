@@ -37,6 +37,15 @@ spec:
           kind: Service
           jsonPointers:
             - /spec/externalName
+        # argocd v3.3.8 builds structured-merge diffs with a pre-1.37 schema;
+        # the apiserver defaults this 1.37+ field onto live CSIDriver objects
+        # and the typed-value build fails ("field not declared in schema"),
+        # blocking all comparisons for nfs-csi until argocd is upgraded.
+        - group: storage.k8s.io
+          kind: CSIDriver
+          name: nfs.csi.k8s.io
+          jsonPointers:
+            - /spec/preventPodSchedulingIfMissing
       syncPolicy:
         automated:
           prune: true
