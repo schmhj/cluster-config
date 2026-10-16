@@ -103,3 +103,12 @@ kubectl create secret generic tailscale-secret \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/tailscale-sealedsecret.yaml
+
+kubectl create secret generic paperless-credentials \
+     --namespace=infrastructure \
+     --dry-run=client \
+     --from-literal=admin-username='***' \
+     --from-literal=admin-password='***' \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/paperless-ngx-sealedsecret.yaml

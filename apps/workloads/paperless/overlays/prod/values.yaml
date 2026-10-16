@@ -78,6 +78,21 @@ tolerations:
 # by the API server) and PAPERLESS_DATA_DIR points paperless at it.
 env:
   PAPERLESS_DATA_DIR: /paperless-data
+
+  # map form → rendered as valueFrom in the container env, from YOUR sealed secret
+  PAPERLESS_ADMIN_USERNAME:
+    valueFrom:
+      secretKeyRef:
+        name: paperless-credentials
+        key: admin-username
+
+  # map form → rendered as valueFrom in the container env, from YOUR sealed secret
+  PAPERLESS_ADMIN_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: paperless-credentials
+        key: admin-password
+
   # K8s service links inject PAPERLESS_PORT=tcp://<svc>:80 for the chart's
   # own Service, which granian rejects; the webserver prefers GRANIAN_PORT.
   GRANIAN_PORT: "8000"
