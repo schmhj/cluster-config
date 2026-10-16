@@ -31,6 +31,9 @@ spec:
               args:
                 - |
                   set -eu
+                  count=$(kubectl get deployment -n workloads \
+                    -l app.kubernetes.io/instance=immich-prod-tenant-b -o name | wc -l)
+                  [ "$count" -gt 0 ] || { echo "ERROR: no matching deployments"; exit 1; }
                   kubectl rollout restart deployment -n workloads \
                     -l app.kubernetes.io/instance=immich-prod-tenant-b
                   kubectl rollout status deployment -n workloads \
