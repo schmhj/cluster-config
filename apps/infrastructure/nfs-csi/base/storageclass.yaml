@@ -13,3 +13,9 @@ allowVolumeExpansion: true
 mountOptions:
   - nfsvers=3
   - hard
+  # The macOS nfsd behind this export provides no NLM locks, so with the
+  # default local_lock=none every flock() fails with ENOLCK (paperless
+  # FileLock(MEDIA_LOCK) during document storing, migration_lock during
+  # init). Serve locks client-side instead: the volume is RWO with a single
+  # writer, and paperless's MEDIA_LOCK only serializes threads in one pod.
+  - local_lock=all
