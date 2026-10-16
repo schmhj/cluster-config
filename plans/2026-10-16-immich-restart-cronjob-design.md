@@ -11,8 +11,9 @@ CronJob, to clear accumulated in-process state without manual intervention.
 
 ## Decisions
 
-- **Mechanism**: CronJob in ns `workloads` running `bitnami/kubectl` pinned to
-  the cluster minor version (1.37), issuing `kubectl rollout restart` against
+- **Mechanism**: CronJob in ns `workloads` running `docker.io/alpine/k8s:1.37.1`
+  (kubectl 1.37.1 + shell; `bitnami/kubectl` and `bitnamilegacy/kubectl:1.37`
+  tags no longer exist as of 2026-10), issuing `kubectl rollout restart` against
   the four Immich deployments, then waiting with `rollout status`.
 - **Targeting**: label selector
   `app.kubernetes.io/instance=immich-prod-tenant-b` (bjw-s chart convention —

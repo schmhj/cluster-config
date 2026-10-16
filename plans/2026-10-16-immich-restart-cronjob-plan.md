@@ -16,7 +16,7 @@
 - Sync-wave annotation on every resource: `argocd.argoproj.io/sync-wave: "5"`
 - CronJob schedule: `"1 0 * * *"` with `timeZone: America/New_York`
 - Restart target selector: `app.kubernetes.io/instance=immich-prod-tenant-b`
-- kubectl image: `docker.io/bitnami/kubectl:1.37` (cluster runs 1.37; do not use `:latest`)
+- kubectl image: `docker.io/alpine/k8s:1.37.1` (as-built; plan originally said `bitnami/kubectl:1.37`, whose tags no longer exist — see Task 3 outcome)
 - Security context: `allowPrivilegeEscalation: false`, `capabilities.drop: ["ALL"]`
 - Every new file added to `apps/workloads/immich/overlays/prod/tenant-b/kustomization.yaml` `resources:`
 - Commit messages: conventional-commit style (`feat(immich): ...`, `docs(immich): ...`)
