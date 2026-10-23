@@ -1,0 +1,3 @@
+# tenant-a is the only prod target for paperless (16 GB workload-0 node;
+# directory presence = deploy target). Shared prod config lives in
+# ../values.yaml.

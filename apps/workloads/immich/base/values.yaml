@@ -1,0 +1,167 @@
+# =============================================================================
+# Immich/Gallery - Base Values
+# Chart: oci://ghcr.io/immich-app/immich-charts/immich
+# Fork: ghcr.io/open-noodle/gallery (S3-native, based on Immich v3.0.3)
+# Docs: https://docs.opennoodle.de/features/s3-storage
+# =============================================================================
+
+# -- Shared environment configurations using YAML anchors to prevent drift
+.s3_env: &s3_env
+  # -- Database connection (PostgreSQL in same namespace)
+  DB_HOSTNAME: postgresql-prod-tenant-b
+  DB_USERNAME: immich
+  DB_DATABASE_NAME: immich
+  DB_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: immich-secret
+        key: db-password
+
+  # -- S3 storage (Garage, via Tailscale egress proxy)
+  IMMICH_STORAGE_BACKEND: s3
+  IMMICH_S3_BUCKET: immich-library
+  IMMICH_S3_REGION: garage
+  IMMICH_S3_ENDPOINT: "http://garage-s3.workloads.svc.cluster.local:3900"
+  IMMICH_S3_SERVE_MODE: proxy
+  IMMICH_S3_ACCESS_KEY_ID:
+    valueFrom:
+      secretKeyRef:
+        name: immich-secret
+        key: s3-access-key
+  IMMICH_S3_SECRET_ACCESS_KEY:
+    valueFrom:
+      secretKeyRef:
+        name: immich-secret
+        key: s3-secret-key
+
+  # -- Machine Learning (smart search + facial recognition)
+  IMMICH_MACHINE_LEARNING_ENABLED: "true"
+  # Release-name-agnostic; bjw-s common runs tpl on env values.
+  IMMICH_MACHINE_LEARNING_URL: '{{ printf "http://%s-machine-learning:3003" .Release.Name }}'
+
+  # -- Disable AWS SDK v3 checksum validation (Garage S3 CRC32 incompatibility)
+  AWS_REQUEST_CHECKSUM_CALCULATION: "when_required"
+  AWS_RESPONSE_CHECKSUM_VALIDATION: "when_required"
+
+# -- Top-level controller settings (shared env vars via bjw-s common library)
+controllers:
+  main:
+    containers:
+      main:
+        env: *s3_env
+        resources:
+          requests:
+            cpu: 250m
+            memory: 512Mi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+
+# -- Immich-specific settings
+immich:
+  metrics:
+    enabled: false
+  persistence:
+    library:
+      existingClaim: immich-data
+
+# -- Built-in Valkey (Redis-compatible) for job queues
+valkey:
+  enabled: true
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: docker.io/valkey/valkey
+            tag: 9.1-alpine
+            pullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+  persistence:
+    data:
+      enabled: true
+      type: emptyDir
+
+# -- Noodle Gallery API/Web Server
+server:
+  enabled: true
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: ghcr.io/open-noodle/gallery-server
+            tag: v5.6.0
+            pullPolicy: IfNotPresent
+  service:
+    main:
+      ports:
+        http:
+          port: 2283
+
+# =============================================================================
+# CRITICAL CORRECTION: Background Microservices Worker
+# Without this, background thumbnail generation and other jobs won't run.
+# The chart creates a separate Deployment that processes the job queue
+# (backed by Valkey). Must share the same image and S3 env as the server.
+# =============================================================================
+microservices:
+  enabled: true
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: ghcr.io/open-noodle/gallery-server
+            tag: v5.2.2
+            pullPolicy: IfNotPresent
+          env: *s3_env
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 2Gi
+
+# =============================================================================
+# Machine Learning component
+# CPU hard-capped at 500m so it cannot starve PostgreSQL / server on the shared
+# 2 vCPU workload-0 node. Image pinned to match the gallery fork (Immich v3.0.3).
+# =============================================================================
+machine-learning:
+  enabled: true
+  controllers:
+    main:
+      containers:
+        main:
+          image:
+            repository: ghcr.io/immich-app/immich-machine-learning
+            tag: v3.0.3
+            pullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 100m
+              memory: 1Gi
+            limits:
+              cpu: 500m
+              memory: 3Gi
+  # Pod scheduling (affinity + tolerations for workload-0) is set globally via
+  # defaultPodOptions in the tenant-b overlay, applying to all components.
+  persistence:
+    cache:
+      enabled: true
+      type: emptyDir
+
+# -- Post-rollout (Immich admin) model selection — NOT chart values:
+#    Administration -> Settings -> Machine Learning
+#      Smart Search (CLIP) model: ViT-B-32__openai
+#      Facial Recognition model: buffalo_s
+#    On a fresh library, jobs process new uploads at steady state; no large
+#    backfill expected. Watch the ML pod stays within the 500m CPU limit.

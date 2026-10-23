@@ -1,0 +1,32 @@
+# =============================================================================
+# Immich - Tenant-B Specific Values
+# Overrides for tenant-b deployment.
+# =============================================================================
+
+# -- Global pod scheduling for all Immich components (server, valkey,
+# machine-learning). This chart's bjw-s common library reads scheduling from
+# defaultPodOptions (strategy: overwrite), so setting it here pins every
+# component to the workload-0 node and adds the tier=workload toleration.
+defaultPodOptions:
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: workload
+                operator: In
+                values:
+                  - workload-0
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                  - workload
+  tolerations:
+    - key: "tier"
+      operator: "Equal"
+      value: "workload"
+      effect: "NoSchedule"

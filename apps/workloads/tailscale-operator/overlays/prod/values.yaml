@@ -1,0 +1,45 @@
+operatorConfig:
+  defaultTags: []
+  resources:
+    limits:
+      cpu: "200m"
+      memory: 256Mi
+    requests:
+      cpu: "100m"
+      memory: 128Mi
+
+  affinity:
+    nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: workload
+                operator: In
+                values:
+                  - workload-0
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+          - matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                  - workload
+
+  tolerations:
+    - key: "tier"
+      operator: "Equal"
+      value: "workload"
+      effect: "NoSchedule"
+
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-tenant-b
+  namespace: workloads
+  annotations:
+    tailscale.com/tailnet-fqdn: "postgresql-tenant-b.taila9d5d4.ts.net"
+    tailscale.com/proxy-group: "egress-proxies"
+spec:
+  type: ExternalName
+  externalName: placeholder
+  ports:
+    - port: 5432
+      protocol: TCP
+      name: tcp-postgresql

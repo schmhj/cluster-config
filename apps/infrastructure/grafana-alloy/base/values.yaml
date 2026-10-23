@@ -66,10 +66,10 @@ alloy:
       }
       prometheus.remote_write "cloud" {
         endpoint {
-          url = env("PROMETHEUS_URL")
+          url = sys.env("PROMETHEUS_URL")
           basic_auth {
-            username = env("PROMETHEUS_USERNAME")
-            password = env("GRAFANA_CLOUD_API_KEY")
+            username = sys.env("PROMETHEUS_USERNAME")
+            password = sys.env("GRAFANA_CLOUD_API_KEY")
           }
         }
       }
@@ -80,10 +80,10 @@ alloy:
       }
       loki.write "cloud" {
         endpoint {
-          url = env("LOKI_URL")
+          url = sys.env("LOKI_URL")
           basic_auth {
-            username = env("LOKI_USERNAME")
-            password = env("GRAFANA_CLOUD_API_KEY")
+            username = sys.env("LOKI_USERNAME")
+            password = sys.env("GRAFANA_CLOUD_API_KEY")
           }
         }
       }
@@ -91,7 +91,7 @@ alloy:
       // 4. EXPORT TRACES: Send OTLP traces to Tempo
       otelcol.exporter.otlp "cloud" {
         client {
-          endpoint = env("TEMPO_URL")
+          endpoint = sys.env("TEMPO_URL")
           auth     = otelcol.auth.basic.cloud.handler
         }
       }
@@ -99,6 +99,12 @@ alloy:
         username = sys.env("TEMPO_USERNAME")
         password = sys.env("GRAFANA_CLOUD_API_KEY")
       }
+
+      // Workload-specific log collection (Immich, PostgreSQL) is defined per
+      // tenant, not here. Alloy loads every *.alloy file in /etc/alloy/, so a
+      // tenant overlay can drop in an extra config file (merged into this same
+      // ConfigMap) without repeating the generic pipeline above.
+      // See overlays/prod-tenant/tenant-b/workloads.alloy for tenant-b.
 
   # Ensure correct ports are matched
   extraPorts:

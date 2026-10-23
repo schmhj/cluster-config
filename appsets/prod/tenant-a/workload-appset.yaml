@@ -13,12 +13,12 @@ spec:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: main
           directories:
-          - path: apps/workloads/*/overlays/prod/tenant/tenant-a
+          - path: apps/workloads/*/overlays/prod/tenant-a
       - git:
           repoURL: https://github.com/schmhj/cluster-config.git
           revision: main
           files:
-          - path: "{{.path.path}}/config.json"
+          - path: '{{trimSuffix "/tenant-a" .path.path}}/config.json'
 
   template:
     metadata:
@@ -62,7 +62,7 @@ spec:
             valueFiles:
               - $values/apps/workloads/{{index .path.segments 2}}/base/values.yaml
               - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/values.yaml
-              - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/{{index .path.segments 6}}/values.yaml
+              - $values/apps/workloads/{{index .path.segments 2}}/overlays/prod/tenant-a/values.yaml
               
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: main

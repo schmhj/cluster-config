@@ -1,0 +1,8 @@
+{
+    "appName": "tailscale",
+    "namespace": "tailscale",
+    "chartRepo": "oci://ghcr.io/coreweave/tailscale/chart/tailscale-operator",
+    "chartName": "tailscale-operator",
+    "chartVersion": "v1.98.5-51a6973",
+    "isGitRepo": false
+}

@@ -6,9 +6,13 @@ resources:
   - ../../base
   - dockerconfig-sealedsecret.yaml
   - grafana-cloud-sealedsecret.yaml
-  - traefik-secret.yaml
+  - traefik-sealedsecret.yaml
   - certmanager-sealedsecret.yaml
   - newrelic-sealedsecret.yaml
+  - postgresql-sealedsecret.yaml
+  - tailscale-sealedsecret.yaml
+  - immich-sealedsecret.yaml
+  - paperless-sealedsecret.yaml
 
 # patches:
 #   - target:

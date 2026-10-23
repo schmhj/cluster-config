@@ -6,7 +6,7 @@ resources:
 
 patches:
   - target:
-      kind: Deployment
+      kind: DaemonSet
       name: grafana-alloy
       namespace: monitoring
     path: tolerations-patch.yaml

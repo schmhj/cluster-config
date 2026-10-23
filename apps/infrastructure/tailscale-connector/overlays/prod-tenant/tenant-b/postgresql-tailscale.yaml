@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql-tailscale
+  namespace: workloads
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/hostname: "postgresql-tenant-b"
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/component: primary
+    app.kubernetes.io/instance: postgresql-prod-tenant-b
+    app.kubernetes.io/name: postgresql
+  ports:
+    - port: 5432
+      targetPort: tcp-postgresql
+      protocol: TCP
+      name: tcp-postgresql

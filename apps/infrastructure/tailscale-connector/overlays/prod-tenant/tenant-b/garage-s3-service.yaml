@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: garage-s3
+  namespace: workloads
+  annotations:
+    tailscale.com/tailnet-ip: "100.73.152.123"
+    tailscale.com/proxy-group: "egress-proxies"
+spec:
+  type: ExternalName
+  externalName: placeholder
+  ports:
+    - port: 3900
+      protocol: TCP
+      name: s3

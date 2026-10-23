@@ -12,30 +12,55 @@ auth:
   # password is sourced from the existing secret defined in global.postgresql.auth.existingSecret
 
 primary:
+  image:
+    registry: ghcr.io
+    repository: immich-app/postgres
+    tag: 18-vectorchord0.4-pgvector0.8.1
+    initdb:
+      scripts:
+        create-extensions.sql: |
+          \c immich
+          CREATE EXTENSION IF NOT EXISTS cube CASCADE;
+          CREATE EXTENSION IF NOT EXISTS earthdistance CASCADE;
+          CREATE EXTENSION IF NOT EXISTS vector CASCADE;
+
+  # Prevent voluntary pod disruption during node drains or cluster operations
+  pdb:
+    create: true
+    minAvailable: 1
+
   # Resource allocation for the database container
   resources:
     limits:
       cpu: "1000m"
-      memory: "256Mi"
+      memory: 2Gi
     requests:
       cpu: "250m"
-      memory: "512Mi"
+      memory: 512Mi
 
-  # Persistence configuration
+  # Persistence configuration (shared PVC with Immich)
   persistence:
     enabled: true
-    storageClass: "oci-bv" # Leave empty to use the cluster's default StorageClass, or specify your own (e.g., standard, gp3)
-    size: 10Gi
-    accessMode:
-      - ReadWriteOnce
+    existingClaim: postgres-data
 
   # Custom PostgreSQL configuration parameters (postgresql.conf)
   extendedConfiguration: |
-    max_connections = 100
-    shared_buffers = 256MB
+    max_connections = 50
+    shared_buffers = 64MB
+    work_mem = 1MB
+    effective_cache_size = 192MB
+    maintenance_work_mem = 16MB
 
   affinity:
     nodeAffinity:
+      preferredDuringSchedulingIgnoredDuringExecution:
+        - weight: 1
+          preference:
+            matchExpressions:
+              - key: workload
+                operator: In
+                values:
+                  - workload-0
       requiredDuringSchedulingIgnoredDuringExecution:
         nodeSelectorTerms:
           - matchExpressions:
@@ -43,10 +68,6 @@ primary:
                 operator: In
                 values:
                   - workload
-              - key: workload
-                operator: In
-                values:
-                  - workload-0
   tolerations:
     - key: "tier"
       operator: "Equal"

@@ -3,7 +3,7 @@
   value:
     - key: "tier"
       operator: "Equal"
-      value: "infra"
+      value: "workload"
       effect: "NoSchedule"
 
 - op: add
@@ -16,4 +16,4 @@
           - key: tier
             operator: In
             values:
-            - infra
+            - workload

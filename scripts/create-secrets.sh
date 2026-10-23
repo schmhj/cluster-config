@@ -55,16 +55,60 @@ kubectl create secret generic traefik-dashboard-secret \
 kubectl create secret generic newrelic-secret \
      --namespace=infrastructure \
      --dry-run=client \
-     --from-literal=licenseKey=c5ef9335dddd73d241cd4ad3d6377afd0bceNRAL \
+     --from-literal=licenseKey=*** \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/newrelic-sealedsecret.yaml
 
 kubectl create secret generic postgresql-secret \
-     --namespace=database \
+     --namespace=infrastructure \
      --dry-run=client \
-     --from-literal=postgresql-admin-password=YEoKYDiib9QPcSBrSndfGDzmMDdKPoFfZKAe9WWy15M= \
-     --from-literal=postgresql-immich-password=z7tvvVrJWHCrUJo1KENda9T7m/aAVmmZXwOMTcvFuH0= \
+     --from-literal=postgresql-admin-password=*** \
+     --from-literal=postgresql-immich-password=*** \
+     --from-literal=postgresql-paperless-password=*** \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/postgresql-sealedsecret.yaml
+
+
+kubectl create secret generic tailscale-secret \
+     --namespace=infrastructure \
+     --dry-run=client \
+     --from-literal=client_id=*** \
+     --from-literal=client_secret=*** \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/tailscale-secret.yaml
+
+kubectl create secret generic immich-secret \
+     --namespace=infrastructure \
+     --dry-run=client \
+     --from-literal=db-password='***' \
+     --from-literal=s3-access-key='***' \
+     --from-literal=s3-secret-key='***' \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/immich-sealedsecret.yaml
+
+
+# Node-level tailscale auth key (tagged reusable key, tag:k8s-nfs-nodes) used by the
+# tailscaled DaemonSet in apps/infrastructure/tailscale-node. Regenerating this file
+# requires re-supplying client_id/client_secret literals as well — they are redacted here.
+kubectl create secret generic tailscale-secret \
+     --namespace=infrastructure \
+     --dry-run=client \
+     --from-literal=client_id='***' \
+     --from-literal=client_secret='***' \
+     --from-literal=nfs-auth-key='***' \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/tailscale-sealedsecret.yaml
+
+kubectl create secret generic paperless-credentials \
+     --namespace=infrastructure \
+     --dry-run=client \
+     --from-literal=admin-username='***' \
+     --from-literal=admin-password='***' \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/paperless-ngx-sealedsecret.yaml
