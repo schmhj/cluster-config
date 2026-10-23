@@ -68,7 +68,7 @@ kubectl create secret generic postgresql-secret \
      --from-literal=postgresql-paperless-password=*** \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
-      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/postgresql-sealedsecret.yaml
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/dev/postgresql-sealedsecret-dev.yaml
 
 
 kubectl create secret generic tailscale-secret \

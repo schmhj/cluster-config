@@ -1,0 +1,82 @@
+# paperless-ngx (CodeOpsMS chart 0.4.0) — prod
+# DB lives in tenant-b postgres over the Tailscale egress service
+# postgresql-tenant-b (see tailscale-connector tenant-a overlay).
+
+fullnameOverride: paperless
+
+config:
+  url: "http://localhost"
+  # Bumped when chart-managed Secret env changes (GRANIAN_PORT, DATA_DIR).
+  secretRevision: 1
+  database:
+    host: "postgresql-dev.workloads.svc.cluster.local"
+    port: 5432
+    name: "paperless"
+    user: "paperless"
+    existingSecret:
+      name: postgresql-secret
+      passwordKey: postgresql-paperless-password
+
+postgresql:
+  enabled: false
+
+valkey:
+  internal: true
+
+# Persistence settings for the paperless data directory.
+persistence:
+  existingClaim: null
+  storageClass: ""
+  size: 5Gi
+  accessMode: ReadWriteOnce
+  retain: true
+
+# Exposure is handled by an IngressRoute in the traefik tenant-a overlay
+# (cross-ns service reference; wildcard TLS secret lives in ns traefik).
+ingress:
+  enabled: false
+
+# Modest footprint; leaves ~13 Gi on workload-0 for a future local LLM.
+resources:
+  requests:
+    cpu: 500m
+    memory: 750Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+# The nfs-paperless export is NFSv3-only and does not support file locking
+# (s6-setlock: "No locks available"), and the server refuses NFSv4 mounts.
+# Keep media/consume/export on NFS but put the data dir (migration lock,
+# search index, logs) on local disk; the index rebuilds from the DB if lost.
+# The chart hardcodes the storage mount at /usr/src/paperless/data, so the
+# local dir must live at a unique path (duplicate mountPaths are rejected
+# by the API server) and PAPERLESS_DATA_DIR points paperless at it.
+env:
+  PAPERLESS_DATA_DIR: /paperless-data
+
+  # map form → rendered as valueFrom in the container env, from YOUR sealed secret
+  PAPERLESS_ADMIN_USERNAME:
+    valueFrom:
+      secretKeyRef:
+        name: paperless-credentials
+        key: admin-username
+
+  # map form → rendered as valueFrom in the container env, from YOUR sealed secret
+  PAPERLESS_ADMIN_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: paperless-credentials
+        key: admin-password
+
+  # K8s service links inject PAPERLESS_PORT=tcp://<svc>:80 for the chart's
+  # own Service, which granian rejects; the webserver prefers GRANIAN_PORT.
+  GRANIAN_PORT: "8000"
+
+# volumes:
+#   - name: data-local
+#     emptyDir: {}
+
+# volumeMounts:
+#   - name: data-local
+#     mountPath: /paperless-data
