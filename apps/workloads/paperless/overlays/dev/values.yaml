@@ -1,4 +1,4 @@
-# paperless-ngx (CodeOpsMS chart 0.4.0) — prod
+# paperless-ngx (CodeOpsMS chart 0.3.23) — dev
 # DB lives in tenant-b postgres over the Tailscale egress service
 # postgresql-tenant-b (see tailscale-connector tenant-a overlay).
 

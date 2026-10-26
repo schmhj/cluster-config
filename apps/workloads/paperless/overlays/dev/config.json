@@ -3,6 +3,6 @@
     "namespace": "workloads",
     "chartRepo": "oci://ghcr.io/codeopsms/helm-charts/paperless-ngx",
     "chartName": "paperless-ngx",
-    "chartVersion": "0.4.0",
+    "chartVersion": "0.3.23",
     "isGitRepo": false
 }
