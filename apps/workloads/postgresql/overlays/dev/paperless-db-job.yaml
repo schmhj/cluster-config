@@ -30,7 +30,7 @@ spec:
                 - |
                   set -eu
                   export PGPASSWORD="$PG_ADMIN_PASSWORD"
-                  PSQL="psql -h postgresql-prod-tenant-b -U postgres -v ON_ERROR_STOP=1 -q"
+                  PSQL="psql -h postgresql-dev -U postgres -v ON_ERROR_STOP=1 -q"
                   if $PSQL -tAc "SELECT 1 FROM pg_roles WHERE rolname='paperless'" | grep -q 1; then
                     $PSQL -c "ALTER ROLE paperless WITH LOGIN PASSWORD '${PAPERLESS_PASSWORD}'"
                     echo "role paperless updated"
