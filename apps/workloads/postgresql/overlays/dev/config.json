@@ -1,6 +1,6 @@
 {
     "appName": "postgresql",
-    "namespace": "database",
+    "namespace": "workloads",
     "chartRepo": "registry-1.docker.io",
     "chartName": "bitnamicharts/postgresql",
     "chartVersion": "18.7.8",
