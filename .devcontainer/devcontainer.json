@@ -36,14 +36,14 @@
 			"label": "Microservice Template App",
 			"protocol": "http"
 		},
-		"30443": {
-			"label": "Traefik Dashboard",
-			"protocol": "http"
-		},
 		"30480": {
 			"label": "Traefik Dashboard",
-			"protocol": "http",
+			"protocol": "https",
 			"visibility": "public"
+		},
+		"32080": {
+			"label": "Paperless App",
+			"protocol": "http"
 		}
 	},
 	"customizations": {

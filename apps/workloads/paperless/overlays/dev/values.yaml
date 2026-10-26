@@ -80,3 +80,9 @@ volumes:
 volumeMounts:
   - name: data-local
     mountPath: /paperless-data
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 80
+  nodePort: 32080
