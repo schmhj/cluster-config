@@ -20,7 +20,7 @@ patches:
     patch: |-
       - op: replace
         path: /metadata/annotations/reflector.v1.k8s.emberstack.com~1reflection-allowed-namespaces
-        value: "workload"
+        value: "workloads"
       - op: replace
         path: /spec/template/metadata/annotations/reflector.v1.k8s.emberstack.com~1reflection-allowed-namespaces
-        value: "workload"
+        value: "workloads"
