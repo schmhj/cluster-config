@@ -32,6 +32,20 @@ spec:
     secretName: newyeti-tls-cert
 
 ---
+# ── ServersTransport: ArgoCD backend TLS ─────────────────────
+# Traefik resolves serversTransport in the Kubernetes Service's
+# namespace (argocd), not the IngressRoute's namespace.
+apiVersion: traefik.io/v1alpha1
+kind: ServersTransport
+metadata:
+  name: argocd-transport
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  insecureSkipVerify: true
+
+---
 # ── IngressRoute: Traefik Dashboard (HTTPS) ──────────────────
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
