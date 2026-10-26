@@ -42,7 +42,8 @@
 		},
 		"30480": {
 			"label": "Traefik Dashboard",
-			"protocol": "http"
+			"protocol": "http",
+			"visibility": "public"
 		}
 	},
 	"customizations": {
