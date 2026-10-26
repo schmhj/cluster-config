@@ -73,10 +73,10 @@ env:
   # own Service, which granian rejects; the webserver prefers GRANIAN_PORT.
   GRANIAN_PORT: "8000"
 
-# volumes:
-#   - name: data-local
-#     emptyDir: {}
+volumes:
+  - name: data-local
+    emptyDir: {}
 
-# volumeMounts:
-#   - name: data-local
-#     mountPath: /paperless-data
+volumeMounts:
+  - name: data-local
+    mountPath: /paperless-data
