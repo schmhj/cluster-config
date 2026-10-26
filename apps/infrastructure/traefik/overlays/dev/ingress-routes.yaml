@@ -28,7 +28,7 @@ spec:
     permanent: true
 
 ---
-# ── IngressRoute: Traefik Dashboard (HTTPS) ──────────────────
+# ── IngressRoute: Traefik Dashboard (Codespaces HTTPS proxy) ─
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -52,7 +52,7 @@ spec:
           kind: TraefikService
 
 ---
-# ── IngressRoute: Microservices (HTTPS) ──────────────────────
+# ── IngressRoute: Microservices (Codespaces HTTPS proxy) ─────
 # Covers: /api/sample, /api
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute

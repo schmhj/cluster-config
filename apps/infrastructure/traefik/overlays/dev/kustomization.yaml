@@ -24,3 +24,11 @@ patches:
       name: traefik
       namespace: traefik
     path: traefik-config-patch.yaml
+
+  - target:
+      group: traefik.io
+      version: v1alpha1
+      kind: Middleware
+      name: secure-headers
+      namespace: traefik
+    path: secure-headers-patch.yaml
