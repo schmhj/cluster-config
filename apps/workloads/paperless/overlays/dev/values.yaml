@@ -15,7 +15,7 @@ config:
     user: "paperless"
     existingSecret:
       name: postgresql-secret
-      passwordKey: postgresql-paperless-password
+      passKey: postgresql-paperless-password
 
 postgresql:
   enabled: false
