@@ -1,68 +1,48 @@
----
 apiVersion: batch/v1
-kind: CronJob
+kind: Job
 metadata:
   name: paperless-db-provision
   namespace: workloads
   annotations:
-    argocd.argoproj.io/sync-wave: "5"
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
 spec:
-  schedule: "@daily"
-  concurrencyPolicy: Forbid
-  successfulJobsHistoryLimit: 3
-  failedJobsHistoryLimit: 3
-  jobTemplate:
+  backoffLimit: 5
+  activeDeadlineSeconds: 300
+  template:
     spec:
-      backoffLimit: 2
-      activeDeadlineSeconds: 300
-      template:
-        metadata:
-          labels:
-            app.kubernetes.io/name: paperless-db-provision
-        spec:
-          restartPolicy: OnFailure
-          containers:
-            - name: provision
-              image: docker.io/library/postgres:18-alpine
-              imagePullPolicy: IfNotPresent
-              command: ["/bin/sh", "-c"]
-              args:
-                - |
-                  set -eu
-                  export PGPASSWORD="$PG_ADMIN_PASSWORD"
-                  PSQL="psql -h postgresql-dev -U postgres -v ON_ERROR_STOP=1 -q"
-                  if $PSQL -tAc "SELECT 1 FROM pg_roles WHERE rolname='paperless'" | grep -q 1; then
-                    $PSQL -c "ALTER ROLE paperless WITH LOGIN PASSWORD '${PAPERLESS_PASSWORD}'"
-                    echo "role paperless updated"
-                  else
-                    $PSQL -c "CREATE ROLE paperless WITH LOGIN PASSWORD '${PAPERLESS_PASSWORD}'"
-                    echo "role paperless created"
-                  fi
-                  if $PSQL -tAc "SELECT 1 FROM pg_database WHERE datname='paperless'" | grep -q 1; then
-                    echo "database paperless already exists"
-                  else
-                    $PSQL -c "CREATE DATABASE paperless OWNER paperless"
-                    echo "database paperless created"
-                  fi
-              env:
-                - name: PG_ADMIN_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: postgresql-secret
-                      key: postgresql-admin-password
-                - name: PAPERLESS_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      name: postgresql-secret
-                      key: postgresql-paperless-password
-              resources:
-                requests:
-                  cpu: 10m
-                  memory: 32Mi
-                limits:
-                  cpu: 100m
-                  memory: 128Mi
-              securityContext:
-                allowPrivilegeEscalation: false
-                capabilities:
-                  drop: ["ALL"]
+      restartPolicy: OnFailure
+      containers:
+        - name: provision
+          image: docker.io/library/postgres:18-alpine
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -eu
+              export PGPASSWORD="$PG_ADMIN_PASSWORD"
+              PSQL="psql -h postgresql-prod-tenant-b -U postgres -v ON_ERROR_STOP=1 -q"
+
+              if $PSQL -tAc "SELECT 1 FROM pg_roles WHERE rolname='paperless'" | grep -q 1; then
+                $PSQL -c "ALTER ROLE paperless WITH LOGIN PASSWORD '${PAPERLESS_PASSWORD}'"
+              else
+                $PSQL -c "CREATE ROLE paperless WITH LOGIN PASSWORD '${PAPERLESS_PASSWORD}'"
+              fi
+
+              if $PSQL -tAc "SELECT 1 FROM pg_database WHERE datname='paperless'" | grep -q 1; then
+                echo "database paperless already exists"
+              else
+                $PSQL -c "CREATE DATABASE paperless OWNER paperless"
+              fi
+
+          env:
+            # Keep the existing secret references
+            - name: PG_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: postgresql-admin-password
+            - name: PAPERLESS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgresql-secret
+                  key: postgresql-paperless-password
