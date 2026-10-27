@@ -36,9 +36,7 @@ primary:
   # Persistence configuration
   persistence:
     enabled: true
-    storageClass: "" # Leave empty to use the cluster's default StorageClass, or specify your own (e.g., standard, gp3)
-    size: 8Gi
-    mountPath: /bitnami/postgresql
+    existingClaim: postgres-data
 
   # Custom PostgreSQL configuration parameters (postgresql.conf)
   extendedConfiguration: |
