@@ -5,7 +5,7 @@
 fullnameOverride: paperless
 
 config:
-  # url: "http://localhost"
+  url: "https://${CODESPACE_NAME}-32080.app.github.dev"
   # Bumped when chart-managed Secret env changes (GRANIAN_PORT, DATA_DIR).
   secretRevision: 1
   database:
