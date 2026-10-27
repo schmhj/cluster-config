@@ -7,3 +7,6 @@ resources:
   - github-app-secret.yaml
   - ghcr-oci-secret.yaml
   - dockerhub-oci-secret.yaml
+
+patches:
+  - path: argocd-cm-insecure-patch.yaml
