@@ -31,8 +31,9 @@ persistence:
   accessMode: ReadWriteOnce
   retain: true
 
-# Exposure is handled by an IngressRoute in the traefik tenant-a overlay
-# (cross-ns service reference; wildcard TLS secret lives in ns traefik).
+# dev has no IngressRoute (prod exposes paperless via the traefik tenant-a
+# overlay); dev reaches it through the NodePort Service defined in this overlay
+# (paperless-nodeport.yaml → nodePort 32080).
 ingress:
   enabled: false
 
@@ -81,8 +82,12 @@ volumeMounts:
   - name: data-local
     mountPath: /paperless-data
 
+# The chart's Service stays ClusterIP (its default): the chart never renders
+# spec.ports[].nodePort, so service.nodePort: 32080 here was silently ignored
+# and the Service got a random nodePort instead. Dev exposure lives in this
+# overlay's dedicated Service — paperless-nodeport.yaml (nodePort 32080), which
+# .devcontainer/manifests/k3d-dev.yaml maps to the Codespaces "Paperless App"
+# forward in .devcontainer/devcontainer.json.
 service:
-  type: NodePort
+  type: ClusterIP
   port: 80
-  targetPort: 80
-  nodePort: 32080

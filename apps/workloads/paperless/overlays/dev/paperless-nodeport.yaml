@@ -1,0 +1,35 @@
+---
+# ── Dedicated NodePort Service for Codespaces port forwarding ──
+#
+# The paperless-ngx chart (0.3.23 and 0.4.0 alike) never renders
+# spec.ports[].nodePort — service.nodePort in values.yaml is silently ignored —
+# and workload apps are rendered directly by Argo CD's Helm engine, so unlike
+# infra apps (see apps/infrastructure/traefik/overlays/dev/traefik-service-patch.yaml)
+# there is no Kustomize patch layer that could fix the chart's Service up.
+# The workload appset renders this overlay's kustomization as an extra source
+# next to the chart (see appsets/dev/workload-appset.yaml), which is how this
+# additional Service reaches the cluster.
+#
+# nodePort 32080 must stay in sync with:
+#   .devcontainer/manifests/k3d-dev.yaml   (port 32080:32080, applied at cluster creation)
+#   .devcontainer/devcontainer.json        (forwardPorts + portsAttributes "Paperless App")
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless-nodeport
+  namespace: workloads
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  type: NodePort
+  # Mirrors the chart's selector — instance is the dev release/app name.
+  selector:
+    app.kubernetes.io/instance: paperless-dev
+    app.kubernetes.io/name: paperless-ngx
+  ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      # Named port → the chart's containerPort (Granian on 8000).
+      targetPort: http
+      nodePort: 32080
