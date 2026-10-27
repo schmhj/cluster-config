@@ -1,0 +1,2 @@
+# Chart defaults are sufficient; CRDs are installed via installCRDs (chart default true).
+installCRDs: true
