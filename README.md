@@ -550,7 +550,7 @@ When running in devContainer with K3d cluster, these services are automatically 
 | 30280 | Sample App | HTTP | Example application |
 | 32056 | Microservice Template | HTTP | Template application |
 | 30443 | Traefik `websecure` (443) | HTTPS | Ingress controller TLS entrypoint |
-| 30480 | Traefik `web` / dashboard | HTTPS | Traefik dashboard & API |
+| 30480 | Traefik `web` / dashboard | HTTP | Traefik dashboard & API (`/dashboard/`) |
 | 32080 | Paperless App | HTTP | paperless-ngx (`Service/paperless-nodeport`) |
 
 Port forwarding needs both halves: a `ports` mapping in
