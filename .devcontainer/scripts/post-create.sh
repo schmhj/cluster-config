@@ -65,6 +65,13 @@ curl -OL "https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.34
 tar -xvzf kubeseal-0.34.0-linux-amd64.tar.gz kubeseal  | tee -a ~/.status.log
 sudo install -m 755 kubeseal /usr/local/bin/kubeseal  | tee -a ~/.status.log
 
+#Install opencode
+curl -fsSL https://opencode.ai/v2/install | bash
+
+#Install PostgreSQL Client
+sudo apt-get update && sudo apt-get install -y postgresql-client | tee -a ~/.status.log
+psql --version
+
 rm kubeseal-0.34.0-linux-amd64.tar.gz
 rm kubeseal
 
