@@ -65,3 +65,8 @@ spec:
         - repoURL: https://github.com/schmhj/cluster-config.git
           targetRevision: develop
           ref: values
+
+        - repoURL: https://github.com/schmhj/cluster-config.git
+          targetRevision: develop
+          ref: kustomize
+          path: '{{ .path.path }}'
