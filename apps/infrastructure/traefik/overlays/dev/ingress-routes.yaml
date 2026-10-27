@@ -39,6 +39,7 @@ metadata:
 spec:
   entryPoints:
     - web
+    - websecure
   routes:
     - match: (Host(`127.0.0.1`) || HostRegexp(`^.+\.github\.dev$`)) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
@@ -66,6 +67,7 @@ spec:
   #   secretName: letsencrypt-staging-account-key - for prod use only
   entryPoints:
     - web
+    - websecure
   routes:
     # ── Microservie template Service ──────────────────────────────────────────
     - match: (Host(`127.0.0.1`) || HostRegexp(`^.+\.github\.dev$`)) && PathPrefix(`/app/api/templates`)
