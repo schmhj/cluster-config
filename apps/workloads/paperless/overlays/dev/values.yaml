@@ -84,6 +84,16 @@ env:
         key: url
         optional: true
 
+  # Extra CSRF-trusted origins for dev. PAPERLESS_URL above only trusts the
+  # Codespaces URL (or http://localhost:32080), but the app is also opened as
+  # https://localhost:32080 (TLS terminated on the client side, plain HTTP to
+  # the NodePort), so Django rejects every POST — signup, login — with
+  # "Origin checking failed - https://localhost:32080 does not match any
+  # trusted origins" even though the GET renders fine. Comma-separated list;
+  # paperless appends PAPERLESS_URL to it, and same-origin http://localhost:32080
+  # is accepted without being listed.
+  PAPERLESS_CSRF_TRUSTED_ORIGINS: "https://localhost:32080,http://localhost:32080"
+
   # K8s service links inject PAPERLESS_PORT=tcp://<svc>:80 for the chart's
   # own Service, which granian rejects; the webserver prefers GRANIAN_PORT.
   GRANIAN_PORT: "8000"
