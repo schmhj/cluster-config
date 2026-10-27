@@ -18,6 +18,9 @@ ports:
   - port: 30480:30480
     nodeFilters:
       - server:*
+  - port: 30443:30443
+    nodeFilters:
+      - server:*
   - port: 32080:32080
     nodeFilters:
       - server:*

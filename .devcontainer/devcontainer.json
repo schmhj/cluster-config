@@ -41,6 +41,10 @@
 			"protocol": "https",
 			"visibility": "public"
 		},
+		"30443": {
+			"label": "Traefik HTTPS",
+			"protocol": "https"
+		},
 		"32080": {
 			"label": "Paperless App",
 			"protocol": "http"

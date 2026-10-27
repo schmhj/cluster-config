@@ -549,8 +549,18 @@ When running in devContainer with K3d cluster, these services are automatically 
 | 30179 | Argo CD Dashboard | HTTPS | ArgoCD web UI |
 | 30280 | Sample App | HTTP | Example application |
 | 32056 | Microservice Template | HTTP | Template application |
-| 30443 | Traefik Dashboard | HTTP | Ingress controller metrics |
-| 30480 | Traefik Dashboard | HTTP | Alternative Traefik dashboard |
+| 30443 | Traefik `websecure` (443) | HTTPS | Ingress controller TLS entrypoint |
+| 30480 | Traefik `web` / dashboard | HTTPS | Traefik dashboard & API |
+| 32080 | Paperless App | HTTP | paperless-ngx (`Service/paperless-nodeport`) |
+
+Port forwarding needs both halves: a `ports` mapping in
+[`.devcontainer/manifests/k3d-dev.yaml`](.devcontainer/manifests/k3d-dev.yaml)
+**and** a `forwardPorts` entry in
+[`.devcontainer/devcontainer.json`](.devcontainer/devcontainer.json). k3d applies
+the `ports` mappings only when the cluster is created, so after changing them
+rebuild the devcontainer (or delete and recreate the `k3d-dev` cluster) — an
+entry that only exists in `forwardPorts` forwards to a closed port and fails
+with "connection refused".
 
 ### Secrets in devContainer
 
