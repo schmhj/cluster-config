@@ -5,7 +5,7 @@
 fullnameOverride: paperless
 
 config:
-  url: "http://localhost"
+  # url: "http://localhost"
   # Bumped when chart-managed Secret env changes (GRANIAN_PORT, DATA_DIR).
   secretRevision: 1
   database:
