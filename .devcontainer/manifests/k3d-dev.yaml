@@ -24,6 +24,9 @@ ports:
   - port: 32080:32080
     nodeFilters:
       - server:*
+  - port: 32081:32081
+    nodeFilters:
+      - server:*
 registries:
   config: |
     mirrors:

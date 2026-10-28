@@ -552,6 +552,7 @@ When running in devContainer with K3d cluster, these services are automatically 
 | 30443 | Traefik `websecure` (443) | HTTPS | Ingress controller TLS entrypoint |
 | 30480 | Traefik `web` / dashboard | HTTP | Traefik dashboard & API (`/dashboard/`) |
 | 32080 | Paperless App | HTTP | paperless-ngx (`Service/paperless-nodeport`) |
+| 32081 | Paperless GPT App | HTTP | paperless-gpt (`Service/paperless-gpt-nodeport`) |
 
 Port forwarding needs both halves: a `ports` mapping in
 [`.devcontainer/manifests/k3d-dev.yaml`](.devcontainer/manifests/k3d-dev.yaml)
