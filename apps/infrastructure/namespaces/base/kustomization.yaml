@@ -10,3 +10,4 @@ resources:
   - database-ns.yaml
   - tailscale-ns.yaml
   - workloads-ns.yaml
+  - external-secrets-ns.yaml
