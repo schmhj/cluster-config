@@ -84,3 +84,33 @@ spec:
         - name: sample-app
           namespace: workloads
           port: 8080
+
+    - match: (Host(`127.0.0.1`) || Host(`localhost`) || HostRegexp(`^.+\.github\.dev$`)) && PathPrefix(`/argocd`)
+      kind: Rule
+      priority: 10
+      middlewares:
+        - name: strip-api-prefix
+          namespace: traefik
+        - name: rate-limit
+          namespace: traefik
+        - name: secure-headers
+          namespace: traefik
+      services:
+        - name: argocd-server
+          namespace: workloads
+          port: 80
+    
+    - match: (Host(`127.0.0.1`) || Host(`localhost`) || HostRegexp(`^.+\.github\.dev$`)) && PathPrefix(`/paperless`)
+      kind: Rule
+      priority: 10
+      middlewares:
+        - name: strip-api-prefix
+          namespace: traefik
+        - name: rate-limit
+          namespace: traefik
+        - name: secure-headers
+          namespace: traefik
+      services:
+        - name: paperless
+          namespace: workloads
+          port: 80
