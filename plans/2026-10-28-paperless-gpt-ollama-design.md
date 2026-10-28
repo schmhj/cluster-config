@@ -90,7 +90,7 @@ workload appset (wave 5); no appset changes.
 | New app (base + dev overlay, otwld chart, PVC, NodePort) | `apps/workloads/ollama/{base,overlays/dev}/...` |
 | k3d port mapping (cluster recreate required) | `.devcontainer/manifests/k3d-dev.yaml` |
 | Port forward entry | `.devcontainer/devcontainer.json` (`forwardPorts`) |
-| IngressRoute + strip-prefix + basicAuth gate | `apps/infrastructure/traefik/overlays/dev/traefik-ingress-routes.yaml` |
+| IngressRoute + strip-prefix + basicAuth gate | `apps/infrastructure/traefik/overlays/dev/ingress-routes.yaml` |
 
 ## Rollout order & verification
 
