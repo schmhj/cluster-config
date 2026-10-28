@@ -1,0 +1,8 @@
+{
+    "appName": "paperless-gpt",
+    "namespace": "workloads",
+    "chartRepo": "https://github.com/schmhj/cluster-config.git",
+    "chartName": "apps/workloads/paperless-gpt/chart",
+    "chartVersion": "develop",
+    "isGitRepo": true
+}

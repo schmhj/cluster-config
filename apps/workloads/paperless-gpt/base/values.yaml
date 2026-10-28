@@ -1,0 +1,39 @@
+# paperless-gpt (icereed, in-repo minimal chart) — dev.
+# Tagging/title suggestions only; OCR-vision and RAG deliberately unconfigured.
+# No built-in auth: exposure is NodePort (localhost) + Traefik basic auth.
+
+fullnameOverride: paperless-gpt
+
+image:
+  repository: icereed/paperless-gpt
+  tag: v0.31.0
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+service:
+  type: ClusterIP
+  port: 8080
+
+existingSecret:
+  name: paperless-gpt-credentials
+  key: paperless-token
+
+env:
+  PAPERLESS_BASE_URL: "http://paperless.workloads.svc.cluster.local"
+  LLM_PROVIDER: "ollama"
+  LLM_MODEL: "qwen2.5:3b"
+  OLLAMA_HOST: "http://ollama.workloads.svc.cluster.local:11434"
+  OLLAMA_KEEP_ALIVE: "10m"
+  LLM_LANGUAGE: "English"
+  TOKEN_LIMIT: "1000"
+  SUGGESTION_WORKERS: "1"
+  OCR_LIMIT_PAGES: "2"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi
