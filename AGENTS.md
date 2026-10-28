@@ -86,9 +86,9 @@ apps/{infrastructure,workloads}/   Layer 3 — Generated Apps
 | Wave | Component | Notes |
 |------|-----------|-------|
 | 0 | `appprojects-app` Application (bootstrap) | Creates the wave-2 AppProject CRs |
-| 2 | sealed-secrets, namespaces, AppProject CRs | AppProjects must exist before the appset-generated apps reference them |
+| 2 | sealed-secrets, external-secrets, namespaces, AppProject CRs | AppProjects must exist before the appset-generated apps reference them |
 | 3 | infra-secrets, argocd-config | Depends on sealed-secrets |
-| 4 | cert-manager, traefik, reflector, grafana-alloy | Set via appset template: `{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}` |
+| 4 | cert-manager, traefik, reflector, grafana-alloy | Set via appset template: `{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "external-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}` |
 | 5 | Workload applications | Hard-coded in the workload appset template |
 
 Tenant does not affect sync ordering — both prod tenants share the same wave plan.

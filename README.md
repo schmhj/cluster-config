@@ -214,7 +214,7 @@ Sync waves control deployment order:
 | Wave | Component | Source |
 |------|-----------|--------|
 | 0 | `appprojects-app` Application (bootstrap) | `bootstrap/{env,prod/<tenant>}/appprojects-app.yaml` |
-| 2 | AppProject CRs, sealed-secrets, namespaces | `appprojects/{env}/`, `apps/infrastructure/{sealed-secrets,namespaces}/overlays/...` |
+| 2 | AppProject CRs, sealed-secrets, external-secrets, namespaces | `appprojects/{env}/`, `apps/infrastructure/{sealed-secrets,external-secrets,namespaces}/overlays/...` |
 | 3 | infra-secrets, argocd-config | AppSet template sets wave based on `.path.segments[2]` |
 | 4 | cert-manager, traefik, reflector, grafana-alloy | AppSet template sets wave based on `.path.segments[2]` |
 | 5 | Workload applications | Hard-coded in the workload appset template |
