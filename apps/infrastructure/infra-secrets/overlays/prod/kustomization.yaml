@@ -12,7 +12,6 @@ resources:
   - postgresql-sealedsecret.yaml
   - tailscale-sealedsecret.yaml
   - immich-sealedsecret.yaml
-  - paperless-sealedsecret.yaml
 
 # patches:
 #   - target:
