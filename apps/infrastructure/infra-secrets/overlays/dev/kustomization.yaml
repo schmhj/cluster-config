@@ -8,7 +8,6 @@ resources:
   - grafana-cloud-sealedsecret.yaml
   - traefik-secret.yaml
   - postgresql-sealedsecret.yaml
-  - paperless-sealedsecret.yaml
 
 patches:
   - target:
