@@ -17,7 +17,7 @@ spec:
       name: "{{index .path.segments 2}}-prod-tenant-a"
       namespace: argocd
       annotations:
-        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "external-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}'
+        argocd.argoproj.io/sync-wave: '{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "external-secrets" }}2{{ else if eq (index .path.segments 2) "namespaces" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}'
       labels:
         layer: "3"
         env: prod

@@ -34,19 +34,19 @@ appsets/{env}/          Layer 2 — ApplicationSets
       ├─ infrastructure-appset.yaml   (git directory generator,
       │                                scans prod-tenant/<tenant>/)
       └─ workload-appset.yaml         (matrix: directory + config.json,
-                                       scans prod/tenant/<tenant>/)
+                                       scans prod/<tenant>/)
 
 apps/{infrastructure,workloads}/   Layer 3 — Generated Apps
   ├─ .../overlays/dev/               (flat; no tenant subdir)
   └─ .../overlays/prod-tenant/{tenant-a,tenant-b}/  (infra)
-     .../overlays/prod/tenant/{tenant-a,tenant-b}/  (workloads)
+     .../overlays/prod/{tenant-a,tenant-b}/  (workloads)
 ```
 
 **Application naming convention** (derived from `.path.segments`):
 - Dev: `{{index .path.segments 2}}-dev` → e.g. `traefik-dev`
 - Prod tenant: `{{index .path.segments 2}}-prod-{tenant}` → e.g. `traefik-prod-tenant-a`
 
-**Path-segment caveat**: infra prod paths use `prod-tenant/<tenant>/` (segment index 6 = tenant), workload prod paths use `prod/tenant/<tenant>/` (segment index 6 = tenant). The naming template `{{index .path.segments 2}}` works for both, but the path-segment-indexing in `valueFiles` differs — see "Non-Obvious Patterns" below.
+**Path-segment caveat**: infra prod paths use `prod-tenant/<tenant>/` and workload prod paths use `prod/<tenant>/` (both flat; segment index 5 = tenant). The naming template `{{index .path.segments 2}}` works for both.
 
 ## Non-Obvious Patterns
 
@@ -56,8 +56,8 @@ apps/{infrastructure,workloads}/   Layer 3 — Generated Apps
 - **AppProject CRs carry `sync-wave: "2"`** ([example](appprojects/dev/infrastructure.yaml:7)), while the bootstrap Application that creates them uses `sync-wave: "0"` ([example](bootstrap/dev/appprojects-app.yaml:7)). The bootstrap App itself is wave 0, the AppProject resources it deploys are wave 2.
 - **`selfHeal: false` on prod tenant root-apps** ([example](bootstrap/prod/tenant-a/root-app.yaml:20), [tenant-b](bootstrap/prod/tenant-b/root-app.yaml)) — dev uses `selfHeal: true` on both the root-app and the ApplicationSets.
 - **Prod infra appsets pin to a feature branch** during rollout ([`main`](appsets/prod/tenant-a/infrastructure-appset.yaml:12)) rather than `HEAD`; dev infra appsets track `HEAD`.
-- **Infra vs workload prod path inconsistency**: infra uses `apps/infrastructure/*/overlays/prod-tenant/<tenant>/` (single `prod-tenant` segment) but the workload appset scans `apps/workloads/*/overlays/prod/tenant/<tenant>/` (nested `prod/tenant/`). This is **as-implemented**, not what the original plan document described — see [`plans/tenant-deployment-strategy.md`](plans/tenant-deployment-strategy.md) for the design doc.
-- **Directory presence = deployment target**: omitting `prod-tenant/<tenant>/` (infra) or `prod/tenant/<tenant>/` (workloads) means the app is not deployed to that tenant.
+- **Infra vs workload prod path inconsistency**: infra uses `apps/infrastructure/*/overlays/prod-tenant/<tenant>/` (single `prod-tenant` segment) but the workload appset scans `apps/workloads/*/overlays/prod/<tenant>/` (single `prod` segment). This is **as-implemented**, not what the original plan document described — see [`plans/tenant-deployment-strategy.md`](plans/tenant-deployment-strategy.md) for the design doc.
+- **Directory presence = deployment target**: omitting `prod-tenant/<tenant>/` (infra) or `prod/<tenant>/` (workloads) means the app is not deployed to that tenant.
 - **Namespace manifests are centralized** in [`apps/infrastructure/namespaces/base/`](apps/infrastructure/namespaces/base/) and auto-registered by the scaffolder script.
 - **NFS StorageClass (`nfs`)** is deployed to both prod clusters by [`apps/infrastructure/nfs-csi/`](apps/infrastructure/nfs-csi/) (upstream `csi-driver-nfs` chart, dynamic provisioning → one subdirectory per PVC under `100.73.152.123:/Volumes/HomeLab`). Cluster nodes join the tailnet via a hostNetwork `tailscaled` DaemonSet ([`apps/infrastructure/tailscale-node/`](apps/infrastructure/tailscale-node/), auth key `nfs-auth-key` from the reflected `tailscale-secret`) — the `tailscale-connector` egress proxy does NOT serve NFS mounts (kernel mounts never pass through a Service). Non-root pods need `securityContext.fsGroup` to write; the export uses `-mapall=501:20`, so all files appear owned by uid 501 on the server.
 
@@ -88,7 +88,7 @@ apps/{infrastructure,workloads}/   Layer 3 — Generated Apps
 | 0 | `appprojects-app` Application (bootstrap) | Creates the wave-2 AppProject CRs |
 | 2 | sealed-secrets, external-secrets, namespaces, AppProject CRs | AppProjects must exist before the appset-generated apps reference them |
 | 3 | infra-secrets, argocd-config | Depends on sealed-secrets |
-| 4 | cert-manager, traefik, reflector, grafana-alloy | Set via appset template: `{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "external-secrets" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}` |
+| 4 | cert-manager, traefik, reflector, grafana-alloy | Set via appset template: `{{ if eq (index .path.segments 2) "sealed-secrets" }}2{{ else if eq (index .path.segments 2) "external-secrets" }}2{{ else if eq (index .path.segments 2) "namespaces" }}2{{ else if eq (index .path.segments 2) "infra-secrets" }}3{{ else }}4{{ end }}` |
 | 5 | Workload applications | Hard-coded in the workload appset template |
 
 Tenant does not affect sync ordering — both prod tenants share the same wave plan.
