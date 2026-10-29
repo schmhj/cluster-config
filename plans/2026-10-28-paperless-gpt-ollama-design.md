@@ -24,12 +24,13 @@ ns workloads:
                                         requests 1 CPU / 3Gi, limits 4 / 4Gi
                                       NodePort 32081 + IngressRoute /paperless-gpt
   paperless-gpt-dev (new)
-    chart: in-repo apps/workloads/paperless-gpt/chart (isGitRepo:true)
+    chart: taskmedia/paperless-gpt 0.3.0 (https://helm.task.media)
     env → PAPERLESS_BASE_URL=http://paperless.workloads.svc.cluster.local
           LLM_PROVIDER=ollama, LLM_MODEL=qwen2.5:3b
           OLLAMA_HOST=http://ollama.workloads.svc.cluster.local:11434
     PAPERLESS_API_TOKEN via Doppler (project paperless-gpt, config dev)
-    SQLite/config/prompts on emptyDir (loseable)
+    SQLite/config/prompts on container writable layer (loseable,
+      persistence.enabled=false)
     NodePort 32081 + IngressRoute /paperless-gpt (strip-prefix,
       gated by dashboard-auth basicAuth)
 ```
@@ -52,9 +53,13 @@ workload appset (wave 5); no appset changes.
 - **Two separate apps** (not one combined chart):
   - `ollama`: community chart `otwld/ollama-helm`, 5Gi PVC for models,
     Service `ollama:11434`, requests 1 CPU/3Gi, limits 4 CPU/4Gi.
-  - `paperless-gpt`: tiny in-repo chart at
-    `apps/workloads/paperless-gpt/chart`, referenced via `isGitRepo: true` —
-    the dev workload appset requires every workload to be a Helm chart.
+  - `paperless-gpt`: community chart `taskmedia/paperless-gpt` 0.3.0 from
+    `https://helm.task.media` (upstream icereed image, `fullnameOverride:
+    paperless-gpt` so Service/selector names match the NodePort and Traefik
+    route) — the dev workload appset requires every workload to be a Helm
+    chart. Replaced an earlier in-repo mini chart after the published chart
+    proved a better fit (`paperless.apiTokenExistingSecret`, `config:` env
+    map, non-root securityContext defaults).
 - **paperless-gpt env**: `PAPERLESS_BASE_URL=http://paperless.workloads.svc.cluster.local`,
   `LLM_PROVIDER=ollama`, `LLM_MODEL=qwen2.5:3b`,
   `OLLAMA_HOST=http://ollama.workloads.svc.cluster.local:11434`,
@@ -91,7 +96,7 @@ workload appset (wave 5); no appset changes.
 
 | Change | File |
 |---|---|
-| New app (base + dev overlay, in-repo chart, Doppler trio, NodePort) | `apps/workloads/paperless-gpt/{base,overlays/dev}/...` incl. `apps/workloads/paperless-gpt/chart/` |
+| New app (base + dev overlay, taskmedia chart ref, Doppler trio, NodePort) | `apps/workloads/paperless-gpt/{base,overlays/dev}/...` |
 | New app (base + dev overlay, otwld chart, PVC, NodePort) | `apps/workloads/ollama/{base,overlays/dev}/...` |
 | k3d port mapping (cluster recreate required) | `.devcontainer/manifests/k3d-dev.yaml` |
 | Port forward entry | `.devcontainer/devcontainer.json` (`forwardPorts`) |
