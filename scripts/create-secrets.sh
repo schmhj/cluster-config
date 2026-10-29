@@ -104,17 +104,17 @@ kubectl create secret generic tailscale-secret \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/tailscale-sealedsecret.yaml
 
-kubectl create secret generic paperless-credentials \
-     --namespace=infrastructure \
+kubectl create secret generic doppler-paperless-token \
+     --namespace=workloads \
      --dry-run=client \
      --from-literal=admin-username='***' \
      --from-literal=admin-password='***' \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
-      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/paperless-ngx-sealedsecret.yaml
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/workloads/paperless/overlays/prod/doppler-paperless-token-sealedsecret.yaml
 
 kubectl create secret generic doppler-paperless-gpt-token \
-     --namespace=infrastructure \
+     --namespace=workloads \
      --dry-run=client \
      --from-literal=doppler-token='***' \
      -o yaml | kubeseal \
