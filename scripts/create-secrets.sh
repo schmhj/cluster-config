@@ -112,3 +112,11 @@ kubectl create secret generic paperless-credentials \
      -o yaml | kubeseal \
       --controller-namespace kube-system \
       --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/infrastructure/infra-secrets/overlays/prod/paperless-ngx-sealedsecret.yaml
+
+kubectl create secret generic doppler-paperless-gpt-token \
+     --namespace=infrastructure \
+     --dry-run=client \
+     --from-literal=doppler-token='***' \
+     -o yaml | kubeseal \
+      --controller-namespace kube-system \
+      --format yaml --cert ~/.secrets/sealed-secrets.pub > apps/workloads/paperless-gpt/overlays/dev/doppler-paperless-gpt-token-sealedsecret.yaml
