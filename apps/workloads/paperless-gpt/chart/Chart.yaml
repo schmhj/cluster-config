@@ -1,6 +1,0 @@
-apiVersion: v2
-name: paperless-gpt
-description: Minimal paperless-gpt chart for dev
-type: application
-version: 0.1.0
-appVersion: "v0.31.0"

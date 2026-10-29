@@ -1,4 +1,4 @@
-# paperless-gpt (icereed, in-repo minimal chart) — dev.
+# paperless-gpt (taskmedia chart 0.3.0, upstream icereed image) — dev.
 # Tagging/title suggestions only; OCR-vision and RAG deliberately unconfigured.
 # No built-in auth: exposure is NodePort (localhost) + Traefik basic auth.
 
@@ -9,18 +9,13 @@ image:
   tag: v0.31.0
   pullPolicy: IfNotPresent
 
-replicaCount: 1
+paperless:
+  baseUrl: "http://paperless.workloads.svc.cluster.local"
+  apiTokenExistingSecret:
+    name: paperless-gpt-credentials
+    key: paperless-token
 
-service:
-  type: ClusterIP
-  port: 8080
-
-existingSecret:
-  name: paperless-gpt-credentials
-  key: paperless-token
-
-env:
-  PAPERLESS_BASE_URL: "http://paperless.workloads.svc.cluster.local"
+config:
   LLM_PROVIDER: "ollama"
   LLM_MODEL: "qwen2.5:3b"
   OLLAMA_HOST: "http://ollama.workloads.svc.cluster.local:11434"
@@ -29,6 +24,12 @@ env:
   TOKEN_LIMIT: "1000"
   SUGGESTION_WORKERS: "1"
   OCR_LIMIT_PAGES: "2"
+
+# Loseable dev state: keep persistence off so prompts/config/db live in the
+# container's writable layer (emptyDir-equivalent, wiped on restart) rather
+# than a PVC. The source of truth stays in paperless-ngx + this repo.
+persistence:
+  enabled: false
 
 resources:
   requests:
