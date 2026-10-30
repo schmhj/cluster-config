@@ -29,8 +29,9 @@ ns workloads:
           LLM_PROVIDER=ollama, LLM_MODEL=qwen2.5:3b
           OLLAMA_HOST=http://ollama.workloads.svc.cluster.local:11434
     PAPERLESS_API_TOKEN via Doppler (project paperless-gpt, config dev)
-    SQLite/config/prompts on container writable layer (loseable,
-      persistence.enabled=false)
+    SQLite/config/prompts on emptyDir mounts at /app/{config,db,prompts}
+      (loseable; required — image's non-root entrypoint cannot mkdir in
+      root-owned /app)
     NodePort 32081 + IngressRoute /paperless-gpt (strip-prefix,
       gated by dashboard-auth basicAuth)
 ```

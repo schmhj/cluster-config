@@ -6,11 +6,12 @@
 # they ever diverge. Keeping it in base means one source of truth and an
 # empty dev overlay, so dev never drifts from the chart defaults.
 #
-# Loseable dev state: persistence.enabled=false in base means
-# /app/prompts, /app/config and /app/db live in the container's writable
-# layer (wiped on restart). That is acceptable in dev — the source of
-# truth lives in paperless-ngx + this repo. Do not enable persistence
-# here without a deliberate decision.
+# Loseable dev state: persistence.enabled=false in base plus emptyDir
+# mounts at /app/prompts, /app/config and /app/db — state is wiped on
+# restart. That is acceptable in dev — the source of truth lives in
+# paperless-ngx + this repo. The mounts themselves are required (the
+# image's non-root entrypoint cannot mkdir in root-owned /app); do not
+# remove them or enable a PVC here without a deliberate decision.
 #
 # OCR vision fallback: OCR_PROVIDER defaults to "llm" and is deliberately
 # unconfigured — OCR-vision and RAG are out of scope for this dev app

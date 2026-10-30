@@ -25,11 +25,29 @@ config:
   SUGGESTION_WORKERS: "1"
   OCR_LIMIT_PAGES: "2"
 
-# Loseable dev state: keep persistence off so prompts/config/db live in the
-# container's writable layer (emptyDir-equivalent, wiped on restart) rather
-# than a PVC. The source of truth stays in paperless-ngx + this repo.
+# Loseable dev state, but the emptyDir mounts below are REQUIRED, not
+# cosmetic: the image runs as uid 10001 and its non-root entrypoint does
+# `mkdir -p /app/config /app/db /app/prompts` in a root-owned /app, which
+# fails with EACCES when nothing is mounted there (verified: `docker run
+# --user 10001` reproduces the crash; with mounts the app starts).
+# Do not remove them or enable a PVC here without a deliberate decision.
 persistence:
   enabled: false
+
+extraVolumes:
+  - name: config
+    emptyDir: {}
+  - name: db
+    emptyDir: {}
+  - name: prompts
+    emptyDir: {}
+extraVolumeMounts:
+  - name: config
+    mountPath: /app/config
+  - name: db
+    mountPath: /app/db
+  - name: prompts
+    mountPath: /app/prompts
 
 resources:
   requests:
