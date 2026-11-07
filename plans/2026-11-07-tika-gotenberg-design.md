@@ -42,6 +42,15 @@ lands.
   4.0.0 (appVersion `4.0.0-1-full`). `fullnameOverride: tika` → Service
   `tika:9998`. Full image variant (includes OCR extras; ~1.5 GB —
   acceptable for dev, minimal variant is a later option).
+  - **As implemented: `image.tag: 3.3.3.0-full`**, not the chart default.
+    Tika 4.0.0 removed the `/tika/form*` endpoints (TIKA-4809) and renamed
+    `X-TIKA:*` metadata to `tk:*`. paperless-ngx 2.20.15 pins
+    `tika-client ~=1.0`, which POSTs `/tika/form/text` and reads
+    `X-TIKA:content` → every Tika parse fails with `404 Not Found for url
+    .../tika/form/text` (stumpylog/tika-client#87). paperless-ngx `main`
+    still pins `tika-client ~=1.0`, so there is no release that works with
+    Tika 4 yet; drop this tag override once paperless moves to
+    `tika-client >=2.0`.
 - **Gotenberg chart**: community chart
   `oci://ghcr.io/maikumori/helm-charts/gotenberg` 1.29.0 (appVersion
   8.38.1). `fullnameOverride: gotenberg`.
