@@ -5,6 +5,10 @@
 
 fullnameOverride: paperless-gpt
 
+# Fully-qualified repo: OKE nodes enforce containerd short-name mode.
+image:
+  repository: docker.io/icereed/paperless-gpt
+
 paperless:
   baseUrl: "http://paperless.workloads.svc.cluster.local"
   apiTokenExistingSecret:

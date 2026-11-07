@@ -4,6 +4,10 @@
 
 fullnameOverride: ollama
 
+# Fully-qualified repo: OKE nodes enforce containerd short-name mode.
+image:
+  repository: docker.io/ollama/ollama
+
 ollama:
   models:
     pull:
@@ -16,9 +20,12 @@ persistentVolume:
   accessModes:
     - ReadWriteOnce
 
+# workload-0 allocatable 2820m CPU with ~2.06 CPU already requested; 1 CPU
+# request did not fit (FailedScheduling Insufficient cpu). 500m request keeps
+# the pod schedulable; burst up to 4 CPU limit.
 resources:
   requests:
-    cpu: "1"
+    cpu: 500m
     memory: 3Gi
   limits:
     cpu: "4"
