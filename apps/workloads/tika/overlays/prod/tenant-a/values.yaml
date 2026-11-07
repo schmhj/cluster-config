@@ -1,0 +1,21 @@
+# Apache Tika — prod tenant-a (content extraction for paperless-ngx).
+
+fullnameOverride: tika
+
+# Same 3.x pin as dev: paperless-ngx 2.20.15 (tika-client ~=1.0) needs the
+# /tika/form endpoint family removed in Tika 4.
+image:
+  tag: 3.3.3.0-full
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+# No affinity/nodeSelector: this chart's values.schema.json rejects any key
+# under both (additionalProperties: false). Scheduling still lands on
+# workload-0 — the cluster's only other node (tier=infra) carries a
+# tier=infra:NoSchedule taint this pod does not tolerate.

@@ -1,0 +1,46 @@
+# Gotenberg — prod tenant-a (HTML/email → PDF for paperless-ngx).
+
+fullnameOverride: gotenberg
+
+# Conventional :3000 endpoint (matches PAPERLESS_TIKA_GOTENBERG_ENDPOINT).
+service:
+  port: 3000
+
+chromium:
+  disableJavaScript: true
+  allowList: "file:///tmp/.*"
+
+enableServiceLinks: false
+
+# Dev's 512Mi limit risks OOM under real load (design-doc warning).
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi
+
+affinity:
+  nodeAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: tier
+              operator: In
+              values:
+                - workload
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        preference:
+          matchExpressions:
+            - key: workload
+              operator: In
+              values:
+                - workload-0
+
+tolerations:
+  - key: tier
+    operator: Equal
+    value: workload
+    effect: NoSchedule
