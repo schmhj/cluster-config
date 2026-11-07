@@ -6,8 +6,11 @@
 fullnameOverride: paperless-gpt
 
 # Fully-qualified repo: OKE nodes enforce containerd short-name mode.
+# Tag/pullPolicy pinned explicitly (do not inherit implicitly from base).
 image:
   repository: docker.io/icereed/paperless-gpt
+  tag: v0.31.0
+  pullPolicy: IfNotPresent
 
 paperless:
   baseUrl: "http://paperless.workloads.svc.cluster.local"
