@@ -6,6 +6,7 @@ metadata:
 data:
   url: https://argocd.newyeti.qzz.io
   application.instanceLabelKey: argocd.argoproj.io/instance
+  application.sync.impersonation.enabled: "false"
   accounts.ghapp: login=ghapp
   account.ghapp.tokens: $ghaap-auth-secret:githubAppID!$ghaap-auth-secret:githubAppInstallationID!$ghaap-auth-secret:githubAppPrivateKey
   
