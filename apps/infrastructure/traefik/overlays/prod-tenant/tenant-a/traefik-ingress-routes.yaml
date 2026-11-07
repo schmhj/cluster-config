@@ -96,3 +96,30 @@ spec:
           namespace: traefik
   tls:
     secretName: newyeti-tls-cert
+
+---
+# ── IngressRoute: paperless-gpt (HTTPS) ───────────────────────
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: paperless-gpt
+  namespace: traefik
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`paperless-gpt.newyeti.qzz.io`)
+      kind: Rule
+      services:
+        - name: paperless-gpt
+          namespace: workloads
+          port: 8080
+      middlewares:
+        - name: dashboard-auth
+          namespace: traefik
+        - name: rate-limit
+          namespace: traefik
+  tls:
+    secretName: newyeti-tls-cert
