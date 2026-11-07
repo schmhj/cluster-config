@@ -5,8 +5,11 @@
 fullnameOverride: ollama
 
 # Fully-qualified repo: OKE nodes enforce containerd short-name mode.
+# alpine/ollama is a small CPU-only image (~31MB arm64 compressed) to avoid
+# DiskPressure on the 36GiB-boot workload node (official image is ~4.3GB).
 image:
-  repository: docker.io/ollama/ollama
+  repository: docker.io/alpine/ollama
+  tag: "0.40.13"
 
 ollama:
   models:
