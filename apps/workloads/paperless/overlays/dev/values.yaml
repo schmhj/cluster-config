@@ -1,0 +1,125 @@
+# paperless-ngx (CodeOpsMS chart 0.3.23) — dev
+# DB lives in tenant-b postgres over the Tailscale egress service
+# postgresql-tenant-b (see tailscale-connector tenant-a overlay).
+
+fullnameOverride: paperless
+
+config:
+  # url: "https://${CODESPACE_NAME}-32080.app.github.dev"
+  # Bumped when chart-managed Secret env changes (GRANIAN_PORT, DATA_DIR,
+  # Tika/Gotenberg endpoints).
+  secretRevision: 2
+  database:
+    host: "postgresql-dev.workloads.svc.cluster.local"
+    port: 5432
+    name: "paperless"
+    user: "paperless"
+    existingSecret:
+      name: postgresql-secret
+      passKey: postgresql-paperless-password
+
+postgresql:
+  enabled: false
+
+valkey:
+  internal: true
+
+# Persistence settings for the paperless data directory.
+persistence:
+  existingClaim: null
+  storageClass: ""
+  size: 5Gi
+  accessMode: ReadWriteOnce
+  retain: true
+
+# dev has no IngressRoute (prod exposes paperless via the traefik tenant-a
+# overlay); dev reaches it through the NodePort Service defined in this overlay
+# (paperless-nodeport.yaml → nodePort 32080).
+ingress:
+  enabled: false
+
+# Modest footprint; leaves ~13 Gi on workload-0 for a future local LLM.
+resources:
+  requests:
+    cpu: 500m
+    memory: 750Mi
+  limits:
+    cpu: "2"
+    memory: 2Gi
+
+# The nfs-paperless export is NFSv3-only and does not support file locking
+# (s6-setlock: "No locks available"), and the server refuses NFSv4 mounts.
+# Keep media/consume/export on NFS but put the data dir (migration lock,
+# search index, logs) on local disk; the index rebuilds from the DB if lost.
+# The chart hardcodes the storage mount at /usr/src/paperless/data, so the
+# local dir must live at a unique path (duplicate mountPaths are rejected
+# by the API server) and PAPERLESS_DATA_DIR points paperless at it.
+env:
+  PAPERLESS_DATA_DIR: /paperless-data
+
+  # map form → rendered as valueFrom in the container env, from YOUR sealed secret
+  PAPERLESS_ADMIN_USERNAME:
+    valueFrom:
+      secretKeyRef:
+        name: paperless-credentials
+        key: admin-username
+
+  # map form → rendered as valueFrom in the container env, from YOUR sealed secret
+  PAPERLESS_ADMIN_PASSWORD:
+    valueFrom:
+      secretKeyRef:
+        name: paperless-credentials
+        key: admin-password
+
+  # Codespaces URL, written into the deliberately UNMANAGED ConfigMap
+  # `paperless-codespace` by .devcontainer/scripts/post-start.sh (its value is
+  # codespace-specific, so Argo CD must not reconcile it). The chart Secret's
+  # PAPERLESS_URL (config.url) only lists http://localhost as a trusted origin,
+  # which makes the login POST fail CSRF when the app is opened as
+  # https://<codespace>-32080.app.github.dev. optional: keeps the pod starting
+  # if the ConfigMap is missing — it then falls back to the chart Secret.
+  PAPERLESS_URL:
+    valueFrom:
+      configMapKeyRef:
+        name: paperless-codespace
+        key: url
+        optional: true
+
+  # Extra CSRF-trusted origins for dev. PAPERLESS_URL above only trusts the
+  # Codespaces URL (or http://localhost:32080), but the app is also opened as
+  # https://localhost:32080 (TLS terminated on the client side, plain HTTP to
+  # the NodePort), so Django rejects every POST — signup, login — with
+  # "Origin checking failed - https://localhost:32080 does not match any
+  # trusted origins" even though the GET renders fine. Comma-separated list;
+  # paperless appends PAPERLESS_URL to it, and same-origin http://localhost:32080
+  # is accepted without being listed.
+  PAPERLESS_CSRF_TRUSTED_ORIGINS: "https://localhost:32080,http://localhost:32080"
+
+  # K8s service links inject PAPERLESS_PORT=tcp://<svc>:80 for the chart's
+  # own Service, which granian rejects; the webserver prefers GRANIAN_PORT.
+  GRANIAN_PORT: "8000"
+
+  # Tika + Gotenberg (Office docs, .eml → content extraction + PDF).
+  # Note: the Gotenberg endpoint env is PAPERLESS_TIKA_GOTENBERG_ENDPOINT,
+  # not PAPERLESS_GOTENBERG_URL (that name does not exist).
+  PAPERLESS_TIKA_ENABLED: "true"
+  PAPERLESS_TIKA_ENDPOINT: "http://tika.workloads.svc.cluster.local:9998"
+  PAPERLESS_TIKA_GOTENBERG_ENDPOINT: "http://gotenberg.workloads.svc.cluster.local:3000"
+
+volumes:
+  - name: data-local
+    emptyDir: {}
+
+volumeMounts:
+  - name: data-local
+    mountPath: /paperless-data
+
+# The chart's Service stays ClusterIP (its default): the chart never renders
+# spec.ports[].nodePort, so service.nodePort: 32080 here was silently ignored
+# and the Service got a random nodePort instead. Dev exposure lives in this
+# overlay's dedicated Service — paperless-nodeport.yaml (nodePort 32080), which
+# .devcontainer/manifests/k3d-dev.yaml maps to the Codespaces "Paperless App"
+# forward in .devcontainer/devcontainer.json.
+service:
+  type: ClusterIP
+  port: 80

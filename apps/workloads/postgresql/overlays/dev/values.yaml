@@ -28,7 +28,7 @@ primary:
   resources:
     limits:
       cpu: "1000m"
-      memory: "256Mi"
+      memory: "2Gi"
     requests:
       cpu: "250m"
       memory: "512Mi"
@@ -36,9 +36,7 @@ primary:
   # Persistence configuration
   persistence:
     enabled: true
-    storageClass: "" # Leave empty to use the cluster's default StorageClass, or specify your own (e.g., standard, gp3)
-    size: 8Gi
-    mountPath: /bitnami/postgresql
+    existingClaim: postgres-data
 
   # Custom PostgreSQL configuration parameters (postgresql.conf)
   extendedConfiguration: |

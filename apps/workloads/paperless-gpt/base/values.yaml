@@ -1,0 +1,58 @@
+# paperless-gpt (taskmedia chart 0.3.0, upstream icereed image) — dev.
+# Tagging/title suggestions only; OCR-vision and RAG deliberately unconfigured.
+# No built-in auth: exposure is NodePort (localhost) + Traefik basic auth.
+
+fullnameOverride: paperless-gpt
+
+image:
+  repository: icereed/paperless-gpt
+  tag: v0.31.0
+  pullPolicy: IfNotPresent
+
+paperless:
+  baseUrl: "http://paperless.workloads.svc.cluster.local"
+  apiTokenExistingSecret:
+    name: paperless-gpt-credentials
+    key: paperless-token
+
+config:
+  LLM_PROVIDER: "ollama"
+  LLM_MODEL: "qwen2.5:3b"
+  OLLAMA_HOST: "http://ollama.workloads.svc.cluster.local:11434"
+  OLLAMA_KEEP_ALIVE: "10m"
+  LLM_LANGUAGE: "English"
+  TOKEN_LIMIT: "1000"
+  SUGGESTION_WORKERS: "1"
+  OCR_LIMIT_PAGES: "2"
+
+# Loseable dev state, but the emptyDir mounts below are REQUIRED, not
+# cosmetic: the image runs as uid 10001 and its non-root entrypoint does
+# `mkdir -p /app/config /app/db /app/prompts` in a root-owned /app, which
+# fails with EACCES when nothing is mounted there (verified: `docker run
+# --user 10001` reproduces the crash; with mounts the app starts).
+# Do not remove them or enable a PVC here without a deliberate decision.
+persistence:
+  enabled: false
+
+extraVolumes:
+  - name: config
+    emptyDir: {}
+  - name: db
+    emptyDir: {}
+  - name: prompts
+    emptyDir: {}
+extraVolumeMounts:
+  - name: config
+    mountPath: /app/config
+  - name: db
+    mountPath: /app/db
+  - name: prompts
+    mountPath: /app/prompts
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi

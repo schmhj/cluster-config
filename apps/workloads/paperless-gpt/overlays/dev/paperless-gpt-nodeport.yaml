@@ -1,0 +1,20 @@
+# nodePort 32081 must stay in sync with:
+#   .devcontainer/manifests/k3d-dev.yaml   (port 32081:32081, applied at cluster creation)
+#   .devcontainer/devcontainer.json        (forwardPorts + portsAttributes "Paperless GPT App")
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless-gpt-nodeport
+  namespace: workloads
+  annotations:
+    argocd.argoproj.io/sync-wave: "5"
+spec:
+  type: NodePort
+  selector:
+    app.kubernetes.io/name: paperless-gpt
+  ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: http
+      nodePort: 32081

@@ -1,0 +1,8 @@
+{
+    "appName": "tika",
+    "namespace": "workloads",
+    "chartRepo": "oci://apache.jfrog.io/tika-helm/tika",
+    "chartName": "tika",
+    "chartVersion": "4.0.0",
+    "isGitRepo": false
+}

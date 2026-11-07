@@ -22,7 +22,7 @@
 	"postCreateCommand": "/bin/bash -c .devcontainer/scripts/post-create.sh",
 	"postStartCommand": "/bin/bash -c .devcontainer/scripts/post-start.sh",
 
-	"forwardPorts": [30179, 30280, 32056, 30443, 30480],
+	"forwardPorts": [30179, 30280, 32056, 30443, 30480, 32080, 32081],
 	"portsAttributes": {
 		"30179": {
 			"label": "Argo CD Dashboard",
@@ -36,12 +36,21 @@
 			"label": "Microservice Template App",
 			"protocol": "http"
 		},
-		"30443": {
-			"label": "Traefik Dashboard",
-			"protocol": "http"
-		},
 		"30480": {
 			"label": "Traefik Dashboard",
+			"protocol": "http",
+			"visibility": "public"
+		},
+		"30443": {
+			"label": "Traefik HTTPS",
+			"protocol": "https"
+		},
+		"32080": {
+			"label": "Paperless App",
+			"protocol": "http"
+		},
+		"32081": {
+			"label": "Paperless GPT App",
 			"protocol": "http"
 		}
 	},

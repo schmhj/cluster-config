@@ -1,0 +1,24 @@
+# Dev overlay — same effective values as base; documented here.
+#
+# CPU-only codespace: no GPU, so Ollama runs on CPU. qwen2.5:3b is ~2GB on
+# disk; memory set to 3Gi request / 4Gi limit to cover the model plus
+# runtime headroom.
+
+fullnameOverride: ollama
+
+ollama:
+  models:
+    pull:
+      - qwen2.5:3b
+
+persistentVolume:
+  enabled: true
+  size: 5Gi
+
+resources:
+  requests:
+    cpu: "1"
+    memory: 3Gi
+  limits:
+    cpu: "4"
+    memory: 4Gi

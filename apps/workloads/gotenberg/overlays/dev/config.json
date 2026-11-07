@@ -1,0 +1,8 @@
+{
+    "appName": "gotenberg",
+    "namespace": "workloads",
+    "chartRepo": "oci://ghcr.io/maikumori/helm-charts/gotenberg",
+    "chartName": "gotenberg",
+    "chartVersion": "1.29.0",
+    "isGitRepo": false
+}

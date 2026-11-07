@@ -10,6 +10,24 @@ echo "post-start start" >>  ~/.status.log
 # Ensure kubeconfig is set up. 
 k3d kubeconfig merge dev --kubeconfig-merge-default | tee -a ~/.status.log 
 
+# Publish the public paperless URL (PAPERLESS_URL) before any app is synced.
+# The ConfigMap is intentionally NOT in git: the value is codespace-specific and
+# Argo CD would revert it on every self-heal. paperless dev values read it via
+# valueFrom (optional: true), so the pod still starts if this step is skipped.
+if [[ $ENVIRONMENT != "prod" ]]; then
+    if [[ -n "${CODESPACE_NAME:-}" ]]; then
+        PAPERLESS_URL_VALUE="https://${CODESPACE_NAME}-32080.app.github.dev"
+    else
+        PAPERLESS_URL_VALUE="http://localhost:32080"
+    fi
+    # The workloads namespace is normally created by Argo CD (wave 2); create it
+    # idempotently first so the ConfigMap can exist before the first sync.
+    kubectl create namespace workloads --dry-run=client -o yaml | kubectl apply -f - | tee -a ~/.status.log
+    kubectl create configmap paperless-codespace \
+        --from-literal=url="${PAPERLESS_URL_VALUE}" \
+        -n workloads --dry-run=client -o yaml | kubectl apply -f - | tee -a ~/.status.log
+fi
+
 # Wit for Argo CD to be ready
 kubectl rollout status -n argocd sts/argocd-application-controller | tee -a  ~/.status.log
 

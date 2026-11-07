@@ -1,0 +1,22 @@
+# Apache Tika (official apache/tika-helm 4.0.0) — dev
+# Content extraction/detection for paperless-ngx (Office docs, .eml, …).
+# Paperless reaches it at PAPERLESS_TIKA_ENDPOINT (see paperless overlay).
+
+fullnameOverride: tika
+
+# Pin the 3.x line. The chart's default appVersion (4.0.0-1-full) removed the
+# whole /tika/form endpoint family, but paperless-ngx 2.20.15 pins
+# tika-client ~=1.0, which still POSTs to /tika/form/text → 404 "Could not
+# parse ... with tika server". tika-client 2.x (Tika 4 only) is what paperless
+# needs to move to before this tag can follow the chart default again.
+image:
+  tag: 3.3.3.0-full
+
+# Chart defaults are 1 CPU / 1500Mi request — too heavy for the Codespace.
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi

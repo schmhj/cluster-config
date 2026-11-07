@@ -214,7 +214,7 @@ Sync waves control deployment order:
 | Wave | Component | Source |
 |------|-----------|--------|
 | 0 | `appprojects-app` Application (bootstrap) | `bootstrap/{env,prod/<tenant>}/appprojects-app.yaml` |
-| 2 | AppProject CRs, sealed-secrets, namespaces | `appprojects/{env}/`, `apps/infrastructure/{sealed-secrets,namespaces}/overlays/...` |
+| 2 | AppProject CRs, sealed-secrets, external-secrets, namespaces | `appprojects/{env}/`, `apps/infrastructure/{sealed-secrets,external-secrets,namespaces}/overlays/...` |
 | 3 | infra-secrets, argocd-config | AppSet template sets wave based on `.path.segments[2]` |
 | 4 | cert-manager, traefik, reflector, grafana-alloy | AppSet template sets wave based on `.path.segments[2]` |
 | 5 | Workload applications | Hard-coded in the workload appset template |
@@ -549,8 +549,19 @@ When running in devContainer with K3d cluster, these services are automatically 
 | 30179 | Argo CD Dashboard | HTTPS | ArgoCD web UI |
 | 30280 | Sample App | HTTP | Example application |
 | 32056 | Microservice Template | HTTP | Template application |
-| 30443 | Traefik Dashboard | HTTP | Ingress controller metrics |
-| 30480 | Traefik Dashboard | HTTP | Alternative Traefik dashboard |
+| 30443 | Traefik `websecure` (443) | HTTPS | Ingress controller TLS entrypoint |
+| 30480 | Traefik `web` / dashboard | HTTP | Traefik dashboard & API (`/dashboard/`) |
+| 32080 | Paperless App | HTTP | paperless-ngx (`Service/paperless-nodeport`) |
+| 32081 | Paperless GPT App | HTTP | paperless-gpt (`Service/paperless-gpt-nodeport`) |
+
+Port forwarding needs both halves: a `ports` mapping in
+[`.devcontainer/manifests/k3d-dev.yaml`](.devcontainer/manifests/k3d-dev.yaml)
+**and** a `forwardPorts` entry in
+[`.devcontainer/devcontainer.json`](.devcontainer/devcontainer.json). k3d applies
+the `ports` mappings only when the cluster is created, so after changing them
+rebuild the devcontainer (or delete and recreate the `k3d-dev` cluster) — an
+entry that only exists in `forwardPorts` forwards to a closed port and fails
+with "connection refused".
 
 ### Secrets in devContainer
 
