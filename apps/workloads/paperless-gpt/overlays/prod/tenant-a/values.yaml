@@ -1,0 +1,50 @@
+# paperless-gpt — prod tenant-a. Tagging/title suggestions only.
+# State (prompts/config/db) is loseable emptyDir — the image (uid 10001) cannot
+# mkdir in root-owned /app, so the /app/* mounts are required; keep
+# persistence.enabled false unless replacing them with a deliberate PVC plan.
+
+fullnameOverride: paperless-gpt
+
+paperless:
+  baseUrl: "http://paperless.workloads.svc.cluster.local"
+  apiTokenExistingSecret:
+    name: paperless-gpt-credentials
+    key: paperless-token
+
+config:
+  LLM_PROVIDER: "ollama"
+  LLM_MODEL: "qwen2.5:3b"
+  OLLAMA_HOST: "http://ollama.workloads.svc.cluster.local:11434"
+  OLLAMA_KEEP_ALIVE: "10m"
+  LLM_LANGUAGE: "English"
+  TOKEN_LIMIT: "1000"
+  SUGGESTION_WORKERS: "1"
+  OCR_LIMIT_PAGES: "2"
+
+persistence:
+  enabled: false
+
+extraVolumes:
+  - name: config
+    emptyDir: {}
+  - name: db
+    emptyDir: {}
+  - name: prompts
+    emptyDir: {}
+extraVolumeMounts:
+  - name: config
+    mountPath: /app/config
+  - name: db
+    mountPath: /app/db
+  - name: prompts
+    mountPath: /app/prompts
+
+nodeSelector:
+  tier: workload
+  workload: workload-0
+
+tolerations:
+  - key: tier
+    operator: Equal
+    value: workload
+    effect: NoSchedule

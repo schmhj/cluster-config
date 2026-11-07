@@ -1,0 +1,3 @@
+# paperless-gpt — prod (shared; tenant overrides live in tenant-a/values.yaml)
+# Base wiring (Ollama/Paperless URLs, model) is shared; secrets + scheduling are
+# tenant-specific. No built-in auth — exposure is gated by Traefik basic auth.
