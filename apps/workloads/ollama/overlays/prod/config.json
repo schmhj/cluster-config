@@ -1,0 +1,8 @@
+{
+    "appName": "ollama",
+    "namespace": "workloads",
+    "chartRepo": "https://helm.otwld.com",
+    "chartName": "ollama",
+    "chartVersion": "1.93.0",
+    "isGitRepo": false
+}
