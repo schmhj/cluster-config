@@ -2,6 +2,11 @@
 
 fullnameOverride: gotenberg
 
+# Fully-qualified repo: the OKE nodes enforce containerd short-name mode,
+# which rejects the chart default `gotenberg/gotenberg` as ambiguous.
+image:
+  repository: docker.io/gotenberg/gotenberg
+
 # Conventional :3000 endpoint (matches PAPERLESS_TIKA_GOTENBERG_ENDPOINT).
 service:
   port: 3000

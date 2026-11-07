@@ -4,7 +4,10 @@ fullnameOverride: tika
 
 # Same 3.x pin as dev: paperless-ngx 2.20.15 (tika-client ~=1.0) needs the
 # /tika/form endpoint family removed in Tika 4.
+# Fully-qualified repo: the OKE nodes enforce containerd short-name mode,
+# which rejects the chart default `apache/tika` as ambiguous.
 image:
+  repository: docker.io/apache/tika
   tag: 3.3.3.0-full
 
 resources:
