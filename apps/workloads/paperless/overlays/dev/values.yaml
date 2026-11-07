@@ -6,8 +6,9 @@ fullnameOverride: paperless
 
 config:
   # url: "https://${CODESPACE_NAME}-32080.app.github.dev"
-  # Bumped when chart-managed Secret env changes (GRANIAN_PORT, DATA_DIR).
-  secretRevision: 1
+  # Bumped when chart-managed Secret env changes (GRANIAN_PORT, DATA_DIR,
+  # Tika/Gotenberg endpoints).
+  secretRevision: 2
   database:
     host: "postgresql-dev.workloads.svc.cluster.local"
     port: 5432
@@ -97,6 +98,13 @@ env:
   # K8s service links inject PAPERLESS_PORT=tcp://<svc>:80 for the chart's
   # own Service, which granian rejects; the webserver prefers GRANIAN_PORT.
   GRANIAN_PORT: "8000"
+
+  # Tika + Gotenberg (Office docs, .eml → content extraction + PDF).
+  # Note: the Gotenberg endpoint env is PAPERLESS_TIKA_GOTENBERG_ENDPOINT,
+  # not PAPERLESS_GOTENBERG_URL (that name does not exist).
+  PAPERLESS_TIKA_ENABLED: "true"
+  PAPERLESS_TIKA_ENDPOINT: "http://tika.workloads.svc.cluster.local:9998"
+  PAPERLESS_TIKA_GOTENBERG_ENDPOINT: "http://gotenberg.workloads.svc.cluster.local:3000"
 
 volumes:
   - name: data-local

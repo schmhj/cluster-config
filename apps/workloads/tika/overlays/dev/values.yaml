@@ -1,0 +1,14 @@
+# Apache Tika (official apache/tika-helm 4.0.0) — dev
+# Content extraction/detection for paperless-ngx (Office docs, .eml, …).
+# Paperless reaches it at PAPERLESS_TIKA_ENDPOINT (see paperless overlay).
+
+fullnameOverride: tika
+
+# Chart defaults are 1 CPU / 1500Mi request — too heavy for the Codespace.
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi

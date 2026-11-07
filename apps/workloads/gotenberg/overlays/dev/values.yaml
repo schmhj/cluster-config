@@ -1,0 +1,28 @@
+# Gotenberg (maikumori/gotenberg 1.29.0, app 8.38.1) — dev
+# HTML/email → PDF conversion for paperless-ngx (paired with Tika).
+# Paperless reaches it at PAPERLESS_TIKA_GOTENBERG_ENDPOINT.
+
+fullnameOverride: gotenberg
+
+# Chart default Service port is 80 (→ container :3000). Override so the
+# endpoint URL uses the conventional :3000 from paperless docs.
+service:
+  port: 3000
+
+# Paperless reference-compose hardening: block JS and remote fetches when
+# rendering .eml HTML (tracking pixels, remote images, etc.).
+chromium:
+  disableJavaScript: true
+  allowList: "file:///tmp/.*"
+
+# Avoid K8s service-link env vars colliding with Gotenberg's own config
+# (chart documents this hazard; e.g. a Service named `api` injects API_PORT).
+enableServiceLinks: false
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
